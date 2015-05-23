@@ -506,9 +506,50 @@ Sublime Text提供两种主要搜索方式：
 [返回目录](#目录)
 
 ##构建系统（批量处理）
+> [构建系统的参考](#构建系统)，这里包含了可选参数、变量等的完整参考文档。
+
+> 注意：构建系统目前正处于开发版本重做状态，以下的信息可能过时。
+> 到[论坛](http://www.sublimetext.com/forum/viewtopic.php?f=2&t=17471&sid=81fd17a6c886e151a3f69c0eaa87272d)查看更多信息。
+
+构建系统让你可以通过外部程序运行你的文件，如整理、翻译等等。
+
+可执行的构建系统必须处于*PATH*下。
+
 ###文件格式
+带有`.sublime-build`扩展名的JSON文件。
+
+####示例
+
+```
+{
+    "cmd": ["python", "-u", "$file"],
+    "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+    "selector": "source.python"
+}
+```
+
+**cmd**
+
+必须，这里包含了真正需要执行的命令：
+
+	python -u /path/to/current/file.ext
+	
+**file_regex**
+
+一个Perl风格的正则表达式捕获从外部程序的输出的错误信息。
+  
+**selector**
+
+如果设置了** Tools | Build System | Automatic** ，Sublime Text会通过匹配的`selector`自动为当前文件找到编译系统。
+
+除了配置选项，你也可以用一些变量，例如上面用到的`$file`。
+
 ###构建系统存放位置
+必须存储在Packages文件夹下（例如*Packages/User*），很多的包都包含它们独自的构建系统。
+
 ###运行构建系统
+按下`F7`键或**Tools | Build**。
+
 [返回目录](#目录)
 
 ##文件导航和文件管理
