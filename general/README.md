@@ -554,11 +554,160 @@ Sublime Text提供两种主要搜索方式：
 
 ##文件导航和文件管理
 ###跳转到任何位置
+这个功能可以非常便捷地对你的项目文件进行导航。
+![](./assets/file-management-goto-anything.png)
+
+键盘快捷键对应关系：
+
+| 打开功能 |Ctrl + P |
+| ------------ | ------------- |
+| 选择当前项并关闭Go Anything | Enter  |
+| 选择当前项 | →  |
+| 关闭Go Anything | Esc |
+
+当你在Go Anything输入框中输入文字时，Sublime Text就会在当前项目中进行搜索，最匹配的结果会有一个预览。这个预览只是*短暂*的，除非你对这个预览文件进行了一些操作。其它情况你也会获取一个短暂的预览视图，比如点击了左侧文件。
+
+####运算符
+你也可以使用一些操作符，注：这些操作符都可以单独使用，也可以跟在搜索项后面。例：
+
+```
+models:100
+```
+
+先搜索models，然后跳转到第100行。
+
+#####支持的操作符
+**@symbol**
+
+符号跳转：输入@symbol跳转到symbol符号所在的位置
+
+**#term**
+
+关键字跳转：输入#term跳转到term所在的位置
+
+**:line_number**
+
+行号跳转：输入:111，跳转到111行，如果行号太大则跳转到文件最后一行。
+
+键盘快捷键对应关系：
+
+| @ |Ctrl + R |
+| ------------ | ------------- |
+| # | Ctrl + ;  |
+| : | Ctrl + G |
+
+
 ###侧边栏
+不论项目是展开还是收起状态，侧边栏总是会有一个激活项目，这样就可以进行项目内检索了。
+
+键盘快捷键对应关系：
+
+| 切换侧边栏 |Ctrl + K, Ctrl + B |
+| ------------ | ------------- |
+| 聚焦侧边栏 | Ctrl + 0 |
+| 导航侧边栏 | 箭头 |
+| 退出聚焦侧边栏，重新聚焦视图 | Esc |
+
 ###项目
+项目组会让你的工作更有组织，总是会有一个激活项目存在，如果没有的话，Sublime Text会默认创建一个隐士的项目。
+
+切换项目快捷键`Ctrl + Alt + P`。
+
+项目的metadata存储在一个扩展名为`.sublime-project`的JSON文件中，不管有没有`.sublime-project`文件，你都可以看到`.sublime-workspace`文件（Sublime Text会用到，你无法编辑它）。
+
+有关项目的[官方文档](http://www.sublimetext.com/docs/2/projects.html)。
+
+####`.sublime-project`格式
+
+```
+{
+    "folders":
+    [
+        {
+            "path": "src",
+            "folder_exclude_patterns": ["backup"]
+        },
+        {
+            "path": "docs",
+            "name": "Documentation",
+            "file_exclude_patterns": ["*.css"]
+        }
+    ],
+    "settings":
+    {
+        "tab_size": 8
+    },
+    "build_systems":
+    [
+        {
+            "name": "List",
+            "cmd": ["ls"]
+        }
+    ]
+}
+```
+
+**folders**：包含的文件夹。
+
+`path`
+
+必须，相对于项目的相对路径，或是绝对路径。
+
+`name`
+
+可选，如果存在，则会出现在侧边栏。
+
+`folder_exclude_patterns`
+
+可选，通配符组成的列表，匹配到的文件夹会被排除在项目外。
+
+`folder_include_patterns`
+
+可选，通配符组成的列表，匹配到的文件夹会被包含在项目中。
+
+`file_exclude_patterns`
+
+可选，通配符组成的列表，匹配到的文件会被排除在项目外。
+
+`file_include_patterns`
+
+可选，通配符组成的列表，匹配到的文件会被包含在项目中。
+
+**settings**：个性化设置。
+
+只会在当前项目中生效的设置，这个会覆盖用户设置。
+
+除了全局设置外，几乎所有的设置都可以被覆盖。
+
+**build_systems**：构建系统。
+
+在`.sublime-project`中你可以定义项目的构建系统，`name`必须唯一，可以在**Tools → Build Systems**菜单看到设置的构建系统。
+
 ###侧边栏和项目的其它设置
+**binary_file_patterns**
+
+通配符组成的列表，匹配到的文件会被展示到侧边栏，但是会被排除在Go Aythings之外。
+
 ###工作空间
+工作空间可以看作是在同一个项目中不同的视图，例如，在做某些功能时你可能只想打开部分文件，或者在写测试时你需要不同的布局，工作空间的存在就是为了解决这个问题。
+
+工作空间的操作和项目非常类似，创建：**Project → New Workspace for Project**，保存：**Project → Save Workspace As**。
+
+切换工作空间`Ctrl + Alt + P`。
+
+工作空间的metadata存储在一个扩展名为`.sublime-workspace`的JSON文件中。
+
 ###面板
+视图组，可以同时打开多个面板。
+
+键盘快捷键对应关系：
+
+| 打开新面板 | Ctrl+K, Ctrl+↑ |
+| ------------ | ------------- |
+| 关闭当前面板 | Ctrl+K, Ctrl+↓ |
+
+更多面板管理看菜单栏**View → Layout**。
+
 [返回目录](#目录)
 
 ##定制化
