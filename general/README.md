@@ -712,10 +712,142 @@ models:100
 
 ##定制化
 ###设置
+Sublime Text把配置文件存放在* .sublime-settings*中。
+
+小经验：总是把个人配置文件放到*Packages/User*下，保证它们会优先于其它任何有冲突的配置文件。
+
+####格式
+带有*.sublime-settings*扩展名的JSON文件。
+
+####设置的类型
+*.sublime-settings*文件的名字决定了它的目的，名字可以是具有描述性的或是和它们所控制的内容相关的。例如，文件类型设置需要携带*.tmLanguage*定义文件类型的名字。因此，*.py*类型文件的语法定义就必须包含在`Python.tmLanguage`文件中，相应的设置文件被成为`Python.sublime-settings`。
+
+然而，一些设置文件只在特殊的平台上生效，这可以通过文件名来推断。例如，`Preferences (platform).sublime-settings`。平台的有效名称是`Windows`、`Linux`、`OSX`。
+
+这一点**非常重要**：`Packages/User`下面基于平台的设置文件会被忽略，这种情况下，你可以确定一个单独的文件可以覆盖其它设置。
+
+设置的改变是时时的，但是你也许需要重启Sublime Text来加载新的设置文件。
+
+####如何访问和编辑基本设置文件
+可以通过菜单栏的**Preferences | Settings - User**和**Preferences | Settings - More**来访问主要的配置文件（除非你需要设置非常细粒度的控制，否则还是不要修改这个）。不鼓励修改**Preferences | Settings - Default **，因为每次更新软件这个文件都会恢复。然而，你可以把它当作一个参考文档：它包含了所有可用的全局和文件类型设置的解释。
+
+####`.sublime-settings`文件优先级顺序
+相同的设置文件（例如`Python.sublime-settings`）可以出现在多个地方，在具有相同名称文件中定义的所有设置将根据预定义的规则进行合并和覆盖。到[这里](#包)查看详细。
+
+`Packages/User`下的设置文件最终都会覆盖其它同名文件的设置内容。
+
+除了设置文件之外，Sublime Text维护*会话*数据——为当前正在被编辑的特定文件集进行设置。当你工作在一些文件时，会话数据会被更新，因此如果你以任何形式（主要是通过API调用）调整特殊文件的设置，它将会被记录在会话中，这将优先于任何可适用*.sublime-setting*文件。
+
+要检查一个正在被编辑的特定文件的设置，在控制台输入`view.settings().get("setting_name")`。
+
+最后，值得注意的是一些设置会自动为你进行调整。如果你对一些设置的值有困惑时，请牢记这一点。例如，这是一个有关空白设置和`syntax`设置的例子。
+
+下面，你可以看到在Windows下Sublime Text对Python文件进行处理的一个假想层级设置的顺序。
+
+- Packages/Default/Preferences.sublime-settings
+- Packages/Default/Preferences (Windows).sublime-settings
+- Packages/User/Preferences.sublime-settings
+- Packages/Python/Python.sublime-settings
+- Packages/User/Python.sublime-settings
+- 当前文件的会话数据
+- 自动调整设置
+
+[设置的层次结构](#设置的层次结构)查看完整示例。
+
+####全局编辑器设置和全局文件设置
+这些设置被存放在`Preferences.sublime-settings`和`Preferences (platform).sublime-settings`文件中，默认设置在`Packages/Default`下。
+
+平台的有效名称是`Windows`、`Linux`、`OSX`。
+
+####文件类型设置
+以语法定义来命名`.sublime-settings`文件，例如，语法定义为`Python.tmLanguage`，设置文件命名为*Python.sublime-settings*。
+
+和全局设置一样，你也可以对文件类型创建指定平台的设置，例如，`Python (Linux).sublime-settings`只会作用于Linux。
+
+此外，我们强调`Pakages/User`下只有`Python.sublime-settings`会被读到。
+
+无论它的位置在哪里，特殊设置都会有一个较高的优先级，高于全局设置。
+
+####设置的层次结构
+下面，你可以看到在Windows下Sublime Text对Python文件进行处理的一个假想层级设置的顺序。
+
+- `Packages/Default/Preferences.sublime-settings`
+- `Packages/Default/Preferences (Windows).sublime-settings`
+- `Packages/AnyOtherPackage/Preferences.sublime-settings`
+- `Packages/AnyOtherPackage/Preferences (Windows).sublime-settings`
+- `Packages/User/Preferences.sublime-settings`
+- 项目中的设置
+- `Packages/Python/Python.sublime-settings`
+- `Packages/Python/Python (Windows).sublime-settings`
+- `Packages/User/Python.sublime-settings`
+- 当前文件的会话数据
+- 自动调整设置
+
+####存放用户设置
+当你想在软件更新时保留你的设置，把对应的*.sublime-settings*文件放到`Packages/User`下。
+
 ###缩进
+> [官方文档](http://www.sublimetext.com/docs/2/indentation.html)
+
 ###按键绑定
+####文件格式
+`.sublime-keymap`为扩展名的JSON文件中。
+
+例如：
+```
+[
+   { "keys": ["ctrl+shift+n"], "command": "new_window" },
+   { "keys": ["ctrl+o"], "command": "prompt_open_file" }
+]
+```
+
+####定义和重写按键绑定
+默认：`Packages/Default/Default (Windows).sublime-keymap)`。如果你想覆盖的话，需要新建一个具有更高优先级的设置文件，例如：`Packages/User/Default (Windows).sublime-keymap`。
+
+####高级按键绑定
+简单按键绑定包括映射到一个命令的一个或多个键的序列，然而还有更加复杂的语法，例如给命令传递一些参数，限制特定上下文的按键绑定。
+
+#####传递参数
+使用`args`指定参数：
+
+```
+{ "keys": ["shift+enter"], "command": "insert", "args": {"characters": "\n"} }
+```
+这里，当按下`Shift+Enter`时，`insert`命令会加上`\n`参数。
+
+#####上下文
+上下文决定了一个给定的按键绑定是否生效。
+
+```
+{ "keys": ["escape"], "command": "clear_fields", "context":
+   [
+      { "key": "has_next_field", "operator": "equal", "operand": true }
+   ]
+}
+```
+
+同样的按键可能会被映射到其它上下文中，所以同样的按键可能产生不一样的结果。
+
+#####Key Chords（同时按两个键）
+你可以用多个按键组合创建一个按键绑定。
+
+```
+{ "keys": ["ctrl+k", "ctrl+v"], "command": "paste_from_history" }
+```
+
+这里，触发`paste_from_history`命令，必须先按下`Ctrl + K`，然后松开`K`，按下`V`。
+
+注：这是一个默认的按键行为，你可以随时尝试。
+
 ###菜单
+无
+
 ###色彩主题
+Sublime Text默认的Python高亮配色主题：
+![](./assets/color_schemes_main.png '')
+
+> [配色方案](#配色方案)参考。
+
 [返回目录](#目录)
 
 ##扩展性和自动化
