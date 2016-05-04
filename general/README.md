@@ -1121,7 +1121,7 @@ Transformation: Text In Snail Case
 
 此外，在补全列表的右侧可以看到一个提示，这是补全后的一个预览。
 
-![](http://docs.sublimetext.info/en/latest/_images/completions_hint.png)
+![提示](./assets/completions_hint.png "提示")
 
 实际上上图中的结果将会展开成`$arrayName = array('' => , );`的代码段。
 
@@ -1131,7 +1131,7 @@ Transformation: Text In Snail Case
 
 例如：PHP中`array_map`的补全将会得到`array_map(callback, arr1)`的结果：
 
-![](http://docs.sublimetext.info/en/latest/_images/completions_contents.gif)
+![补全内容](./assets/completions_contents.gif "补全内容")
 
 图中可以看到鼠标自动选择了`callback`，这是因为补全提供了和代码段的字段和placeholder类似的功能。更多细节，请看[Snippet特征](####Snippet特征);
 
@@ -1165,7 +1165,7 @@ l| andl|
 
 ##### 插入一个Tab占位符
 
-当`tab_completion`功能开启时，如果想要插入一个Tab占位符，可以按下`Shift + Tab`。
+当`tab_completion`功能开启时，如果想要插入一个Tab占位符，可以按下`Shift + Tab`。
 
 ####补全及其优先级的相关资源
 
@@ -1180,7 +1180,7 @@ l| andl|
 ####概述
 *命令面板*是一个以执行命令为目的的可交互式的列表。
 
-![](http://docs.sublimetext.info/en/latest/_images/command-palette-0001.png)
+![命令面板](./assets/command-palette-0001.png "命令面板")
 
 默认情况下，命令面板包含了许多有用的命令，并且提供了非常方便的个人设置和设置文件。
 
