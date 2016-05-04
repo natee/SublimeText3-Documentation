@@ -1,79 +1,79 @@
 #Sublime Text非官方文档
 ##目录
 - [关于文档](#通用)
-	- [完善文档](#完善文档)
+  - [完善文档](#完善文档)
 - [安装](#安装)
-	- [32位和64位](#32位和64位)
-	- [Windows](#windows)
-	- [OS X](#os-x)
-	- [Linux](#linux)
-	- [发布渠道](#发布渠道)
+  - [32位和64位](#32位和64位)
+  - [Windows](#windows)
+  - [OS X](#os-x)
+  - [Linux](#linux)
+  - [发布渠道](#发布渠道)
 - [基本概念](#基本概念)
-	- [概述](#概述)
-	- [通用惯例](#通用惯例)
-	- [需要花时间来掌握Sublime Text](#需要花时间来掌握sublime-text)
-	- [Data目录](#data目录)
-	- [Packages目录](#packages目录)
-	- [Sublime Text是可编程的](#sublime-text是可编程的)
-	- [包、插件、资源和其它项](#包-插件-资源和其它项)
-	- [Textmate兼容性](#textmate兼容性)
-	- [vi/Vim模式](#vi-Vim模式)
-	- [emacs模式](#emacs模式)
+  - [概述](#概述)
+  - [通用惯例](#通用惯例)
+  - [需要花时间来掌握Sublime Text](#需要花时间来掌握sublime-text)
+  - [Data目录](#data目录)
+  - [Packages目录](#packages目录)
+  - [Sublime Text是可编程的](#sublime-text是可编程的)
+  - [包、插件、资源和其它项](#包-插件-资源和其它项)
+  - [Textmate兼容性](#textmate兼容性)
+  - [vi/Vim模式](#vi-Vim模式)
+  - [emacs模式](#emacs模式)
 - [编辑](#编辑)
-	- [概述](#概述)
-	- [多文本选择](#多文本选择)
-	- [多行选择合并成一行](#多行选择合并成一行)
-	- [列选择](#列选择)
-	- [选择文本的其它方式](#选择文本的其它方式)
-	- [置换](#置换)
-	- [更多...](#更多...)
+  - [概述](#概述)
+  - [多文本选择](#多文本选择)
+  - [多行选择合并成一行](#多行选择合并成一行)
+  - [列选择](#列选择)
+  - [选择文本的其它方式](#选择文本的其它方式)
+  - [置换](#置换)
+  - [更多...](#更多...)
 - [搜索和替换](#搜索和替换)- 
-	- [单文件搜索](#单文件搜索)
-	- [多文件搜索](#多文件搜索)
-	- [正则表达式](#正则表达式)
+  - [单文件搜索](#单文件搜索)
+  - [多文件搜索](#多文件搜索)
+  - [正则表达式](#正则表达式)
 - [构建系统（批量处理）](#构建系统-（批量处理）)
-	- [文件格式](#文件格式)
-	- [构建系统存放位置](#构建系统存放位置)
-	- [运行构建系统](#运行构建系统)
+  - [文件格式](#文件格式)
+  - [构建系统存放位置](#构建系统存放位置)
+  - [运行构建系统](#运行构建系统)
 - [文件导航和文件管理](#文件导航和文件管理)
-	- [跳转到任何位置](#跳转到任何位置)
-	- [侧边栏](#侧边栏)
-	- [项目](#项目)
-	- [侧边栏和项目的其它设置](#侧边栏和项目的其它设置)
-	- [工作空间](#工作空间)
-	- [面板](#面板)
+  - [跳转到任何位置](#跳转到任何位置)
+  - [侧边栏](#侧边栏)
+  - [项目](#项目)
+  - [侧边栏和项目的其它设置](#侧边栏和项目的其它设置)
+  - [工作空间](#工作空间)
+  - [面板](#面板)
 - [定制化](#定制化)
-	- [设置](#设置)
-	- [缩进](#缩进)
-	- [按键绑定](#按键绑定)
-	- [菜单](#菜单)
-	- [色彩主题](#色彩主题)
+  - [设置](#设置)
+  - [缩进](#缩进)
+  - [按键绑定](#按键绑定)
+  - [菜单](#菜单)
+  - [色彩主题](#色彩主题)
 - [扩展性和自动化](#扩展性和自动化)
-	- [命令](#命令)
-	- [宏](#宏)
-	- [Snippets](#snippets)
-	- [补全](#补全)
-	- [命令面板](#命令面板)
-	- [语法定义](#语法定义)
-	- [插件](#插件)
-	- [包](#包)
+  - [命令](#命令)
+  - [宏](#宏)
+  - [Snippets](#snippets)
+  - [补全](#补全)
+  - [命令面板](#命令面板)
+  - [语法定义](#语法定义)
+  - [插件](#插件)
+  - [包](#包)
 - [命令行](#命令行)
 - [参考](#参考)
-	- [语法定义](#语法定义)
-	- [配色方案](#配色方案)
-	- [构建系统](#构建系统)
-	- [按键绑定](#按键绑定)
-	- [设置](#设置)
-	- [符号](#符号)
-	- [注释](#注释)
-	- [补全文件](#补全文件)
-	- [Metadata文件](#metadata文件)
-	- [命令面板](#命令面板)
-	- [插件](#插件)
-	- [Python API](#python-api)
-	- [命令](#命令)
-	- [Windows键盘快捷键](#windows键盘快捷键)
-	- [OSX键盘快捷键](#osx键盘快捷键)
+  - [语法定义](#语法定义)
+  - [配色方案](#配色方案)
+  - [构建系统](#构建系统)
+  - [按键绑定](#按键绑定)
+  - [设置](#设置)
+  - [符号](#符号)
+  - [注释](#注释)
+  - [补全文件](#补全文件)
+  - [Metadata文件](#metadata文件)
+  - [命令面板](#命令面板)
+  - [插件](#插件)
+  - [Python API](#python-api)
+  - [命令](#命令)
+  - [Windows键盘快捷键](#windows键盘快捷键)
+  - [OSX键盘快捷键](#osx键盘快捷键)
 - [词汇表](#词汇表)
 
 ##关于文档
@@ -122,7 +122,7 @@ Sublime Text在Windows上有普通和便捷两个版本。除非你知道你是�
 ####如何安装便捷版本的Sublime Text？
 1. 下载压缩文件
 2. 解压到一个文件夹
-文件夹中可以看到一个可执行的*sublime_text.exe*文件。
+   文件夹中可以看到一个可执行的*sublime_text.exe*文件。
 
 
 ###OS X
@@ -131,7 +131,7 @@ Sublime Text在Windows上有普通和便捷两个版本。除非你知道你是�
 3. 把Sublime Text拖动到*应用程序*文件夹中
 
 使用下面的命令创建一个快捷方式。
-   
+
 ```
 ln -s  "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
 ```
@@ -351,30 +351,30 @@ Sublime Text有非常多的编辑功能，这里只能介绍一点皮毛。
 ####使用鼠标
 Windows
 
-| 选择块  | 右击+`⇧`   |
-|---|---|
-| 添加到选择     | `Ctrl`+右击+`⇧` |
-| 从选择中移除   | `Alt`+右击+`⇧`  |
+| 选择块    | 右击+`⇧`        |
+| ------ | ------------- |
+| 添加到选择  | `Ctrl`+右击+`⇧` |
+| 从选择中移除 | `Alt`+右击+`⇧`  |
 
 Linux
 
-| 选择块  | 右击+`⇧`   |
-|---|---|
-| 添加到选择     | `Ctrl`+右击+`⇧` |
-| 从选择中移除   | `Alt`+右击+`⇧`  |
+| 选择块    | 右击+`⇧`        |
+| ------ | ------------- |
+| 添加到选择  | `Ctrl`+右击+`⇧` |
+| 从选择中移除 | `Alt`+右击+`⇧`  |
 
 OSX
 
-| 选择块  | 右击+`⌥`   |
-|---|---|
-| 添加到选择     | `⌘`+右击+`⇧` |
-| 从选择中移除   | `⌘`+`⇧`+右击+`⇧`  |
+| 选择块    | 右击+`⌥`         |
+| ------ | -------------- |
+| 添加到选择  | `⌘`+右击+`⇧`     |
+| 从选择中移除 | `⌘`+`⇧`+右击+`⇧` |
 
 ####使用键盘
 | Windows | Ctrl + Alt + Up/Down |
-|--------:|----------------------|
-| Linux   | Alt + `⇧` + Up/Down  |
-| OS X    | `⌃` + `⇧` + Up/Down  |
+| ------: | -------------------- |
+|   Linux | Alt + `⇧` + Up/Down  |
+|    OS X | `⌃` + `⇧` + Up/Down  |
 
 ###选择文本的其它方式
 所有的选项都可以在**Selection**菜单处找到，列出一部分：
@@ -405,35 +405,35 @@ Sublime Text提供两种主要搜索方式：
 键盘快捷键与搜索面板对应关系：
 
 | 打开搜索面板 | Ctrl + F      |
-|--------------|---------------|
-| 正则表达式   | Alt + R       |
-| 大小写匹配   | Alt + C       |
-| 精确匹配     | Alt + W       |
-| 下一个       | Enter         |
-| 上一个       | Shift + Enter |
-| 所有         | Alt + Enter   |
+| ------ | ------------- |
+| 正则表达式  | Alt + R       |
+| 大小写匹配  | Alt + C       |
+| 精确匹配   | Alt + W       |
+| 下一个    | Enter         |
+| 上一个    | Shift + Enter |
+| 所有     | Alt + Enter   |
 
 ####增量搜索
 键盘快捷键与增量搜索面板对应关系：
 
 | 打开增量搜索面板 | Ctrl + I      |
-|--------------|---------------|
-| 正则表达式   | Alt + R       |
-| 大小写匹配   | Alt + C       |
+| -------- | ------------- |
+| 正则表达式    | Alt + R       |
+| 大小写匹配    | Alt + C       |
 | 精确匹配     | Alt + W       |
-| 下一个       | Enter         |
-| 上一个       | Shift + Enter |
-| 所有         | Alt + Enter   |
+| 下一个      | Enter         |
+| 上一个      | Shift + Enter |
+| 所有       | Alt + Enter   |
 
 增量搜索面板和普通搜索面板的唯一区别就在于`Enter`键的行为不同，增量搜索中，按下`Enter`键后会选中下一个匹配项并直接关闭搜索面板，到底用哪一种搜索形式见仁见智。
 
 ####替换文本
 键盘快捷键与替换面板对应关系：
 
-| 打开替换面板 | Ctrl + H      |
-|--------------|---------------|
-| 下一个     | Ctrl + Shift + H   |
-| 所有       | Ctrl + Alt + Enter |
+| 打开替换面板 | Ctrl + H           |
+| ------ | ------------------ |
+| 下一个    | Ctrl + Shift + H   |
+| 所有     | Ctrl + Alt + Enter |
 
 ####小技巧
 #####其它搜索方式
@@ -442,15 +442,15 @@ Sublime Text提供两种主要搜索方式：
 #####其它和搜索有关的按键
 下面这些按键只有在搜索面板隐藏时才有用
 
-| 向前搜索最近匹配的搜索项 | F3    |
-|--------------|---------------|
+| 向前搜索最近匹配的搜索项 | F3         |
+| ------------ | ---------- |
 | 向后搜索最近匹配的搜索项 | Shift + F3 |
-| 选择所有匹配项 | Alt + F3 |
+| 选择所有匹配项      | Alt + F3   |
 
 你还可以基于当前的选择进行搜索
 
-| 搜索当前选中内容 | Ctrl + E |
-|--------------|---------------|
+| 搜索当前选中内容 | Ctrl + E         |
+| -------- | ---------------- |
 | 替换当前选中内容 | Ctrl + Shift + E |
 
 #####多行搜索
@@ -465,11 +465,11 @@ Sublime Text提供两种主要搜索方式：
 键盘快捷键与搜索文件对应关系：
 
 | 打开搜索面板 | Ctrl + Shift + F |
-|--------------|---------------|
-| 正则表达式   | Alt + R       |
-| 大小写匹配   | Alt + C       |
-| 精确匹配     | Alt + W       |
-| 下一个       | Enter         |
+| ------ | ---------------- |
+| 正则表达式  | Alt + R          |
+| 大小写匹配  | Alt + C          |
+| 精确匹配   | Alt + W          |
+| 下一个    | Enter            |
 
 ####搜索作用域
 **where**限制了搜索的范围，你可以通过下面的一些方法来定义范围：
@@ -493,9 +493,9 @@ Sublime Text提供两种主要搜索方式：
 ####导航结果
 如果搜索到匹配项，可以用下面的按键来切换搜索结果。
 
-| 下一个 | F4 |
-|--------------|---------------|
-| 上一个 | Shift + F4  |
+| 下一个  | F4         |
+| ---- | ---------- |
+| 上一个  | Shift + F4 |
 
 
 ###正则表达式
@@ -507,6 +507,7 @@ Sublime Text提供两种主要搜索方式：
 
 ##构建系统（批量处理）
 > [构建系统的参考](#构建系统)，这里包含了可选参数、变量等的完整参考文档。
+
 
 > 注意：构建系统目前正处于开发版本重做状态，以下的信息可能过时。
 > 到[论坛](http://www.sublimetext.com/forum/viewtopic.php?f=2&t=17471&sid=81fd17a6c886e151a3f69c0eaa87272d)查看更多信息。
@@ -533,11 +534,11 @@ Sublime Text提供两种主要搜索方式：
 必须，这里包含了真正需要执行的命令：
 
 	python -u /path/to/current/file.ext
-	
+​	
 **file_regex**
 
 一个Perl风格的正则表达式捕获从外部程序的输出的错误信息。
-  
+
 **selector**
 
 如果设置了** Tools | Build System | Automatic** ，Sublime Text会通过匹配的`selector`自动为当前文件找到编译系统。
@@ -559,11 +560,11 @@ Sublime Text提供两种主要搜索方式：
 
 键盘快捷键对应关系：
 
-| 打开功能 |Ctrl + P |
-| ------------ | ------------- |
-| 选择当前项并关闭Go Anything | Enter  |
-| 选择当前项 | →  |
-| 关闭Go Anything | Esc |
+| 打开功能                | Ctrl + P |
+| ------------------- | -------- |
+| 选择当前项并关闭Go Anything | Enter    |
+| 选择当前项               | →        |
+| 关闭Go Anything       | Esc      |
 
 当你在Go Anything输入框中输入文字时，Sublime Text就会在当前项目中进行搜索，最匹配的结果会有一个预览。这个预览只是*短暂*的，除非你对这个预览文件进行了一些操作。其它情况你也会获取一个短暂的预览视图，比如点击了左侧文件。
 
@@ -591,10 +592,10 @@ models:100
 
 键盘快捷键对应关系：
 
-| @ |Ctrl + R |
-| ------------ | ------------- |
-| # | Ctrl + ;  |
-| : | Ctrl + G |
+| @    | Ctrl + R |
+| ---- | -------- |
+| #    | Ctrl + ; |
+| :    | Ctrl + G |
 
 
 ###侧边栏
@@ -602,11 +603,11 @@ models:100
 
 键盘快捷键对应关系：
 
-| 切换侧边栏 |Ctrl + K, Ctrl + B |
-| ------------ | ------------- |
-| 聚焦侧边栏 | Ctrl + 0 |
-| 导航侧边栏 | 箭头 |
-| 退出聚焦侧边栏，重新聚焦视图 | Esc |
+| 切换侧边栏          | Ctrl + K, Ctrl + B |
+| -------------- | ------------------ |
+| 聚焦侧边栏          | Ctrl + 0           |
+| 导航侧边栏          | 箭头                 |
+| 退出聚焦侧边栏，重新聚焦视图 | Esc                |
 
 ###项目
 项目组会让你的工作更有组织，总是会有一个激活项目存在，如果没有的话，Sublime Text会默认创建一个隐士的项目。
@@ -702,8 +703,8 @@ models:100
 
 键盘快捷键对应关系：
 
-| 打开新面板 | Ctrl+K, Ctrl+↑ |
-| ------------ | ------------- |
+| 打开新面板  | Ctrl+K, Ctrl+↑ |
+| ------ | -------------- |
 | 关闭当前面板 | Ctrl+K, Ctrl+↓ |
 
 更多面板管理看菜单栏**View → Layout**。
@@ -851,14 +852,391 @@ Sublime Text默认的Python高亮配色主题：
 [返回目录](#目录)
 
 ##扩展性和自动化
-###命令
+下面的章节展示了Sublime Text各种各样被扩展的附加功能。
+
+###指令
+Sublime Text中指令是无处不在的：按键绑定、菜单项、宏等都可以通过指令来工作。
+有些指令是在Sublime Text编辑器的核心实现的，但是他们当中的很多都是作为Python插件，每一个指令都可以由一个通过Python插件来调用。
+
+####指令调度
+通常情况，指令是被绑定到应用程序对象、一个窗口对象或是一个视图对象中。但是，窗口对象会根据输入的焦点来调度指令，所以你可以从一个窗口对象发送一个视图指令，它会为你找到正确的视图实例。
+
+####指令解析
+指令都是以`_`分隔的名称，如：`hot_key`，它可以跟一个字典参数（key是string类型，value是JSON类型）。下面是几个从Python控制台运行的指令：
+```
+view.run_command("goto_line", {"line": 10})
+view.run_command('insert_snippet', {"contents": "<$SELECTION>"})
+view.window().run_command("prompt_select_project")
+```
+> [指令](#指令)参考。
+
 ###宏
+宏是包含一个指令队列的自动化工具，可以用它来完成一些重复性工作。
+
+宏文件是以`.sublime-macro`为扩展名的JSON文件，Sublime Text自带了几个提供核心功能的宏命令，如行和词的删除。你可以在**工具 | Macros**或是`Packages/Default`中找到它们。
+
+####如何录制宏
+按下`Ctrl+q`，然后依次执行所需的命令。当操作完成时，再次按下`Ctrl+q`结束宏的录制。新创建的宏不会保存成一个文件，只会保留在宏缓冲区中。现在你可以通过按下`Ctrl+Shift+q`来运行这个宏，或者执行**工具 | 保存宏**把它保存到一个文件中。
+
+注意：宏缓冲区只会保留最新记录的宏，宏只会记录发送到缓冲区的命令：窗口级别的指令将会被忽视，如创建文件。
+
+####如何编辑宏
+录制宏的另外一个选择就是手动编辑它，在`Packages/User`下创建一个以`.sublime-macro`为扩展名的文件，这个文件中写入操作指令。宏文件格式如下：
+```
+[
+    {"command": "move_to", "args": {"to": "hardeol"}},
+    {"command": "insert", "args": {"characters": "\n"}}
+]
+```
+手动编辑宏时，需要对引号、空格和反斜杠前添加`\`进行转义。
+
+####宏存储到位置
+宏文件可以被存到任意包文件夹下，可以在**工具 | 宏 | <PackageName>**处看到。
+
+####宏的按键绑定
+可以通过组合键的形式运行宏，把宏文件的路径替换下面的`run_macro_file`。
+```
+{"keys": ["super+alt+l"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Example.sublime-macro"}}
+```
+
 ###Snippets
+我们在编写代码的时候，总会遇到一些需要反复使用的代码片段。这时候就需要反复的复制和黏贴，大大影响效率。用snippet功能可以使自己免于这种繁琐的操作。片段是能为你加入一些文字并使他们适应上下文的只能模板。
+
+####文件格式
+以*.sublime-snippet*为后缀的XML文件，例如，你可以把一个`greeting.sublime-snippet`放到一个`Email`的包里。
+
+一个典型的snippet如下所示：
+```
+<snippet>
+    <content><![CDATA[Type your snippet here]]></content>
+    <!-- Optional: Tab trigger to activate the snippet -->
+    <tabTrigger>xyzzy</tabTrigger>
+    <!-- Optional: Scope the tab trigger will be active in -->
+    <scope>source.python</scope>
+    <!-- Optional: Description to show in the menu -->
+    <description>My Fancy Snippet</description>
+</snippet>
+```
+`snippet`元素包含了Sublime Text所需的一切信息从而判断应该插入什么内容、什么时候插入、是否需要插入。我们依次来看看这些组成部分。
+
+**`content`**
+真正的片段内容，片段可以是很简单的，也可以是非常复杂的。稍后会有各种示例。
+如果你要写自己的代码片段，请牢记下面的内容：
+- `$`，你必须通过`\$`的形式。
+- 始终用Tab来表示缩进，当代码片段被插入后，如果`translateTabsToSpaces`被设置为`true`，Tab键会被转化成空格符。
+- `content`必须包含在`<![CDATA[…]]>`块中，否则代码片段是无法生效的。
+- 代码片段的内容不能包含`]]>`，否则会提前结束`<![CDATA[…]]>`，抛出一个XML的错误信息。你可以通过插入一个未定义的变量来避免这类问题，如：`]]$NOT_DEFINED>`。Sublime Text在插入代码段到文件之前会把`$NOT_DEFINED`替换成一个空字符串。
+
+**`tabTrigger`**
+定义必须被按下以插入此片断的键的顺序。输入此序列后按下Tab键，代码片段将会立即插入。
+Tab键是一个隐士的按键绑定。
+
+**`scope`**
+Scope决定代码片段被激活的上下文，参考[作用域](####作用域)获得更多内容。
+
+**`description`**
+当在Snippets菜单显示snippet时会用到，如果不存在，Sublime Text将会默认线回收代码段的文件名。
+
+有了这些信息后，你就可以参照下节的描述写自己的代码段了。
+
+####Snippet特征
+#####环境变量
+代码片段可以访问环境形式的上下文信息，下面列出的变量的值由Sublime Text自动设置。
+
+你可以添加自己的变量来增加额外的信息，这些额外的变量是在`.sublime-options`文件中定义的。
+
+| **$PARAM1 .. $PARAMn** | 传递给`insert_snippet`命令的参数                 |
+| ---------------------- | ---------------------------------------- |
+| **$SELECTION**         | 代码段被触发时所选中的文本                            |
+| **$TM_CURRENT_LINE**   | 代码段被触发时鼠标所在行                             |
+| **$TM_CURRENT_WORD**   | 代码段被触发时鼠标所在位置的单词                         |
+| **$TM_FILENAME**       | 被编辑的文件的名称，包括扩展名                          |
+| **$TM_FILEPATH**       | 被编辑的文件的路径                                |
+| **$TM_FULLNAME**       | 用户的用户名                                   |
+| **$TM_LINE_INDEX**     | 代码段被插入的列，从0开始                            |
+| **$TM_LINE_NUMBER**    | 代码段被插入的行，从1开始                            |
+| **$TM_SELECTED_TEXT**  | **$SELECTION**的别名                        |
+| **$TM_SOFT_TABS**      | `translate_tabs_to_spaces`值为true时是true，否则为false |
+| **$TM_TAB_SIZE**       | 每个Tab表示的空格数（由`tab_size`选项控制）             |
+
+看一个简单的例子：
+
+```
+
+=================================
+​USER NAME:          $TM_FULLNAME
+​FILE NAME:          $TM_FILENAME
+​TAB SIZE:          $TM_TAB_SIZE
+SOFT TABS:          $TM_SOFT_TABS
+=================================
+
+# Output:
+=============================
+USER NAME:          guillermo
+FILE NAME:          test.txt
+ TAB SIZE:          4
+SOFT TABS:          YES
+=============================
+```
+
+
+#####字段
+在字段标记的帮助下，你可以通过按Tab键在代码段中的位置进行跳转。字段被插入后，将会引导你完成一个代码段的定制。
+
+```
+First Name: $1
+Second Name: $2
+Address: $3
+```
+
+上面的例子中，当你按一次`Tab`键光标将会调到`$1`处，再次按`Tab`键时会跳到`$2`处，依次类推。你可以按下`Shift+Tab`回到上一个位置，如果你按下了最多的`Tab`，光标将会被定位到代码段的最后面，从而恢复到正常的编辑状态。
+
+如果你想控制什么时候退出，使用`$0`标记，默认情况这是代码段的结尾。
+
+按下`Esc`键随时终止字段周期。
+
+#####镜像字段
+
+相同的字段标识互为镜像：当你编辑第一个时，其余的将会被实时填充为相同的值。
+
+```
+First Name: $1
+Second Name: $2
+Address: $3
+User name: $1
+```
+
+示例中，“User name”将会被填充为和“First Name”相同的值。
+
+#####Placeholder
+
+对字段的语法扩展一点点就可以给字段添加默认值了。
+
+```
+First Name: ${1:Guillermo}
+Second Name: ${2:López}
+Address: ${3:Main Street 1234}
+User name: $1
+```
+
+变量也可以被用来当做占位：
+
+```
+First Name: ${1:Guillermo}
+Second Name: ${2:López}
+Address: ${3:Main Street 1234}
+User name: ${4:$TM_FULLNAME}
+```
+
+也可以使用嵌套的占位：
+
+```
+Test: {1:Nested {2:Placeholder}}
+```
+
+#####置换
+
+除了占位语法外，制表符也可以通过置换指定更复杂的操作。
+
+置换的语法如下：
+
+- `${var_name/regex/format_string/}`
+
+- `${var_name/regex/format_string/options}`
+
+**var_name**
+
+**regex**
+
+  Perl风格的正则表达式：[Boost library documentation for regular expressions](http://www.boost.org/doc/libs/1_56_0/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html).
+
+**format_string**
+
+  [Boost library documentation for format strings](http://www.boost.org/doc/libs/1_56_0/libs/regex/doc/html/boost_regex/format/boost_format_syntax.html).
+
+**options**
+
+**可选的，可以是下列的任意一种**
+
+- **i**
+
+  不区分大小写。
+
+- **g**
+
+  全局替换。
+
+- **m**
+
+  允许多行匹配。
+
+例如，可以毫不费力的给文字添加下划线：
+
+```
+      Original: ${1:Hey, Joe!}
+Transformation: ${1/./=/g}
+
+# Output:
+
+      Original: Hey, Joe!
+Transformation: =========
+```
+
+下面这个更复杂点的例子把下划线连接的词转化成首字母大写以空格分隔的词，基本上，它是结合了两个独立的表达式并且替换成一个。这也说明在Tab切换停止前替换就会发生。
+
+```
+Transformation: ${1/^(\w)|(?:_(\w))/(?1\u$1:)(?2 \u$2:)/g}
+      Original: ${1:text_in_snail_case}
+
+# Output:
+
+Transformation: Text In Snail Case
+      Original: text_in_snail_case
+```
+
 ###补全
-###命令面板
+本着IDE的精神，Sublime Text通过捕获你所写的任何内容对汇总代码或内容进行提示，比如变量。
+
+然而有多种方式扩展补全列表（例如，根据当前的语法）。
+
+本文主题是如何使用补全？补全从何处来？
+####如何使用补全
+有两种方法使用补全功能，两种方式优先级一样，但是所产生的结果是不同的。
+
+补全内容可以用下列两种方式插入：
+
+-  通过补全列表（`Ctrl + Spacebar`），或
+-  按下 `Tab`键
+
+#####补全列表
+
+使用补全列表的方法：
+
+1. 按下`Ctrl + Spacebar`，或者随便输入点内容。
+2. 你也可以再次按下`Ctrl + Spacebar`或使用上下箭头来选择下一个条目。
+3. 按下`Enter`或`Tab`来验证选择（依赖于`auto_complete_commit_on_tab`的设置）。
+4. 可选，重复按下`Tab`键以插入下一个可用的补全。
+
+#####提示
+
+此外，在补全列表的右侧可以看到一个提示，这是补全后的一个预览。
+
+![](http://docs.sublimetext.info/en/latest/_images/completions_hint.png)
+
+实际上上图中的结果将会展开成`$arrayName = array('' => , );`的代码段。
+
+#####触发条件和内容
+
+来源于非当前文件中文字的补全将会提供一个不同于他们将要插入的内容的触发器，这通常用于函数的补全。
+
+例如：PHP中`array_map`的补全将会得到`array_map(callback, arr1)`的结果：
+
+![](http://docs.sublimetext.info/en/latest/_images/completions_contents.gif)
+
+图中可以看到鼠标自动选择了`callback`，这是因为补全提供了和代码段的字段和placeholder类似的功能。更多细节，请看[Snippet特征](####Snippet特征);
+
+##### 多行补全
+
+Sublime Text提供了同时进行多个补全的功能，但是每个光标当前位置及其前面的最后一个单词分隔符中的文本必须一致。
+
+正确示例（`|`代表光标）：
+
+```
+l|
+some text with l|
+l| and.l|
+```
+
+错误示例：
+
+```
+l|
+some text with la|
+l| andl|
+```
+
+选择的内容实际上都是被忽视的，仅仅和光标所在位置有关。因此，`e|[-some selection] example`（`|`表示光标，`[...]`表示所选文本）的补全结果是`example|[-some selection] example`。
+
+##### `Tab`-完成补全
+
+如果你想使用Tab键补全功能，必须把`tab_completion`设置为`true`（默认值），Snippet补全不受此设置影响：它们始终依据自己的tab触发器来完成补全。
+
+当`tab_completion`补全可用时，都是自动完成补全的。也就是说，和补全列表不一样，Sublime Text始终会帮你做一个决定。选择最佳补全规则如上所述，在有歧义的情况下，Sublime Text将会使用它认为最合适的条目。你可以多次按下`Tab`键在其余选项中来回切换。
+
+##### 插入一个Tab占位符
+
+当`tab_completion`功能开启时，如果想要插入一个Tab占位符，可以按下`Shift + Tab`。
+
+####补全及其优先级的相关资源
+
+这些都是用户可控的补全来源，按优先级排序：
+
+1. [Snippets](###Snippets)
+2. 通过[`on_query_completions()`](http://docs.sublimetext.info/en/latest/reference/api.html#sublime_plugin.EventListener.on_query_completions)的API-注入式补全
+3. [*补全文件*](http://docs.sublimetext.info/en/latest/reference/completions.html)
+4. 在缓冲区的词
+
+###指令面板
+####概述
+*命令面板*是一个以执行命令为目的的可交互式的列表。
+
+![](http://docs.sublimetext.info/en/latest/_images/command-palette-0001.png)
+
+默认情况下，命令面板包含了许多有用的命令，并且提供了非常方便的个人设置和设置文件。
+
+如何使用命令面板：
+
+1. 按下`Ctrl+Shift+P`
+2. 选择一个命令面板
+3. 按下`Enter`
+
+命令面板通过上下文过滤条目，这就是说无论何时打开文件，你不会永远都看到定义在`.sublime-commands`中的所有命令。
+
+#### 示例文件`.sublime-commands`
+
+这是从`Packages/Default/Default.sublime-commands`中的一段摘录：
+
+```
+[
+    { "caption": "Project: Save As", "command": "save_project_as" },
+    { "caption": "Project: Close", "command": "close_project" },
+    { "caption": "Project: Add Folder", "command": "prompt_add_folder" },
+
+    { "caption": "Preferences: Default File Settings", "command": "open_file", "args": {"file": "${packages}/Default/Base File.sublime-settings"} },
+    { "caption": "Preferences: User File Settings", "command": "open_file", "args": {"file": "${packages}/User/Base File.sublime-settings"} },
+    { "caption": "Preferences: Default Global Settings", "command": "open_file", "args": {"file": "${packages}/Default/Global.sublime-settings"} },
+    { "caption": "Preferences: User Global Settings", "command": "open_file", "args": {"file": "${packages}/User/Global.sublime-settings"} },
+    { "caption": "Preferences: Browse Packages", "command": "open_dir", "args": {"dir": "$packages"} }
+]
+```
+
+
+
 ###语法定义
+####先决条件
+####文件格式
+####作用域
+####语法定义是如何工作的
+####着手语法定义
+####分析模式
+
 ###插件
+####先决条件
+####插件存储位置
+####着手插件
+####分析你的插件
+####指令的类型
+####学习API
+
 ###包
+####概述
+####包的位置（和缩写）
+####包的内容
+####包的类型
+####管理包
+####定制化或改写包
+####合并与优先顺序
+####还原到Sublime Text默认配置
 [返回目录](#目录)
 
 ##命令行
@@ -877,7 +1255,7 @@ Sublime Text默认的Python高亮配色主题：
 ###命令面板
 ###插件
 ###Python API
-###命令
+###指令
 ###Windows键盘快捷键
 ###OSX键盘快捷键
 [返回目录](#目录)
