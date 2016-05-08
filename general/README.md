@@ -980,7 +980,7 @@ SOFT TABS:          YES
 ```
 
 
-#####字段
+#####字段（还是翻译成域？）
 在字段标记的帮助下，你可以通过按Tab键在代码段中的位置进行跳转。字段被插入后，将会引导你完成一个代码段的定制。
 
 ```
@@ -1210,21 +1210,436 @@ l| andl|
 ]
 ```
 
-
-
 ###语法定义
+语法定义使得Sublime Text可以感知变成语言和标记语言。最明显的是它可以通过颜色来进行语法高亮。
 ####先决条件
+学习本章节，你必须安装Sublime Text的一个包[PackageDev](https://github.com/SublimeText/PackageDev)，这个包可以方便的进行新语法定义的创建。
 ####文件格式
+Sublime Text使用[属性列表](http://en.wikipedia.org/wiki/Property_list)（Plist）文件来存储语法定义，然而，由于编辑XML文件是一个繁重的工作，我们将使用YAML代替，之后把它转成Plist格式。这就是上面提到的PackageDev包的用武之地。
+
+注意：如果在本节内容的操作发生什么错误的话，很可能是PackageDev或是YAML有问题，不要马上认为是你的操作造成的错误，这也许只是Sublime Text的一个bug。😄
+
+如果你习惯了XML，那么就手动编辑Plist文件，但是请一定注意有关于转义序列和XML标签等等时的不同需求。
 ####作用域
+作用域是Sublime Text中的核心概念，本质上讲，它是在缓冲区中有名字的文本区域。
+
+例如，当你触发一个代码片段，Sublime Text会检测绑定到代码段上的作用域并寻找插入符在文件中的位置。如果插入符当前的位置和代码段作用域匹配，则触发，否则无反应。
+
+作用域可嵌套，从而可以支持高粒度作用域。你可以像CSS选择器一样进行深层次的钻取。例如，由于作用域选择器的存在，在Python源码中的单引号字符串中可以有一个按键绑定被激活，其他语言中则不会。
+
+Sublime Text借鉴了TextMeat（Mac下的一款文本编辑器）中有关作用域的想法，TextMate的在线手册中包含很多有关作用域选择器的详细信息，这些内容对Sublime Text用户也是有很大帮助的。对于色彩的运用尤其明显。
+
+作用域和作用域选择器还是略有区别的：作用域是在语法定义中定义的名称，而作用域选择器的作用是在使用类似代码片段和按键绑定时触发作用域。创建一个新的语法定义的时候你关心的是作用域，当你想限制一个代码段到一定的作用域范围时，你考虑的是作用域选择器。
 ####语法定义是如何工作的
+语法定义是和作用域名称配对的正则表达式的数组。Sublime Text试图在一个缓冲区的文本中匹配这些模式，并为所有找到的附上相应作用域名称。这些正则表达式和作用域名称的配对被称为规则。
+
+规则是按以下顺序应用：
+
+1. 规则在一行中的第一个位置被匹配上
+2. 数组当中第一条规则
+
+每个规则都会占用被匹配的文字的区域，因此下一条规则尝试匹配时就会跳过这些已匹配上的（极少数情况例外）。
+
+单独文件中的语法定义可以被组合，并且也可以将它们递归地应用。
+
 ####着手语法定义
+我们通过一个示例的方式来给 Sublime Text 代码段创建一个语法定义。我们只写真正的代码段内容，不会列出所有的`.sublime-snippet`文件内容。
+
+注意：由于语法定义主要用于语法高亮，我们将使用短语来划分源文件中的作用域。但是请牢记颜色和语法定义还不是一回事儿，作用域除了语法高亮外还有很多用处。
+
+下面是我们想在一个代码片段中设计的元素：
+
+- 变量 （`$PARAM1`, `$USER_NAME`…）
+- 简单的field（`$0`, `$1`…）
+- 带有placeholder的复杂的field（`${1:Hello}`）
+- 嵌套的field`${1:Hello ${2:World}!}`)
+- 转移序列（`\\$`, `\\<`…）
+- 非法序列（`$`, `<`…）
+
+下面这些对于本例来说太复杂所以我们不想放进去：
+
+- 变量替换（`${1/Hello/Hi/g}`）
+
+##### 创建一个新的语法定义
+
+按以下步骤执行：
+
+- **Tools | Packages | Package Development | New Syntax Definition**
+- 把文件保存成`.YAML-tmLanguage`文件放到 `Packages/User` 文件夹下。
+
+现在你可以看到一个如下的文件：
+
+```
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Syntax Name
+scopeName: source.syntax_name
+fileTypes: []
+uuid: 0da65be4-5aac-4b6f-8071-1aadb970b8d9
+
+patterns:
+-
+...
+```
+
+分别解释key的含义：
+
+- `name`
+
+  Sublime Text将会展示在语法定义下拉列表中的名称，使用一个简短的带有描述性的名称。
+
+- `scopeName`
+
+  本语法定义最顶层的作用域，格式为`source.<lang_name>` 或`text.<lang_name>`。编程语言使用`source`，标记语言或其他使用`text`。
+
+- `fileTypes`
+
+  这是文件拓展名列表（不包含前面的点）。当打开这些扩展名文件时，将会自动激活语法定义。
+
+- `uuid`
+
+  语法定义的唯一识别码，每个新的语法定义都会有其uuid，尽管Sublime Text会忽略它，千万不要编辑uuid的值。
+
+- `patterns`
+
+  你的匹配模式的容器。
+
+对于我们的例子，用下面的信息填充模板：
+
+```
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Sublime Snippet (Raw)
+scopeName: source.ssraw
+fileTypes: [ssraw]
+uuid: 0da65be4-5aac-4b6f-8071-1aadb970b8d9
+
+patterns:
+-
+...
+```
+
+注意：YAML并不是一个严格的格式，然而不了解它的约定仍然会使你感到头痛。YAML支持单引号和双引号，但是如果你在其中没有创建其他的YAML字面量时就可以忽略引号。如果这些约定对于Plist失败的话，在输出面板查看一下有关出错的信息。稍后我们将解释如何把YAML中的语法定义转成Plist，这也会出现在模板中的第一行注释中。
+
+`---` 和 `...` 是可选的。
+
 ####分析模式
 
+`patterns`可以包含多种类型的元素，接下来的章节中我们会了解其中的一部分，如果你想了解更多，去查看Textmate的在线手册。
+
+##### 匹配项
+
+匹配项的形式：
+
+```
+match: (?i:m)y \s+[Rr]egex
+name: string.format
+comment: This comment is optional.
+```
+
+- `match`
+
+  Sublime Text寻找匹配的正则表达式。
+
+- `name`
+
+  任何`match`被匹配到时的作用域名称。
+
+- `comment`
+
+  可选的注释。
+
+回到例子中，现在是这样的：
+
+```
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Sublime Snippet (Raw)
+scopeName: source.ssraw
+fileTypes: [ssraw]
+uuid: 0da65be4-5aac-4b6f-8071-1aadb970b8d9
+
+patterns:
+-
+...
+```
+
+确保`patterns`是空的。
+
+现在开始添加代码段的规则，先从简单的正则开始：
+
+```
+\$[0-9]+
+# or...
+\$\d+
+```
+
+我们可以建立如下的模式：
+
+```
+name: keyword.other.ssraw
+match: \$\d+
+comment: Tab stops like $1, $2...
+```
+
+也可以把它加到语法定义中：
+
+```
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Sublime Snippet (Raw)
+scopeName: source.ssraw
+fileTypes: [ssraw]
+uuid: 0da65be4-5aac-4b6f-8071-1aadb970b8d9
+
+patterns:
+- comment: Tab stops like $1, $2...
+  name: keyword.other.ssraw
+  match: \$\d+
+...
+```
+
+注意：对于YAML和上述例子中推荐用2个空格作为缩进。
+
+现在，我们准备把文件转化成`.tmLanguage`。处于兼容性考虑，语法定义使用了Textmeta的`.tmLanguage`作为扩展名。上面已经解释过，它是Plist XML文件。
+
+请按照下列步骤来执行转换：
+
+- 确保 **Tools | Build System**中的`Automatic`是勾选状态，或者选择`Convert to …`
+- 按下`F7`
+- 将会在在相同的文件夹中生成一个新的`.tmLanguage` 文件
+- Sublime Text将会刷新这些改动
+
+如果你想知道为什么PackageDev知道你将要把文件转化成什么：请看第一行注释。
+
+现在你已经创建了一个语法定义，下一步，创建一个`.ssraw`文件，语法名将会自动切换成“Sublime Snippet (Raw)”，如果你输入`$1`或是其他代码段字段就可以看到代码高亮效果了。
+
+让我们继续创建环境变量的其他规则。
+
+```
+comment: Variables like $PARAM1, $TM_SELECTION...
+name: keyword.other.ssraw
+match: \$[A-Za-z][A-Za-z0-9_]+
+```
+
+重复以上步骤来更新`.tmLanguage`文件。
+
+##### Fine Tuning Matches
+
+你可能已经注意到了，`$PARAM1`中的所有文本有着相同的样式。你个人可能更倾向于让$变得明显，这就是`captures`存在的意义，使用`captures`，你就可以单独对它细分出一个匹配模式。
+
+我们用`captures`来修改一下上面的文件内容：
+
+```
+comment: Variables like $PARAM1, $TM_SELECTION...
+name: keyword.other.ssraw
+match: \$([A-Za-z][A-Za-z0-9_]+)
+captures:
+  '1': {name: constant.numeric.ssraw}
+```
+
+capture给你的规则带来了复杂性，但是它又是很简单的。需要注意数字是如何引用从左到右的带括号的分组。当然，捕获组你想写多少写多少。
+
+注意：多亏了PackageDev，在新的一行中输入`1`按下tab键就会自动填充`'1': {name: }`。
+
+注：和正则表达式于置换一样，捕获中的`0`应用于整个匹配。
+
+##### 开始-结束规则
+
+现在，我们已经在使用一个简单的规则了。尽管我们已经见识过如何把规则模式分解成一个个小组件，但有时候你仍然想对那些源码中由明显的开始和结束标记分隔的大部分代码去应用规则。
+
+用引号或其他划定结构的封闭文本字符串可以更好地处理开始-结束规则。
+
+下面是这样的规则的一个框架：
+
+```
+name:
+begin:
+end:
+```
+
+下面是一个包含所有可选项的效果：
+
+```
+name:
+contentName:
+begin:
+beginCaptures:
+  '0': {name: }
+  # ...
+end:
+endCaptures:
+  '0': {name: }
+  # ...
+patterns:
+- name:
+  match:
+# ...
+```
+
+有些元素看起来很眼熟，但是它们组合起来就会让人望而生畏。我们来一个个看：
+
+- `name`
+
+  可选。整个匹配的作用域名称。实际上，这会给规则总定义的`beginCaptures`，`endCaptures`和`patterns`创建嵌套作用域。
+
+- `contentName`
+
+  可选，和`name`不同，`contentName`只会给闭合的文本添加一个作用域。
+
+- `begin`
+
+  正则表达式，作用域开始的标识。
+
+- `end`
+
+  正则表达式，作用域结束的标识。
+
+- `beginCaptures`
+
+  可选，`begin`标识的捕获，和简单匹配的捕获类似使用方法。
+
+- `endCaptures`
+
+  可选，`end`标识的捕获。
+
+- `patterns`
+
+  可选，**仅仅**匹配始末的内容的一个匹配模式的数组，不匹配`begin`和`end`本身的文本。
+
+段中定义复杂的领域：
+
+```
+name: variable.complex.ssraw
+contentName: string.other.ssraw
+begin: '(\$)(\{)([0-9]+):'
+beginCaptures:
+  '1': {name: keyword.other.ssraw}
+  '3': {name: constant.numeric.ssraw}
+end: \}
+patterns:
+- include: $self
+- name: support.other.ssraw
+  match: .
+```
+
+这将是本教程中最复杂的模式，`begin`和`end`就不必解释了：他们定义了一个从`${<NUMBER>:` 到`}`之间的区域。`begin`的值必须用引号包起来，否则解析器发现有`:`，又会识别成另外一个key。`beginCaptures`把开始标记分割成更小的作用域。
+
+最有意思的部分显然是`partterns`。
+
+上面已经看到了作用域是可嵌套的，为了解决这个问题，我们需要已递归风格进行作用域的嵌套。这就是它的价值：它对我们的开始-结束规则捕获的所有文字递归地应用整个语法定义。
+
+注意：我们使用`contentName: string.other.ssraw`代替上次的匹配模式，这种方式我们也提到过排序的重要性和已匹配上的将不会再次进行匹配等内容。
+
+##### 最后的完善
+
+最后，来设置转义序列和非法序列的样式，然后就可以收工了。
+
+```
+- comment: Sequences like \$, \> and \<
+  name: constant.character.escape.ssraw
+  match: \\[$<>]
+
+- comment: Unescaped and unmatched magic characters
+  name: invalid.illegal.ssraw
+  match: '[$<>]'
+```
+
+唯一的难点是`[]`是在YAML中括起来的数组，需要放到引号中。除此之外，如果你熟悉正则表达式的话这些规则将会非常简单。
+
+然而，在其他匹配到`$` 字符的规则后面，你必须非常小心地放置第二条规则，否则，由于前面被匹配到了导致后面的表达式都不会被匹配。
+
+此外，即使添加了这两条额外规则，也要注意，上面我们的递归的开始-结束规则也会按预期继续工作。
+
+这是最终的语法定义：
+
+```
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Sublime Snippet (Raw)
+scopeName: source.ssraw
+fileTypes: [ssraw]
+uuid: 0da65be4-5aac-4b6f-8071-1aadb970b8d9
+
+patterns:
+- comment: Tab stops like $1, $2...
+  name: keyword.other.ssraw
+  match: \$(\d+)
+  captures:
+    '1': {name: constant.numeric.ssraw}
+
+- comment: Variables like $PARAM1, $TM_SELECTION...
+  name: keyword.other.ssraw
+  match: \$([A-Za-z][A-Za-z0-9_]+)
+  captures:
+    '1': {name: constant.numeric.ssraw}
+
+- name: variable.complex.ssraw
+  begin: '(\$)(\{)([0-9]+):'
+  beginCaptures:
+    '1': {name: keyword.other.ssraw}
+    '3': {name: constant.numeric.ssraw}
+  end: \}
+  patterns:
+  - include: $self
+  - name: support.other.ssraw
+    match: .
+
+- comment: Sequences like \$, \> and \<
+  name: constant.character.escape.ssraw
+  match: \\[$<>]
+
+- comment: Unescaped and unmatched magic characters
+  name: invalid.illegal.ssraw
+  match: '[$<>]'
+...
+```
+
+还有更多的使用“repository”进行结构和代码的重用的技术，但上述的解释只是让你着手于语法定义。
+
+注意：由于PackageDev是向后兼容的，所以如果你以前使用JSON语法定义，现在仍然可以做到这一点。
+
 ###插件
+本部分适用于有编程能力的用户。
+
+Sublime Text可以通过Python插件进行扩展，插件通过重用现有命令或创建新命令来构建功能。插件是逻辑实体而非物理实体。
 ####先决条件
+你必须掌握Python编程才能进行插件的开发。
 ####插件存储位置
-####着手插件
+Sublime Text只会在下列位置寻找插件：
+
+- `Installed Packages` (只有 *.sublime-package*文件)
+- `Packages`
+- `Packages/<pkg_name>/`
+
+因此，任何嵌套在更深层次的包都不会被加载。
+
+不提倡直接把插件放到 `Packages` 下，Sublime Text在加载它们之前会以一个预先定义好的规则对其进行排序，所以如果直接放到 `Packages` 下可能会得到令你困惑的结果。
+####第一个插件
+给Sublime Text写一个“Hello, World!”插件：
+
+1. 在菜单栏中选择 **Tools | New Plugin…**。
+2. 保存为 `Packages/User/hello_world.py`.
+
+你已经写了你的第一个插件，
+1. 创建一个新的缓冲区（`Ctrl+n`）。
+2. 打开Python控制台（`Ctrl+``）。
+3. 输入 `view.run_command("example")` 然后按下回车。
+
+新的缓冲区（其实就是未保存的新文件）中将会看到“Hello, World!”。
 ####分析你的插件
+上面的插件看起来就是这样的：
+```
+import sublime, sublime_plugin
+
+class ExampleCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.insert(edit, 0, "Hello, World!")
+```
+
+Sublime Text提供了 `sublime`和 `sublime_plugin` 模块；它们不是Python的标准库。
+
+
 ####指令的类型
 ####学习API
 
