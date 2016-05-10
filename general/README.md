@@ -1870,6 +1870,8 @@ Sublime Text加载包的顺序如下：
 [返回目录](#目录)
 
 ##命令行
+请参看[OS X命令行](../miscellaneous/README.md#os-x命令行)
+
 [返回目录](#目录)
 
 ##参考
