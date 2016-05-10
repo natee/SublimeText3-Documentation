@@ -1,6 +1,6 @@
 #Sublime Text非官方文档
 ##目录
-- [关于文档](#通用)
+- [关于文档]（#通用)
   - [完善文档](#完善文档)
 - [安装](#安装)
   - [32位和64位](#32位和64位)
@@ -610,7 +610,7 @@ models:100
 | 退出聚焦侧边栏，重新聚焦视图 | Esc                |
 
 ###项目
-项目组会让你的工作更有组织，总是会有一个激活项目存在，如果没有的话，Sublime Text会默认创建一个隐士的项目。
+项目组会让你的工作更有组织，总是会有一个激活项目存在，如果没有的话，Sublime Text会默认创建一个隐式的项目。
 
 切换项目快捷键`Ctrl + Alt + P`。
 
@@ -929,13 +929,13 @@ view.window().run_command("prompt_select_project")
 
 **`tabTrigger`**
 定义必须被按下以插入此片断的键的顺序。输入此序列后按下Tab键，代码片段将会立即插入。
-Tab键是一个隐士的按键绑定。
+Tab键是一个隐式的按键绑定。
 
 **`scope`**
 Scope决定代码片段被激活的上下文，参考[作用域](####作用域)获得更多内容。
 
 **`description`**
-当在Snippets菜单显示snippet时会用到，如果不存在，Sublime Text将会默认线回收代码段的文件名。
+当在Snippets菜单显示snippet时会用到，如果不存在，Sublime Text将会默认显示代码段的文件名。
 
 有了这些信息后，你就可以参照下节的描述写自己的代码段了。
 
@@ -945,19 +945,19 @@ Scope决定代码片段被激活的上下文，参考[作用域](####作用域)�
 
 你可以添加自己的变量来增加额外的信息，这些额外的变量是在`.sublime-options`文件中定义的。
 
-| **$PARAM1 .. $PARAMn** | 传递给`insert_snippet`命令的参数                 |
-| ---------------------- | ---------------------------------------- |
-| **$SELECTION**         | 代码段被触发时所选中的文本                            |
-| **$TM_CURRENT_LINE**   | 代码段被触发时鼠标所在行                             |
-| **$TM_CURRENT_WORD**   | 代码段被触发时鼠标所在位置的单词                         |
-| **$TM_FILENAME**       | 被编辑的文件的名称，包括扩展名                          |
-| **$TM_FILEPATH**       | 被编辑的文件的路径                                |
-| **$TM_FULLNAME**       | 用户的用户名                                   |
-| **$TM_LINE_INDEX**     | 代码段被插入的列，从0开始                            |
-| **$TM_LINE_NUMBER**    | 代码段被插入的行，从1开始                            |
-| **$TM_SELECTED_TEXT**  | **$SELECTION**的别名                        |
-| **$TM_SOFT_TABS**      | `translate_tabs_to_spaces`值为true时是true，否则为false |
-| **$TM_TAB_SIZE**       | 每个Tab表示的空格数（由`tab_size`选项控制）             |
+| **PARAM1 .. PARAMn**  | 传递给`insert_snippet`命令的参数                 |
+| --------------------- | ---------------------------------------- |
+| **$SELECTION**        | 代码段被触发时所选中的文本                            |
+| **$TM_CURRENT_LINE**  | 代码段被触发时鼠标所在行                             |
+| **$TM_CURRENT_WORD**  | 代码段被触发时鼠标所在位置的单词                         |
+| **$TM_FILENAME**      | 被编辑的文件的名称，包括扩展名                          |
+| **$TM_FILEPATH**      | 被编辑的文件的路径                                |
+| **$TM_FULLNAME**      | 用户的用户名                                   |
+| **$TM_LINE_INDEX**    | 代码段被插入的列，从0开始                            |
+| **$TM_LINE_NUMBER**   | 代码段被插入的行，从1开始                            |
+| **$TM_SELECTED_TEXT** | **$SELECTION**的别名                        |
+| **$TM_SOFT_TABS**     | `translate_tabs_to_spaces`值为true时是true，否则为false |
+| **$TM_TAB_SIZE**      | 每个Tab表示的空格数（由`tab_size`选项控制）             |
 
 看一个简单的例子：
 
@@ -1073,12 +1073,12 @@ Test: {1:Nested {2:Placeholder}}
 例如，可以毫不费力的给文字添加下划线：
 
 ```
-      Original: ${1:Hey, Joe!}
+Original: ${1:Hey, Joe!}
 Transformation: ${1/./=/g}
 
 # Output:
 
-      Original: Hey, Joe!
+Original: Hey, Joe!
 Transformation: =========
 ```
 
@@ -1265,7 +1265,7 @@ Sublime Text借鉴了TextMeat（Mac下的一款文本编辑器）中有关作用
 按以下步骤执行：
 
 - **Tools | Packages | Package Development | New Syntax Definition**
-- 把文件保存成`.YAML-tmLanguage`文件放到 `Packages/User` 文件夹下。
+- 把文件保存成`.YAML-tmLanguage`文件放到 `Packages/User` 文件夹下。
 
 现在你可以看到一个如下的文件：
 
@@ -1639,19 +1639,234 @@ class ExampleCommand(sublime_plugin.TextCommand):
 
 Sublime Text提供了 `sublime`和 `sublime_plugin` 模块；它们不是Python的标准库。
 
+前面已经说过，插件创建或是重用*命令*，命令是Sublime Text的重要组成部分，它只是可以被Sublime Text中不同的方式如插件API、菜单文件、宏等等调用的Python类。
+
+Sublime Text命令是从定义在`sublime_plugin`中的 `*Command` 类派生出来的（后面会作介绍）。
+
+例子中余下部分的代码涉及到`TextCommand` 或是API的，在后面的章节再讲。
+
+在接着讲之前，我们来看看如何调用一个新的命令：首先打开Python控制台，然后下发一个命令调用`view.run_command()`。这种调用命令的方式相当的不方便，但是对于开发阶段开始很有用的。现在请记住，你的命令可以像其他命令一样通过快捷键或是其他方式呗调用。
+
+##### 命令名称的约定
+
+你也许已经注意到我们的命令命名为 `ExampleCommand`，但是我们却是通过传递字符串`example`给API进行调用。Sublime Text标准的命令命名方式就是把类名的`Command`后缀剥离，然后把 `PhrasesLikeThis` 这样的用下划线进行连接，就像：`phrases_like_this`。
+
+新的命令也应该遵循这种命名方式。
+
 
 ####指令的类型
+
+你可以创建下列类型的命令：
+
+- 窗口命令（`sublime_plugin.WindowCommand`）
+- 文本命令（`sublime_plugin.TextCommand`）
+
+
+根据你的目的选择合适的命令类型。
+
+##### 命令的共同点
+
+所有的命令都需要实现一个`.run()`函数才能正常运行，此外，它们可以接收任意多的关键字参数。
+
+注意：命令的参数必须是有效的JSON值。
+
+##### 窗口命令
+
+窗口命令是在窗口级别进行操作，这并不是说你不能从窗口命令处理视图，而是说你使用窗口命令时无需视图。如，正在开发的 `new_file` 是一个窗口命令，所以你不打开任何视图就可以调用这个命令。
+
+窗口命令实例中有`.window`属性指向创建它们的窗口实例。
+
+窗口命令的 `.run()` 函数不需要任何位置参数。
+
+##### 文本命令
+
+文本命令是在视图级别进行操作，所以调用时必须得有一个视图。
+
+文本命令实例中有`.view`属性指向创建它们的视图实例。
+
+文本命令的`.run()`函数需要一个`edit`实例作为其第一个参数。
+
+##### 文本命令和`edit`对象
+
+`edit`对象把视图的编辑尽心分组以便撤销和宏可以正常工作。
+
+注意：和老版本不同，Sublime Text3不允许对编辑对象进行编程控制。API是负责管理其生命周期的。插件的作者必须确保新的文本命令中的所有的编辑都在`.run()`中。要调用现有命令，你可以使用`view.run_command（<cmd_name>,<args>）`或类似的API调用。
+
+##### 事件的响应
+
+任何从`EventListener`派生的命令都能够对事件作出响应。
+
+##### 另一个插件实例：
+
+让我们创建一个从谷歌的自动填充服务获取数据的插件，然后将其送至Sublime Text补全列表。
+
+```
+import sublime, sublime_plugin
+
+from xml.etree import ElementTree as ET
+import urllib
+
+GOOGLE_AC = r"http://google.com/complete/search?output=toolbar&q=%s"
+
+class GoogleAutocomplete(sublime_plugin.EventListener):
+    def on_query_completions(self, view, prefix, locations):
+        elements = ET.parse(
+            urllib.request.urlopen(GOOGLE_AC % prefix)
+        ).getroot().findall("./CompleteSuggestion/suggestion")
+
+        sugs = [(x.attrib["data"],) * 2 for x in elements]
+
+        return sugs
+```
+
+注意：请确保学习后把这个示例插件删掉，否则它会影响到系统默认的自动补全。
+
 ####学习API
+
+想创建插件，你需要熟悉Sublime Text的API和命令，在写这个教程时有关这两个的文档还很少，但你可以通过现有代码来学习。
+
+Packages/Default包含很多无文档的命令和API调用的例子。如果你想看它的代码，必须先把其内容提取到一个文件夹中。作为练习，你可以创建一个构建系统来按需做那样的操作，才能够方便的查看项目的示例代码。
 
 ###包
 ####概述
+包是资源的容器。
 ####包的位置（和缩写）
+有三个位置存储包，每个地方都有不同的作用：
+
+- 包可以是 *`Data/Packages`* 下的**文件夹**（简写成`Packages`）
+- 位于 *`Data/Installed Packages`*（简写成*`Installed Packages`*）或其任意子目录下的以 `.sublime-package` 为后缀名的 **zip压缩包** 。
+- *`Application/Packages`*（简写成：*`Shipped Packages`*）下有一些默认的 **zip压缩包**，`Application`是Sublime Text可执行文件所在的目录。
+
+注：为了简洁，我们把以上所有的路径统称为Packages，任何文件夹下（不管是不是`.sublime-package`）的包称之为 *`Packages/PackageName`*。因此，包中的文件会被称为 `PackageName/a_file.extension`。
+
+##### `.sublime-package`包
+
+作为 `.sublime-package` 压缩文件应该是只读的，永远不能被手动修改。这是由于它通常是作为一个整体被更新的，任何手动修改的内容都将在更新过程丢失。
+
+如果你想修改它们，查看[定制化或覆盖包](####定制化或覆盖包)。
+
+##### 同名包的相互影响
+
+If two packages with the same name exist in both *`Installed Packages`* and *`Shipped Packages`*, the one in*`Installed Packages`* will be used and the one in *`Shipped Packages`* will be ignored.
+
+Any file in `*Packages*/*PackageName*` takes precedence over an identically named file in`*Installed Packages*/*PackageName*.sublime-package` or `*Shipped Packages*/*PackageName*.sublime-package`.
+
+参看[定制化或覆盖包](####定制化或覆盖包)。
+
 ####包的内容
+包中的典型资源有：
+
+- 构建系统（`.sublime-build`）
+- 颜色主题（`.tmTheme`）
+- key maps (`.sublime-keymap`)
+- 宏（`.sublime-macro`）
+- 菜单（`.sublime-menu`）
+- 元数据（`.tmPreferences`）
+
+
+- mouse maps (`.sublime-mousemap`)
+- 插件（`.py`）
+- 设置（`.sublime-settings`）
+- 代码段（`.sublime-snippet`）
+- 语法定义（`.tmLanguage`）
+- 主题`.sublime-theme`）
+
+一些包是用来支持其他包或核心功能的，如，英文字典拼写检查器使用` Installed Packages/Language - English.sublime-package `作为数据存储。
 ####包的类型
+本指南中，讨论这个主题时为了方便我们把包进行了分类，但是Sublime Text不适用这些术语，所以你不必了解它。
+
+**默认包**
+
+  Sublime Text自带的包，一些是核心包，其他的则是对Sublime Text进行增强的包。
+
+  例如：Default, Python, Java, C++, Markdown.
+
+  位于 *`Shipped Packages`*下。
+
+**核心包**
+
+  Sublime Text正常工作的必需包。
+
+  完整的清单：Default, Theme - Default, Color Scheme - Default, Text, Language - English。
+
+  这是自带包的一部分，位于位于 *`Shipped Packages`*下。
+
+**用户包**
+
+  用户安装的包，这通常是用户自己或是第三方开发的包。
+
+**已安装的包**
+
+  *用户包*的一个分支，是由包管理者进行维护的 `.sublime-package` 压缩文件。位于*`Installed Packages`*。
+
+  注：由于Sublime Text中这个文件夹的名称有点不合适，所以当我们说到*安装*包时可能会令人感到困惑。
+
+  在本指南中，有时候说*安装*是给Sublime Text添加一个第三方包，有时候是指复制一个`.sublime-package` 文件到`Installed Packages`下。
+
+**覆盖包**
+
+  *用户包*的一种特殊类型。它是对发布成`.sublime-package`文件尽心定制化后的包。位于 *`Packages`*下。
 ####管理包
-####定制化或改写包
+##### 安装包
+
+注：由于有自动包管理器，所以普通用户几乎不需要去了解如何手动安装包。
+
+ Sublime Text的包管理器是 [Package Control](https://packagecontrol.io/)。
+
+包的安装通常采用以下两种主要方式：
+
+- 复制Sublime Text资源到 *`Packages`*
+- 复制`.sublime-package`文件到*`Installed Packages`*。
+
+##### 禁用包
+
+把包名加入到`Packages/User/Preferences.sublime-settings`中的`ignored_packages`以临时禁用包。
+
+##### 启用包
+
+从`Packages/User/Preferences.sublime-settings`中的`ignored_packages`中删除要启用的包名即可。
+
+##### 删除包
+
+如果你是通过包管理器安装的，那么使用包管理器的默认卸载方法。
+
+如果你是手动安装的包，那么按一下步骤来安全删除一个包：
+
+1. Sublime Text打开时先禁用包。
+2. 关闭Sublime Text。
+3. 从硬盘中删除包的资源。
+4. 从 `ignored_packages` 中移除包名。
+
+除了最开始位于 *`Packages`*和*`Installed Packages`*中的资源，插件还会创建其他文件（例如`.sublime-settings`文件）来存储有关包的相关信息。 通常情况下，你可以在*User* package下找到这些文件。因此，如果你想彻底卸载包，还需要找到这些额外的文件一并删除。
+
+⚠️Sublime Text更新时会把所有自带的包复原，所以自带包是无法彻底删除的，如果你想停止使用自带包，直接禁用就行。
+
+####定制化或覆盖包
+ `.sublime-package` 是只读的，所以你无法直接编辑它。但是，Sublime Text允许你创建覆盖包，这无需修改原始存档就可以有效注入到原始存档中。
+
+创建覆盖包：在*`Packages`*下创建一个新的文件夹，以你要修改的`.sublime-package` 文件的名称命名，不带后缀。在此包中创建的任何文件，将优先于原包中的同名文件。
+
+⚠️覆盖包中的文件是全部替换原始文件，所以相应的`.sublime-package`中的文件更新是你可能注意不到。
 ####合并与优先顺序
-####还原到Sublime Text默认配置
+包的优先级对于合并某些资源来说非常重要。
+
+如果存在一个 `.sublime-package` 的覆盖包，它将和`.sublime-package`同时加载。
+
+Sublime Text加载包的顺序如下：
+
+1. `Packages/Default`；
+2. 默认包，按字典顺序；
+3. 已安装的包，按字典顺序；
+4. 除 `Packages/User`外所有用户包，按字典顺序；
+5. `Packages/User`
+
+####还原Sublime Text为默认配置
+把Sublime Text恢复到初始状态可以解决Sublime Text的一些错误（然而这些错误通常是由于插件造成的）。
+
+把Sublime Text恢复到默认状态并删除所有的个人配置，删除packages目录并重启编辑器。`Installed Packages` 会被一并删除，所以你安装的插件都宣告拜拜了。
+
+在做这种操作之前务必备份数据。
+
 [返回目录](#目录)
 
 ##命令行
