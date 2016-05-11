@@ -2120,11 +2120,269 @@ match: "#"\w+""
 
 #### 存储位置
 
+你可以把配色方案文件放到Packages下的任何地方（甚至是深层次的嵌套）。
+
+约定配色方案都用 *Color Scheme*作为前缀，如：*Color Scheme - Default*。
+
+可选配色方案在菜单栏中的 **Preferences → Color Scheme**
+
 #### 文件结构
+
+配色方案文件是基于Property List格式的。所有配色方案最外层的结构都是一致的。
+
+颜色的写法支持： `#RRGGBB`， `#RGB`。
+
+大多数控制颜色的元素都支持alpha通道：`#RRGGBBAA`。
+
+##### 配色方案文件最外层元素
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   <key>name</key>
+   <string>Monokai</string>
+   <key>settings</key>
+   <array>
+   ... INSERT AWESOME COLORS HERE ...
+   </array>
+   <key>uuid</key>
+   <string>D8D5E82E-3D5B-46B5-B38E-8C841C21347D</string>
+</dict>
+</plist>
+```
+
+`name`
+
+可选，配色方案的名称，Sublime Text会忽视。
+
+`uuid`
+
+可选，唯一的标识符，Sublime Text会忽视。
+
+##### 设置的子元素
+
+Sublime Text支持以下几种配色方案的设置：
+
+- 全局设置
+
+  此处的设置会影响全局，在 `<array>`中的`<dict>`中设置。
+
+  ```
+  <array>
+     <dict>
+        <key>settings</key>
+        <dict>
+           <key>background</key>
+           <string>#272822</string>
+           <key>caret</key>
+           <string>#F8F8F0</string>
+           ...
+        </dict>
+     </dict>
+  ...
+  </array>
+  ```
+
+- 按类型排序的全局设置
+
+  - 普通
+
+    `foreground`
+
+    视图的前景色。
+
+    `background`
+
+    视图的背景色。
+
+    `invisibles`
+
+    忽略。
+
+    `caret`
+
+    插入符的颜色。
+
+    `lineHighlight`
+
+    插入符所在行的颜色，只有 `higlight_line` 设置成`true`才有效。
+
+  - 括号
+
+    `bracketContentsForeground`
+
+    插入符在括号中时，括号中文字的颜色。需要设置`match_brackets`为`true`。
+
+    `bracketContentsOptions`
+
+    当光标在括号时控制某些选项，需要设置`match_brackets`为`true`。
+
+    选项： `underline`，`stippled_underline`，`squiggly_underline`。*underline*表示文字应该用指定颜色绘制，而不仅仅是下划线。
+
+    `bracketsForeground`
+
+    插入符挨着括号时括号的颜色。需要设置`match_brackets`为`true`。
+
+    `bracketsOptions`
+
+    当光标挨着括号时控制某些选项，需要设置`match_brackets`为`true`。
+
+    选项： `underline`，`stippled_underline`，`squiggly_underline`。*underline*表示文字应该用指定颜色绘制，而不仅仅是下划线。
+
+  - 标签
+
+    `tagsForeground`
+
+    插入符挨着标签时标签的颜色。需要设置`match_tags`为`true`。
+
+    `tagsOptions`
+
+    当光标挨着标签时控制某些选项，需要设置`match_tags`为`true`。
+
+    选项： `underline`，`stippled_underline`，`squiggly_underline`。*underline*表示文字应该用指定颜色绘制，而不仅仅是下划线。
+
+  - 查找
+
+    `findHighlight`
+
+    匹配结果的背景色。
+
+    `findHighlightForeground`
+
+    匹配结果的前景色。
+
+  - [Gutter](http://docs.sublimetext.info/en/latest/reference/color_schemes.html#gutter)
+
+    `gutter`
+
+    gutter背景色。
+
+    `gutterForeground`
+
+    gutter前景色。
+
+  - 选择块
+
+    `selection`
+
+    选中区域文字颜色。
+
+    `selectionBackground`
+
+    选中区域背景色。
+
+    `selectionBorder`
+
+    选中区域的边框颜色。
+
+    `inactiveSelection`
+
+    非活动部分的颜色。
+
+  - 引导
+
+    `guide`
+
+    引导的颜色。
+
+    `activeGuide`
+
+    有插入符的行的引导颜色。`indent_guide_options`需设置为`draw_active`。
+
+    `stackGuide`
+
+    当前引导的父级引导颜色。
+
+    `indent_guide_options`需设置为`draw_active`。
+
+  - 高亮区域
+
+    `highlight`
+
+    带有`sublime.DRAW_OUTLINED`标签时通过 `sublime.add_regions()` 添加的区域的背景色。
+
+    `highlightForeground`
+
+    带有`sublime.DRAW_OUTLINED`标签时通过 `sublime.add_regions()` 添加的区域的前景色。
+
+  - 阴影
+
+    `shadow`
+
+    滚动时阴影的颜色。
+
+    `shadowWidth`
+
+    滚动时阴影的宽度。
+
+- 范围设置
+
+  特殊作用域的设置。
+
+  ```
+  <array>
+     ...
+     <dict>
+        <key>name</key>
+        <string>Comment</string>
+        <key>scope</key>
+        <string>comment</string>
+        <key>settings</key>
+        <dict>
+           <key>foreground</key>
+           <string>#75715E</string>
+        </dict>
+     </dict>
+     ...
+  </array>
+  ```
+
+- `name`
+
+  名称。
+
+- `scope`
+
+  作用域名称。
+
+- `settings`
+
+  设置的容器。
+
+  合法的设置：
+
+- `fontStyle`
+
+   字体样式，选项：`bold`， `italic`。
+
+- `foreground`
+
+  前景色。
+
+- `background`
+
+  背景色。
 
 #### Sublime Text中有关配色的设置
 
+`color_scheme`
+
+配色方案文件的路径（如：`Packages/Color Scheme - Default/Monokai.tmTheme`）。
+
 ###构建系统
+利用构建系统，你无需离开Sublime Text就可以通过运行外部程序来查看文件的效果。
+#### 基本信息
+
+#### 配置
+
+#### 执行命令的参数
+
+#### 故障诊断
+
+
+
 ###按键绑定
 ###设置
 ###符号
