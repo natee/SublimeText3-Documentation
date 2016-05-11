@@ -1,6 +1,6 @@
 #Sublime Text非官方文档
 ##目录
-- [关于文档]（#通用)
+- [关于文档](#通用)
   - [完善文档](#完善文档)
 - [安装](#安装)
   - [32位和64位](#32位和64位)
@@ -1401,7 +1401,7 @@ patterns:
 
 注意：对于YAML和上述例子中推荐用2个空格作为缩进。
 
-现在，我们准备把文件转化成`.tmLanguage`。处于兼容性考虑，语法定义使用了Textmeta的`.tmLanguage`作为扩展名。上面已经解释过，它是Plist XML文件。
+现在，我们准备把文件转化成`.tmLanguage`。处于兼容性考虑，语法定义使用了Textmate的`.tmLanguage`作为扩展名。上面已经解释过，它是Plist XML文件。
 
 请按照下列步骤来执行转换：
 
@@ -1875,8 +1875,255 @@ Sublime Text加载包的顺序如下：
 [返回目录](#目录)
 
 ##参考
+本节包含Sublime Text的一些简要的技术，它的目的是给想要更改Sublime Text默认行文的高级用户提供快速参考。
 ###语法定义
+Sublime Text 3084版本加入了一种新的语法定义格式，扩展名为`.sublime-syntax`。目前只在 [开发版](http://www.sublimetext.com/3dev) 可用。
+#### 和Textmate兼容
+
+通常情况，Sublime Text语法定义和Textmate语言文件是相兼容的。
+
+#### 文件格式
+
+Textmate语法定义是扩展名为 `tmLanguage` 的Plist文件。然而为了方便，本参考中用YAML来代替。
+
+此外，Sublime Text也识别`hidden-tmLanguage` 为扩展名的文件，“文件内查找”会用到这个东西。缺点是不能被其它语言的import语句引入。
+
+```
+---
+name: Sublime Snippet (Raw)
+scopeName: source.ssraw
+fileTypes: [ssraw]
+uuid: 0da65be4-5aac-4b6f-8071-1aadb970b8d9
+
+patterns:
+- comment: Tab stops like $1, $2...
+  name: keyword.other.ssraw
+  match: \$\d+
+
+- comment: Variables like $PARAM1, $TM_SELECTION...
+  name: keyword.other.ssraw
+  match: \$([A-Za-z][A-Za-z0-9_]+)
+  captures:
+    '1': {name: constant.numeric.ssraw}
+
+- name: variable.complex.ssraw
+  begin: '(\$)(\{)([0-9]+):'
+  beginCaptures:
+    '1': {name: keyword.other.ssraw}
+    '3': {name: constant.numeric.ssraw}
+  end: \}
+  patterns:
+  - include: $self
+  - name: support.other.ssraw
+    match: .
+
+- name: constant.character.escape.ssraw
+  match: \\[$<>]
+
+- name: invalid.illegal.ssraw
+  match: '[$<>]'
+...
+```
+
+- `name`
+
+  语法定义的描述性名称。显示在Sublime Text界面语法定义菜单右下角的下拉列表中。
+
+- `scopeName`
+
+  此语法定义最顶层作用域的名称，不管是`source.<lang>`还是`text.<lang>`。用`source`来表示编程语言，用`text`表示标记性语言或其它东西。
+
+- `fileTypes`
+
+  可选。这是一个文件扩展名（不带前面的点）的列表。当打开这些类型的文件时，Sublime Text将自动激活其语法定义。
+
+- `uuid`
+
+  语法定义的唯一识别码。
+
+- `patterns`
+
+  你的匹配模式的容器，数组格式。
+
+- `repository`
+
+  可选。从 `patterns` 中抽象出来的模式数组。对于保持语法定义的整洁或是对于复用模式、递归调用等一些特殊用途来说很有用。
+
+#### 匹配模式的数组
+
+ `patterns` 数组中的元素。
+
+- `match`
+
+  包含以下元素：
+
+  | `match`    | 搜索的匹配项                     |
+  | ---------- | :------------------------- |
+  | `name`     | 可选，安排给`match`匹配到的内容的作用域名称。 |
+  | `comment`  | 可选，注释。                     |
+  | `captures` | 可选，让`match`更加细致。           |
+
+  `captures`可以包含下列元素项的*n*（`0`表示全部匹配）：
+
+  | `0..n` | 引用分组的名称，必须是字符串。 |
+  | ------ | --------------- |
+  | `name` | 组的作用域           |
+
+  例如：
+
+  ```
+  # Simple
+
+  - comment: Sequences like \$, \> and \<
+    name: constant.character.escape.ssraw
+    match: \\[$<>]
+
+  # With captures
+
+  - comment: Tab stops like $1, $2...
+    name: keyword.other.ssraw
+    match: \$(\d+)
+    captures:
+      '1': {name: constant.numeric.ssraw}
+  ```
+
+- `include`
+
+  包含repository中的条目、其它语法定义或是当前这个。
+
+  参考：
+
+  | $self     | 当前语法定义               |
+  | --------- | -------------------- |
+  | #itemName | repository中的itemName |
+  | source.js | 外部语法定义               |
+
+  例如：
+
+  ```
+  # Requires presence of DoubleQuotedStrings element in the repository.
+  - include: '#DoubleQuotedStrings'
+
+  # Recursively includes the complete current syntax definition.
+  - include: $self
+
+  # Includes and external syntax definition.
+  - include: source.js
+  ```
+
+- `begin..end`
+
+  定义多行文本的作用域。
+
+  包含下列元素（只有`begin`和`end`是必选的）：
+
+  | `name`          | 包含标记的内容的作用域名称  |
+  | --------------- | -------------- |
+  | `contentName`   | 不包含标记的内容的作用域名称 |
+  | `begin`         | 匹配的开始标识        |
+  | `end`           | 匹配的结束标识        |
+  | `name`          | 全部区域的作用域       |
+  | `beginCaptures` | 参看 `captures`  |
+  | `endCaptures`   | 参看 `captures`  |
+  | `patterns`      | 匹配项列表，用来匹配内容   |
+
+  例如：
+
+  ```
+  name: variable.complex.ssraw
+  begin: '(\$)(\{)([0-9]+):'
+  beginCaptures:
+    '1': {name: keyword.other.ssraw}
+    '3': {name: constant.numeric.ssraw}
+  end: \}
+  patterns:
+  - include: $self
+  - name: support.other.ssraw
+    match: .
+  ```
+
+#### Repository
+
+可以从 `patterns` 或其自身的 `include` 元素中被引用。
+
+repository可以包含下列元素：
+
+```
+repository:
+
+  # Simple elements
+  elementName:
+    match: some regexp
+    name:  some.scope.somelang
+
+  # Complex elements
+  otherElementName:
+    patterns:
+    - match: some regexp
+      name:  some.scope.somelang
+    - match: other regexp
+      name:  some.other.scope.somelang
+```
+
+例子：
+
+```
+repository:
+  numericConstant:
+    patterns:
+    - name: constant.numeric.double.powershell
+      match: \d*(?<!\.)(\.)\d+(d)?(mb|kb|gb)?
+      captures:
+        '1': {name: support.constant.powershell}
+        '2': {name: support.constant.powershell}
+        '3': {name: keyword.other.powershell}
+    - name: constant.numeric.powershell
+      match: (?<!\w)\d+(d)?(mb|kb|gb)?(?!\w)
+      captures:
+        '1': {name: support.constant.powershell}
+        '2': {name: keyword.other.powershell}
+
+  scriptblock:
+    name: meta.scriptblock.powershell
+    begin: \{
+    end: \}
+    patterns:
+    - include: $self
+```
+
+#### 转义序列
+
+在需要的时候确保对 JSON/XML进行转义。
+
+对于YAML，请确保你没有使用一个不带引号的字符串作为开始。
+
+示例将**无法**按预期生效。
+
+```
+match: [aeiou]
+
+include: #this-is-actually-a-comment
+
+match: "#"\w+""
+```
+
 ###配色方案
+#### 概述
+
+用来对代码进行颜色高亮。例如：背景色、前景色...
+
+#### 文件格式
+
+扩展名为`.tmTheme`的文件，文件格式继承自Textmate。
+
+注：Sublime Text使用`.tmTheme`作为扩展名来保持与Textamte相兼容。有一个容易混淆的地方是，Sublime Text还有一个用户界面（UI）主题的概念。UI主题是用来改变编辑器外观的。一定要记住这两个不是一个东西。一般来说，创建一个UI主题要比创建一个配色方案要复杂的多。
+
+#### 存储位置
+
+#### 文件结构
+
+#### Sublime Text中有关配色的设置
+
 ###构建系统
 ###按键绑定
 ###设置
