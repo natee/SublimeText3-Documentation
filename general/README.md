@@ -2406,8 +2406,51 @@ Sublime Text中的构建系统框架足够灵活所以它可以容纳大量的�
 | `Ctrl+Shift+B` | 运行 “Run” 构建任务 |
 | `Ctrl+Break`   | 取消当前的构建任务     |
 
+#### `exec`命令的参数
 
-#### 执行命令的参数
+`cmd`
+
+`shell_cmd`为空时则必需。否则将会被 `shell_cmd`覆盖。
+
+包含将运行的命令及其参数的数组。如果不指定一个绝对路径，将会在`PATH`中搜索外部的程序。最终将会调用`subprocess.Popen(cmd)`。
+
+`shell_cmd`
+
+`cmd`为空时则必需。否则将会被 `cmd`覆盖。
+
+一个指定将运行的命令及其参数的字符串，最终将会调用`subprocess.Popen(shell_cmd, shell=True)`。
+
+`working_dir`
+
+可选。运行`cmd`之前改变当前目录的指向目录，当前目录的原始值将会在之后恢复。
+
+`encoding`
+
+可选。输出`cmd`的编码，必须是合法的Python编码格式，默认是`UTF-8`。
+
+`env`
+
+可选。传递给`cmd`之前将与当前进程进行合并的环境变量的字典。使用这个参数你就可以在不改变系统设置的情况编辑环境变量。
+
+`shell`
+
+可选。值为*true*时，`cmd`将通过shell（`cmd.exe`，`bash`等等）运行。如果使用了`shell_cmd`，则此选项无效。
+
+`path`
+
+可选。`cmd`子进程使用的`PATH`。使用这个参数就可以在不改变系统设置的情况添加字典到`PATH`中。
+
+`file_regex`
+
+可选。给结果视图设置 `result_file_regex` 。
+
+`line_regex`
+
+可选。给结果视图设置 `result_line_regex` 。
+
+`syntax`
+
+可选。如果设置了，就会使构建系统的输入有色彩。
 
 #### 故障诊断
 
