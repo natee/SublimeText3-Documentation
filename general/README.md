@@ -2286,6 +2286,127 @@ Sublime Text支持以下几种配色方案的设置：
 
 #### 配置
 
+⚠️开发版本中构建系统章节正在被重新调整，所以下面的内容可能已经过时了。
+
+##### 概述
+
+Sublime Text中的构建系统框架足够灵活所以它可以容纳大量的构建场景。
+如果默认配置满足不了你的需求，你可以通过以下两种主要方式实现你自己的构建系统：
+
+- 自定义的`target` 命令（仍然使用默认的构建系统框架）
+- 新的插件（与默认构建系统无关）
+
+##### 构建系统中的Meta选项
+这是所有构建系统都能够理解的标准选项，这些选项由Sublime Text内部使用。 `target` 选项不接收任何选项。
+
+`target`（可选）
+一个 Sublime Text `WindowCommand`，默认为 `exec` （`Packages/Default/exec.py`）。此命令接收所有在 `.sublime-build` 文件中指定的目标命令参数。
+用来覆盖构建系统的默认命令，注意，如果你选择了覆盖构建系统的默认命令，你可以把任意数量的额外选项添加到`.sublime-build`中。
+
+`selector`（可选）
+**Tools | Build System | Automatic**设置为 `true`，Sublime Text使用这个范围选择器来为当前活动视图找到合适的构建系统。
+
+`windows`, `osx` and `linux`（可选）
+用于操作系统有选择性的应用选项，特定的操作系统的值将覆盖默认值，列出的项中每一个都接受一个字典选项。
+
+`variants`（可选）
+选项中的一个字典列表，如果构建系统的选择器匹配了当前活动的文件，出现在命令面板的Variant的名称就可以方便地进行调用。
+可以在同一个 `.sublime-build` 文件中指定多个构建系统任务。
+
+`name` （可选）
+**只有在variant中才合法**。标识构建系统任务，如果`name`是“Run”，variant将会显示在 **Tools | Build System**下。Sublime Text自动绑定“Run”任务到 `Ctrl+Shift+B`。
+
+**特定平台选项**
+`windows`、 `osx`和`linux` 使你可以在构建系统中添加指定平台的数据。例如：
+
+```
+{
+    "cmd": ["ant"],
+    "file_regex": "^ *\\[javac\\] (.+):([0-9]+):() (.*)$",
+    "working_dir": "${project_path:${folder}}",
+    "selector": "source.java",
+
+    "windows": {
+        "cmd": ["ant.bat"]
+    }
+}
+```
+
+这个例子中，除Windows外的其他平台将执行`ant`命令，而Windows将执行`ant.bat`。
+
+**Variants**
+
+例子：
+
+```
+{
+    "selector": "source.python",
+    "cmd": ["date"],
+
+    "variants": [
+
+        { "name": "List Python Files",
+          "cmd": ["ls -l *.py"],
+          "shell": true
+        },
+
+        { "name": "Word Count (current file)",
+          "cmd": ["wc", "$file"]
+        },
+
+        { "name": "Run",
+          "cmd": ["python", "-u", "$file"]
+        }
+    ]
+}
+```
+
+ `Ctrl+B` 将执行*date*命令，`Crtl+Shift+B`将会运行Python解析器，其余的将会在构建系统被激活时已`Build: name`的形式出现在命令面板中。
+
+##### 捕获构建系统的结果
+
+当构建系统输入文本到结果视图中时，你可以捕获*结果数据*以便启用结果导航。
+注：*结果*也被称作*错误*。
+
+参照下面的**视图设置**：
+`result_file_regex`
+一个Perl风格的正则表达式，捕获结果视图中错误信息中的资格字段，分别是：文件名、行数、列数、错误信息。
+
+`result_line_regex`
+ `result_file_regex` 不匹配，而`result_line_regex`存在且匹配当前行，在缓存中向后查找知道匹配了`result_file_regex`，这两个综合起来来确定将要跳转到哪个文件中的哪一行。
+
+`result_base_dir`
+用来寻找出错的文件。
+
+##### 构建系统变量
+
+ `.sublime-build` 文件中有以下变量：
+
+| `$file_path`         | 当前文件的路径，如：*C:\Files*                 |
+| -------------------- | ------------------------------------ |
+| `$file`              | 当前文件的绝对路径，如：*C:\Files\Chapter1.txt*。 |
+| `$file_name`         | 当前文件的文件名， 如：*Chapter1.txt*。          |
+| `$file_extension`    | 当前文件的扩展名，如：*txt*。                    |
+| `$file_base_name`    | 当前文件的名字部分，如：*Document*。              |
+| `$folder`            | 当前项目中被打开的第一个文件夹路径。                   |
+| `$project`           | 当前项目的绝对路径。                           |
+| `$project_path`      | 当前项目的路径。                             |
+| `$project_name`      | 当前项目的名字。                             |
+| `$project_extension` | 当前项目的扩展名部分，                          |
+| `$project_base_name` | 当前项目的名字部分。                           |
+| `$packages`          | *Packages*文件夹的绝对路径。                  |
+
+##### 运行构建系统
+
+ 从**Tools | Build System**选择构建系统，然后选择**Tools | Build**。另外，你也可以用下列快捷方式：
+
+| `Ctrl+B`       | 运行默认构建任务      |
+| -------------- | ------------- |
+| `F7`           | 运行默认构建任务      |
+| `Ctrl+Shift+B` | 运行 “Run” 构建任务 |
+| `Ctrl+Break`   | 取消当前的构建任务     |
+
+
 #### 执行命令的参数
 
 #### 故障诊断
