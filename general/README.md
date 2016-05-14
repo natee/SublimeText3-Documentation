@@ -820,7 +820,118 @@ Sublime Text把配置文件存放在* .sublime-settings*中。
 注：这是一个默认的按键行为，你可以随时尝试。
 
 ###菜单
-无
+#### 文件格式
+
+| **Format**    | JSON （带注释）                               |
+| ------------- | ---------------------------------------- |
+| **Extension** | `.sublime-menu`                          |
+| **Name**      | 可用菜单项的列表，查看[Available Menus](http://docs.sublimetext.info/en/latest/customization/menus.html#menu-types) |
+| **Location**  | *`Packages`*下的任意位置                       |
+| **Content**   | [“Menu Item” 对象](http://docs.sublimetext.info/en/latest/reference/menus.html#menu-item-objects)的列表 |
+
+**例子**
+
+下面的内容是 `Main.sublime-menu` 文件中的一个摘要：
+
+```
+[
+    {
+        "caption": "Edit",
+        "mnemonic": "E",
+        "id": "edit",
+        "children":
+        [
+            { "command": "undo", "mnemonic": "U" },
+            { "command": "redo_or_repeat", "mnemonic": "R" },
+            {
+                "caption": "Undo Selection",
+                "children":
+                [
+                    { "command": "soft_undo" },
+                    { "command": "soft_redo" }
+                ]
+            },
+            { "caption": "-", "id": "clipboard" },
+            { "command": "copy", "mnemonic": "C" },
+            { "command": "cut", "mnemonic": "t" },
+            { "command": "paste", "mnemonic": "P" },
+            { "command": "paste_and_indent", "mnemonic": "I" },
+            { "command": "paste_from_history", "caption": "Paste from History" }
+        ]
+    }
+]
+```
+**图片**
+
+![](./assets/context_menu_default.png '')编辑区域的默认的右键菜单
+
+![](./assets/context_menu_modified.png '')编辑区域的编辑后的右键菜单
+
+#### 可用菜单
+
+| 文件/菜单名                   | 描述                                    |
+| ------------------------ | ------------------------------------- |
+| **Main**                 | 主菜单                                   |
+| **Context**              | 编辑区域的右键菜单                             |
+| **Find in Files**        | 点击*在文件中查找*面板中的“…”按钮（查找范围）时出现。         |
+| **Side Bar**             | 侧边栏每个节点的右键菜单                          |
+| **Side Bar Mount Point** | 侧边栏最外层文件夹额额外右键菜单项                     |
+| **Tab Context**          | 标签栏的右键菜单                              |
+| **Widget Context**       | 各组件输入框的右键菜单，包括命令面板，跳转到，查找面板和各插件打开的面板。 |
+
+此外，当你点击状态栏中下面四项时会显示各自的列表：
+
+- **Encoding**
+- **Line Endings**
+- **Indentation**
+- **Syntax**
+
+![](./assets/statusbar_menu.gif '')
+*状态栏菜单的演示*
+
+#### 菜单项
+
+选中一个菜单项时，会执行一个命令或者打开一个子菜单列表。
+
+可用属性：
+
+- 指令名
+- 命令的参数
+- 一个ID
+- 一个标题
+- 快捷键
+- 子菜单
+
+一个可正常工作的菜单至少包含：
+
+- 指令名
+- 标题和子菜单
+- 只有标题
+- 一个ID
+
+解析一个菜单将遵循以下规则：
+
+1. 包含子菜单的菜单无法调用指令，如果使用了分隔符标题，则它将被渲染成连字符。
+2. 如果没有提供标题，则会从指令的描述信息中抽取出一个标题，如果及没有标题也没有指令，则标题为空字符串。
+3. 快捷键必须包含在caption中，且是大小写敏感的。
+4. 引用了不存在的指令的菜单将被禁用。
+5. 菜单项可以通过其引用的指令进行隐藏或禁用。
+
+**分隔符**
+
+分隔符是菜单项标题有 `-` 且无子菜单的，通常用于给有相同目的的菜单项进行分组。分隔符不能调用指令。
+
+多个分隔符会缩减成一个，菜单的开头和结尾的分隔符不显示。
+
+#### 菜单合并
+
+#### 子菜单
+
+#### 主菜单
+
+#### 命令的接口
+
+#### 侧边栏的右键菜单
 
 ###色彩主题
 Sublime Text默认的Python高亮配色主题：
@@ -2765,27 +2876,21 @@ Sublime Text默认的按键映射位于 `Packages/Default`下。其他包也许
 菜单项包含下列属性：
 
 `command`
-
 菜单项选中时将调用的命令的名称。
 
 `args`
-
 命令的参数，是一个对象。对于**Side Bar** 和 **Side Bar Mount Point** 菜单，这是一个由侧边栏包含所有选中项的列表的文件参数所扩展的。
 
 `caption`
-
 菜单栏上展示的文字。
 
 `children`
-
 鼠标滑过菜单项时显示的列表，覆盖已存在的`command`属性。
 
 `mnemonic`
-
 菜单的快捷键，区分大小写的单个字符，必须包含在caption中。
 
 `id`
-
 菜单项的唯一字符串标识符。这可以用来扩展菜单或是子菜单，甚至完全改写菜单。
 
 ###设置
