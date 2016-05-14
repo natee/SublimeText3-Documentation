@@ -2714,6 +2714,80 @@ Sublime Text默认的按键映射位于 `Packages/Default`下。其他包也许
 
 这将帮助你调试按键绑定。
 
+### 菜单
+
+#### 文件格式
+
+| **Format**    | JSON （带注释）                               |
+| ------------- | ---------------------------------------- |
+| **Extension** | `.sublime-menu`                          |
+| **Name**      | 可用菜单项的列表，查看[Available Menus](http://docs.sublimetext.info/en/latest/customization/menus.html#menu-types) |
+| **Location**  | *`Packages`*下的任意位置                       |
+| **Content**   | [“Menu Item” 对象](http://docs.sublimetext.info/en/latest/reference/menus.html#menu-item-objects)的列表 |
+
+**例子**
+
+下面的内容是 `Main.sublime-menu` 文件中的一个摘要：
+
+```
+[
+    {
+        "caption": "Edit",
+        "mnemonic": "E",
+        "id": "edit",
+        "children":
+        [
+            { "command": "undo", "mnemonic": "U" },
+            { "command": "redo_or_repeat", "mnemonic": "R" },
+            {
+                "caption": "Undo Selection",
+                "children":
+                [
+                    { "command": "soft_undo" },
+                    { "command": "soft_redo" }
+                ]
+            },
+            { "caption": "-", "id": "clipboard" },
+            { "command": "copy", "mnemonic": "C" },
+            { "command": "cut", "mnemonic": "t" },
+            { "command": "paste", "mnemonic": "P" },
+            { "command": "paste_and_indent", "mnemonic": "I" },
+            { "command": "paste_from_history", "caption": "Paste from History" }
+        ]
+    }
+]
+```
+
+#### “Menu Item”对象
+
+除非你通过一个ID来引用已有项目，否则每个菜单项必须定义其 `children`或`command`或`caption`。
+
+菜单项包含下列属性：
+
+`command`
+
+菜单项选中时将调用的命令的名称。
+
+`args`
+
+命令的参数，是一个对象。对于**Side Bar** 和 **Side Bar Mount Point** 菜单，这是一个由侧边栏包含所有选中项的列表的文件参数所扩展的。
+
+`caption`
+
+菜单栏上展示的文字。
+
+`children`
+
+鼠标滑过菜单项时显示的列表，覆盖已存在的`command`属性。
+
+`mnemonic`
+
+菜单的快捷键，区分大小写的单个字符，必须包含在caption中。
+
+`id`
+
+菜单项的唯一字符串标识符。这可以用来扩展菜单或是子菜单，甚至完全改写菜单。
+
 ###设置
 ###符号
 ###注释
