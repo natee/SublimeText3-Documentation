@@ -2928,6 +2928,239 @@ Sublime Text默认的按键映射位于 `Packages/Default`下。其他包也许
 菜单项的唯一字符串标识符。这可以用来扩展菜单或是子菜单，甚至完全改写菜单。
 
 ###设置
+
+⚠️本节内容也许包含过时的和未完成的信息，你可以在默认的设置文件（**Preferences → Settings - Default** or`Default/Preferences.sublime-settings`）中查看可用的设置。
+
+#### 全局设置
+
+这些设置只能从 `Preferences.sublime-settings` and`Preferences (*platform*).sublime-settings`进行编辑。
+
+`theme`
+使用的主题，如：`Default.sublime-theme`。
+
+`scroll_speed`
+设置为0禁用滚动，设置0到1之间缓慢滚动，设置超过1快速滚动。
+
+`hot_exit`
+ `hot_exit` 启用时，无需提示就可以立即关闭应用程序或窗口，未保存的编辑和已打开的文件在下次启动时将被恢复。
+
+`remember_open_files`
+决定是否重新打开Sublime Text上次关闭时打开的文件。
+
+`open_files_in_new_window`
+只在OS X有效，控制是否创建了一个新窗口。
+
+`close_windows_when_empty`
+最后一个文件关闭时直接关闭窗口。
+
+`show_full_path`
+在标题栏显示文件的绝对路径。
+
+`preview_on_click`
+值为`true`时，点击侧边栏的文件时将预览其内容。双击将会在新标签打开这个文件。
+
+`folder_exclude_patterns`
+排除匹配的文件夹。
+
+`file_exclude_patterns`
+排除匹配的文件。
+
+`binary_file_patterns`
+从跳转、查找文件中排除匹配到的文件，但不从侧边栏排除。
+
+`show_tab_close_buttons`
+值为`false`时将隐藏标签上的关闭按钮知道鼠标悬停在tab上。
+
+`mouse_wheel_switches_tabs`
+值为`true`时，如果鼠标停在tab区域，滚动鼠标的滚轮将会切换标签。
+
+`ignored_packages`
+被忽略的（不加载）包的列表。
+
+#### 文件设置
+
+##### 空格和缩进
+
+`auto_indent`
+
+Toggles automatic indentation.
+
+`tab_size`
+
+Number of spaces a tab is considered equal to.
+
+`translate_tabs_to_spaces`
+
+Determines whether to replace a tab character with `tab_size` number of spaces when `Tab` is pressed.
+
+`use_tab_stops`
+
+If `translate_tabs_to_spaces` is `true`, will make `Tab` and `Backspace` insert/delete `tab_size` number of spaces per key press.
+
+`trim_automatic_white_space`
+
+Toggles deletion of white space added by `auto_indent`.
+
+`detect_indentation`
+
+Set to `false` to disable detection of tabs vs. spaces whenever a buffer is loaded. If set to `true`, it automatically will modify `translate_tabs_to_spaces` and `tab_size`.
+
+`draw_white_space`
+
+Valid values: `none`, `selection`, `all`.
+
+`trim_trailing_white_space_on_save`
+
+Set to `true` to remove white space on save.
+
+##### 视觉设置
+
+`always_show_minimap_viewport`
+
+if set to true, then it will always show rectangle on minimap highlighting current document position; defualt false, which shows position only on mouse over the minimap.
+
+`color_scheme`
+
+Sets the colors used for text highlighting. Accepts a path rooted at the data directory (e.g.:`Packages/Color Scheme - Default/Monokai Bright.tmTheme`).
+
+`font_face`
+
+Font face to be used for editable text.
+
+`font_size`
+
+Size of the font for editable text.
+
+`font_options`
+
+Valid values: `bold`, `italic`, `no_antialias`, `gray_antialias`, `subpixel_antialias`, `directwrite`(Windows).
+
+`gutter`
+
+Toggles display of gutter.
+
+`rulers`
+
+Columns in which to display vertical rules. Accepts a list of numeric values (such as `[79, 89, 99]`) or a single numeric value (for example, `79`).
+
+`draw_minimap_border`
+
+Set to `true` to draw a border around the minimap’s region corresponding to the the view’s currently visible text. The active color scheme’s `minimapBorder` key controls the border’s color.
+
+`highlight_line`
+
+Set to `false` to stop highlighting lines with a cursor.
+
+`line_padding_top`
+
+Additional spacing at the top of each line, in pixels.
+
+`line_padding_bottom`
+
+Additional spacing at the bottom of each line, in pixels.
+
+`scroll_past_end`
+
+Set to `false` to disable scrolling past the end of the buffer. If `true`, Sublime Text will leave a wide, empty margin between the last line and the bottom of the window.
+
+`line_numbers`
+
+Toggles display of line numbers in the gutter.
+
+`word_wrap`
+
+If set to `false`, long lines will be clipped instead of wrapped. Scroll the screen horizontally to see the clipped text.
+
+`wrap_width`
+
+If greater than `0`, wraps long lines at the specified column as opposed to the window width. Only takes effect if `word_wrap` is set to `true`.
+
+`indent_subsequent_lines`
+
+If set to `false`, wrapped lines will not be indented. Only takes effect if `word_wrap` is set to `true`.
+
+`draw_centered`
+
+If set to `true`, text will be drawn centered rather than left-aligned.
+
+`match_brackets`
+
+Set to `false` to disable underlining the brackets surrounding the cursor.
+
+`match_brackets_content`
+
+Set this to `false` if you’d rather have brackets highlighted only when the cursor is next to one.
+
+`match_brackets_square`
+
+Set to `false` to stop highlighting square brackets. Only takes effect if `match_brackets` is `true`.
+
+`match_bracktets_braces`
+
+Set to `false` to stop highlighting curly brackets. Only takes effect if `match_brackets` is `true`.
+
+`match_bracktets_angle`
+
+Set to `false` to stop highlighting angle brackets. Only takes effect if `match_brackets` is `true`.
+
+##### 自动行为
+
+`auto_match_enabled`
+切换自动匹配引号、括号等。
+
+`save_on_focus_lost`
+值为`ture`时，切换到其他文件或应用程序将自动保存文件。
+
+`find_selected_text`
+值为`true`时，当打开查找面板，选中的文字会自动被复制到面板中。
+
+`word_separators`
+单词分隔符。
+
+`ensure_newline_at_eof_on_save`
+保存时始终在文件末尾加新的一行。
+
+##### 系统和其它设置
+
+`is_widget`
+相对于一个常规文件，如果文件是对话框中的输入字段，返回`true`。
+
+`spell_check`
+切换拼写检查。
+
+`dictionary`
+拼写检查的单词列表，接收一个数据目录的路径，如：`Packages/Language - English/en_US.dic`。
+
+`fallback_encoding`
+当不能自动决定编码时使用的编码格式，ASCII、UTF-8和UTF-16编码格式将会被自动检测。
+
+`default_line_ending`
+决定用来指定新行的字符，合法的值：`system` （OS-dependant），`windows` （`CRLF`）和 `unix`（`LF`）。 
+
+`tab_completion`
+决定按下`Tab`键是否进行补全操作。
+
+##### 构建和错误导航设置
+
+`result_file_regex` and `result_line_regex`
+用来提取打印到视图或是输出面板的错误信息的正则表达式。
+
+`result_base_dir`
+开始查找基于用`result_file_regex`和`result_line_regex`进行信息提取问题的文件的文件夹
+
+`build_env`
+默认添加到构建系统的路径列表。
+
+##### 文件和目录设置
+
+`default_dir`
+设置视图的默认保存文件夹。
+
+##### 输入设置
+
+`command_mode`
+值为`true`时，文件将会忽略按键的点击，在模拟VIM模态行为时很有用。
+
 ###符号
 ###注释
 ###补全文件
