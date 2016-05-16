@@ -3133,6 +3133,66 @@ Sublime Text默认的按键映射位于 `Packages/Default`下。其他包也许
 
 ### 补全文件
 
+注意补全并不限制于补全文件，因为其他来源也会对补全做出补充，参考补全章节的内容。然而，Sublime Text中提供给你用来完善补全功能的最明显的方法就是通过 `.sublime-completions` 文件。
+
+补全文件是带有 `.sublime-completions` 后缀的JSON文件。
+
+#### 例子
+
+```
+{
+   "scope": "text.html - source - meta.tag, punctuation.definition.tag.begin",
+
+   "completions":
+   [
+      { "trigger": "a", "contents": "<a href=\"$1\">$0</a>" },
+      { "trigger": "abbr\t<abbr>", "contents": "<abbr>$0</abbr>" },
+      { "trigger": "acronym", "contents": "<acronym>$0</acronym>" }
+   ]
+}
+```
+
+**scope**
+
+确定补全列表何时被填充。
+
+**completions**
+
+*补全*的数组。
+
+#### 补全的类型
+
+##### 纯字符串
+
+纯字符串等价于`trigger` 和`contents`一致的条目。
+
+```
+"foo"
+// is equivalent to:
+{ "trigger": "foo", "contents": "foo" }
+
+```
+
+##### 基于Trigger的补全
+
+```
+{ "trigger": "foo", "contents": "foobar" },
+{ "trigger": "foo\ttest", "contents": "foobar" }
+
+```
+
+**trigger**
+
+展示到补全列表中的文字，选中时将会插入`contents`中的内容。
+
+你可以使用`\t`添加一个*提示*，提示是右对齐的、略微有点灰色，不影响当前的触发器。
+
+**contents**
+
+插入到文件中的文本。
+
+注意：如果你想要一个字面量`$`，你需要进行转义`\\$`（由于是在一个JSON字符串中，所以需要双斜杠）。
+
 ###符号
 
 ###注释
