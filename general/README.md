@@ -2292,7 +2292,7 @@ Sublime Text支持以下几种配色方案的设置：
     `findHighlightForeground`
     匹配结果的前景色。
 
-  - [Gutter](http://docs.sublimetext.info/en/latest/reference/color_schemes.html#gutter)
+  - Gutter（指显示行号那个区域）
 
     `gutter`
     gutter背景色。
@@ -2982,126 +2982,96 @@ Sublime Text默认的按键映射位于 `Packages/Default`下。其他包也许
 ##### 空格和缩进
 
 `auto_indent`
-
-Toggles automatic indentation.
+切换自动缩进。
 
 `tab_size`
-
-Number of spaces a tab is considered equal to.
+`Tab`键等价于几个空格。
 
 `translate_tabs_to_spaces`
-
-Determines whether to replace a tab character with `tab_size` number of spaces when `Tab` is pressed.
+决定按下`Tab`键时是否把tab符转化成`tab_size`规定的空格数。
 
 `use_tab_stops`
-
-If `translate_tabs_to_spaces` is `true`, will make `Tab` and `Backspace` insert/delete `tab_size` number of spaces per key press.
+如果`translate_tabs_to_spaces`值为`true`，每一次按下`Tab`键和`Backspace`键都将插入或删除 `tab_size`规定的空格数。
 
 `trim_automatic_white_space`
-
-Toggles deletion of white space added by `auto_indent`.
+切换是否删除由 `auto_indent`添加的空格。
 
 `detect_indentation`
-
-Set to `false` to disable detection of tabs vs. spaces whenever a buffer is loaded. If set to `true`, it automatically will modify `translate_tabs_to_spaces` and `tab_size`.
+值为`false`时，文件加载后将禁用tab和空格。如果值为`true`，将自动编辑`translate_tabs_to_spaces`和`tab_size`。
 
 `draw_white_space`
-
-Valid values: `none`, `selection`, `all`.
+合法的值：`none`， `selection`， `all`。
 
 `trim_trailing_white_space_on_save`
-
-Set to `true` to remove white space on save.
+值为`true`时保存文件时将删除空格。
 
 ##### 视觉设置
 
 `always_show_minimap_viewport`
-
-if set to true, then it will always show rectangle on minimap highlighting current document position; defualt false, which shows position only on mouse over the minimap.
+设置为`true`时，将会在始终在缩略图区域高亮显示当前文件位置；默认值是`false`，这种情况只有鼠标移到缩略图区域才能看到当前文件所在位置。这里说的缩略图就是右侧整个文件的缩略。
 
 `color_scheme`
-
-Sets the colors used for text highlighting. Accepts a path rooted at the data directory (e.g.:`Packages/Color Scheme - Default/Monokai Bright.tmTheme`).
+设置文本高亮的颜色。如：`Packages/Color Scheme - Default/Monokai Bright.tmTheme`。
 
 `font_face`
-
-Font face to be used for editable text.
+可编辑的文字字体。
 
 `font_size`
-
-Size of the font for editable text.
+可编辑的文字字号。
 
 `font_options`
-
-Valid values: `bold`, `italic`, `no_antialias`, `gray_antialias`, `subpixel_antialias`, `directwrite`(Windows).
+合法值：`bold`，`italic`，`no_antialias`，`gray_antialias`，`subpixel_antialias`，`directwrite`（Windows）。
 
 `gutter`
-
-Toggles display of gutter.
+切换gutter。
 
 `rulers`
-
-Columns in which to display vertical rules. Accepts a list of numeric values (such as `[79, 89, 99]`) or a single numeric value (for example, `79`).
+显示垂直规则的列，接收一个包含数值的数组（如`[79,89,99]`）或者一个单一的数值（如`79`）。
 
 `draw_minimap_border`
-
-Set to `true` to draw a border around the minimap’s region corresponding to the the view’s currently visible text. The active color scheme’s `minimapBorder` key controls the border’s color.
+是否对缩略图区域当前视图可见文本区域画边框，颜色主题中的`minimapBorder`控制边框的颜色。
 
 `highlight_line`
-
-Set to `false` to stop highlighting lines with a cursor.
+设置为`false`禁用高亮当前行。
 
 `line_padding_top`
-
-Additional spacing at the top of each line, in pixels.
+每行顶部额外的空白，像素单位。
 
 `line_padding_bottom`
-
-Additional spacing at the bottom of each line, in pixels.
+每行底部额外的空白，像素单位。
 
 `scroll_past_end`
-
-Set to `false` to disable scrolling past the end of the buffer. If `true`, Sublime Text will leave a wide, empty margin between the last line and the bottom of the window.
+设置为`false`时禁用滚动到文件的底部，设置为`true`时Sublime Text将会在最后一行和窗体底部留下一个大的边距。
 
 `line_numbers`
-
-Toggles display of line numbers in the gutter.
+切换是否显示行号。
 
 `word_wrap`
-
-If set to `false`, long lines will be clipped instead of wrapped. Scroll the screen horizontally to see the clipped text.
+设置为`false`时，长文本将不会换行，需要横向滚动以看全其它文本。
 
 `wrap_width`
-
-If greater than `0`, wraps long lines at the specified column as opposed to the window width. Only takes effect if `word_wrap` is set to `true`.
+如果比`0`大，长行的换行将依据指定列而不是窗口的宽度。只有`word_wrap`设置为`true`时这个设置才会生效。
 
 `indent_subsequent_lines`
-
-If set to `false`, wrapped lines will not be indented. Only takes effect if `word_wrap` is set to `true`.
+设置为`false`时，换行的行将不会有缩进。只有`word_wrap`设置为`true`时这个设置才会生效。
 
 `draw_centered`
-
-If set to `true`, text will be drawn centered rather than left-aligned.
+是否居中对齐。
 
 `match_brackets`
-
-Set to `false` to disable underlining the brackets surrounding the cursor.
+设置为`false`时禁用给光标周围的括号添加下划线。
 
 `match_brackets_content`
-
-Set this to `false` if you’d rather have brackets highlighted only when the cursor is next to one.
+当光标靠近一个括号时如果你仅仅想高亮显示括号，将其值设置为`false`。
 
 `match_brackets_square`
-
-Set to `false` to stop highlighting square brackets. Only takes effect if `match_brackets` is `true`.
+设置为`false`禁用高亮方括号。`match_brackets`为`true`时才会生效。
 
 `match_bracktets_braces`
-
-Set to `false` to stop highlighting curly brackets. Only takes effect if `match_brackets` is `true`.
+设置为`false`禁用高亮花括号。`match_brackets`为`true`时才会生效。
 
 `match_bracktets_angle`
-
-Set to `false` to stop highlighting angle brackets. Only takes effect if `match_brackets` is `true`.
+设置为`false`禁用高亮尖括号。`match_brackets`为`true`时才会生效。
 
 ##### 自动行为
 
@@ -3161,9 +3131,11 @@ Set to `false` to stop highlighting angle brackets. Only takes effect if `mat
 `command_mode`
 值为`true`时，文件将会忽略按键的点击，在模拟VIM模态行为时很有用。
 
+### 补全文件
+
 ###符号
+
 ###注释
-###补全文件
 ###Metadata文件
 ###命令面板
 ###插件
