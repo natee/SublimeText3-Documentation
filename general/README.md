@@ -3249,7 +3249,7 @@ s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
 </plist>
 ```
 
-下面这些事符号定义文件中合法的元素：
+下面这些是符号定义文件中合法的元素：
 
 `name`
 可选，符号定义的名称，Sublime Text会忽略。
@@ -3345,6 +3345,194 @@ s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
 | `Ctrl+Shift+R` | 显示全局符号列表 |
 
 ###注释
+
+#### 概述
+
+Sublime Text提供了一个默认的命令来注释和取消注释，支持任何类型使用了元数据文件的文件。
+
+#### 文件格式
+
+使用元数据文件定义注释标记。和普通元文件一样，注释元数据文件扩展名为 `.tmPreferences` ，使用 Property List 格式。查看[*Metadata Files*](http://docs.sublimetext.info/en/latest/reference/metadata.html)的官方介绍。
+
+**示例**
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   <key>name</key>
+   <string>Miscellaneous</string>
+   <key>scope</key>
+   <string>source.python</string>
+   <key>settings</key>
+   <dict>
+      <string></string>
+      <key>shellVariables</key>
+      <array>
+         <dict>
+            <key>name</key>
+            <string>TM_COMMENT_START</string>
+            <key>value</key>
+            <string># </string>
+         </dict>
+      </array>
+   </dict>
+</dict>
+</plist>
+```
+
+#### 元文件结构
+
+所有源文件的外部结构都是一样的，继承自Property List格式。
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   ...
+</dict>
+</plist>
+```
+
+下面这些是合法的元素：
+
+`name`
+可选，符号定义的名称，Sublime Text会忽略。
+
+```
+<key>name</key>
+<string>Shell Variables</string>
+```
+
+`scope`
+必需，以逗号分隔的作用域名称列表。
+
+```
+<key>scope</key>
+<string>source.python</string>
+```
+
+`settings`
+必需，设置的容器。
+
+```
+<key>settings</key>
+<dict>
+   ...
+</dict>
+
+```
+
+`uuid`
+可选，文件的唯一标识符，Sublime Text会忽略。
+
+```
+<key>uuid</key>
+<string>BC062860-3346-4D3B-8421-C5543F83D11F</string>
+```
+
+#### `setting`子元素
+
+`shellVariables`
+
+必需，注释标记的容器。
+
+```
+<key>shellVariables</key>
+<array>
+   ...
+</array>
+```
+
+#### `shellVariables`子元素
+
+注意：`shellVariables` 数组可以包含任意的子元素，这里我们只关注和注释有关的。
+
+`TM_COMMENT_START`
+定义默认的注释标记。如果想定义一个额外的注释标记，取名为`TM_COMMENT_START_2`、`TM_COMMENT_START_3`等等。
+
+```
+<dict>
+   <key>name</key>
+   <string>TM_COMMENT_START</string>
+   <key>value</key>
+   <string># </string>
+</dict>
+
+```
+
+`TM_COMMENT_END`
+可选，定义注释标记的结束。如果省略的话，`TM_COMMENT_START`将被视为一个行注释标记。
+如果开始和结束标记都有的话，则这一组将视为块级注释标记。
+如果想定义一个额外的注释结束标记，取名为`TM_COMMENT_END_2`、`TM_COMMENT_END_3`等等。
+
+```
+<dict>
+   <key>name</key>
+   <string>TM_COMMENT_END_2</string>
+   <key>value</key>
+   <string>*/</string>
+</dict>
+
+```
+
+`TM_COMMENT_DISABLE_INDENT`
+可选，合法值为`yes`和`no`。禁用`TM_COMMENT_START`标记的缩进。如果要指定其他组的标记，使用 `TM_COMMENT_DISABLE_INDENT_2`等。
+
+```
+<dict>
+   <key>name</key>
+   <string>TM_COMMENT_DISABLE_INDENT</string>
+   <key>value</key>
+   <string>yes</string>
+</dict>
+```
+
+**示例**
+
+这里有一个更加完整的示例，使用了刚才说到的内容：
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+   <dict>
+      <key>shellVariables</key>
+      <array>
+         <dict>
+            <key>name</key>
+            <string>TM_COMMENT_START</string>
+            <key>value</key>
+            <string>// </string>
+         </dict>
+         <dict>
+            <key>name</key>
+            <string>TM_COMMENT_START_2</string>
+            <key>value</key>
+            <string>/*</string>
+         </dict>
+         <dict>
+            <key>name</key>
+            <string>TM_COMMENT_END_2</string>
+            <key>value</key>
+            <string>*/</string>
+         </dict>
+      </array>
+   </dict>
+   <key>uuid</key>
+   <string>BC062860-3346-4D3B-8421-C5543F83D11F</string>
+</dict>
+</plist>
+```
+
+#### 相关快捷键
+
+| `Ctrl+/`       | 切换行的注释 |
+| -------------- | ------ |
+| `Ctrl+Shift+/` | 切换块的注释 |
+
 ###Metadata文件
 ###命令面板
 ###插件
