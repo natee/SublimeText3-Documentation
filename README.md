@@ -1,11 +1,5 @@
 #Sublime Text 3 Documentation
-##目录
-- [通用](#通用)
-- [使用方法](#使用方法)
-- [定制化](#定制化)
-- [其它](#其它)
-- [API](#API)
-	
+注：目前正在着手于[Sublime Text非官方文档](/general/README.md)的翻译，这部分内容里面有些链接也是官方文档内容，未作翻译。
 
 ###通用
 - [Sublime Text非官方文档](/general/README.md)
