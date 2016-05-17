@@ -2554,47 +2554,35 @@ Sublime Text中的构建系统框架足够灵活所以它可以容纳大量的�
 #### `exec`命令的参数
 
 `cmd`
-
 `shell_cmd`为空时则必需。否则将会被 `shell_cmd`覆盖。
-
 包含将运行的命令及其参数的数组。如果不指定一个绝对路径，将会在`PATH`中搜索外部的程序。最终将会调用`subprocess.Popen(cmd)`。
 
 `shell_cmd`
-
 `cmd`为空时则必需。否则将会被 `cmd`覆盖。
-
 一个指定将运行的命令及其参数的字符串，最终将会调用`subprocess.Popen(shell_cmd, shell=True)`。
 
 `working_dir`
-
 可选。运行`cmd`之前改变当前目录的指向目录，当前目录的原始值将会在之后恢复。
 
 `encoding`
-
 可选。输出`cmd`的编码，必须是合法的Python编码格式，默认是`UTF-8`。
 
 `env`
-
 可选。传递给`cmd`之前将与当前进程进行合并的环境变量的字典。使用这个参数你就可以在不改变系统设置的情况编辑环境变量。
 
 `shell`
-
 可选。值为*true*时，`cmd`将通过shell（`cmd.exe`，`bash`等等）运行。如果使用了`shell_cmd`，则此选项无效。
 
 `path`
-
 可选。`cmd`子进程使用的`PATH`。使用这个参数就可以在不改变系统设置的情况添加字典到`PATH`中。
 
 `file_regex`
-
 可选。给结果视图设置 `result_file_regex` 。
 
 `line_regex`
-
 可选。给结果视图设置 `result_line_regex` 。
 
 `syntax`
-
 可选。如果设置了，就会使构建系统的输入有色彩。
 
 #### 故障诊断
@@ -2622,19 +2610,15 @@ Sublime Text中的构建系统框架足够灵活所以它可以容纳大量的�
 ##### 按键绑定的结构
 
 - `keys`
-
   区分大小写的一个数组。
 
 - `command`
-
   将执行的命名名称。
 
 - `args`
-
   传递给`command`的参数形成的字典。关键字必须是`command`的参数名。
 
 - `context`
-
   决定一个特定*上下文*的条件数组，所有条件需同时满足才算是符合条件。
 
 例子：
@@ -2657,91 +2641,70 @@ Sublime Text中的构建系统框架足够灵活所以它可以容纳大量的�
 ##### Context的结构
 
 `key`
-
 上下文的名称。
 
 `operator`
-
 针对 `key`的值要进行的操作符，默认为`equal`。
 
 `operand`
-
 通过`key`返回的结果用这个值进行测试。
 
 `match_all`
-
 需要测试对所有选择都生效，默认为`false`。
 
 **Context Operands**
 
 `auto_complete_visible`
-
 自动填充列表显示时返回`true`。
 
 `has_next_field`
-
 下一个代码段域可用时返回`true`。
 
 `has_prev_field`
-
 上一个代码段域可用时返回`true`。
 
 `num_selections`
-
 返回选择的数量。
 
 `overlay_visible`
-
 遮罩层可见时返回`true`。
 
 `panel_visible`
-
 面板可见时返回`true`。
 
 `following_text`
-
 限制测试插入符之后的文本。
 
 `preceding_text`
-
 限制测试为插入符之前的文本。
 
 `selection_empty`
-
 选择区域是空时返回`true`。
 
 `setting.x`
-
 返回`x`的值，setting.x可以是任意字符串。
 
 `text`
-
 限制测试为选中文本。
 
 `selector`
-
 返回当前作用域的名称。
 
 `panel_has_focus`
-
 如果面板中有输入框是focus时返回`true`。
 
 `panel`
-
 如果面板中指定的`operand`可见时返回`true`。
 
 **Context Operators**
 
 `equal`、`not_equal`
-
 测试是否相等。
 
 `regex_match`、`not_regex_match`
-
 通过正则表达式匹配（全匹配）。
 
 `regex_contains`、`not_regex_contains`
-
 通过正则表达式匹配（部分匹配）。
 
 #### 命令模式
@@ -3194,6 +3157,192 @@ Sublime Text默认的按键映射位于 `Packages/Default`下。其他包也许
 注意：如果你想要一个字面量`$`，你需要进行转义`\\$`（由于是在一个JSON字符串中，所以需要双斜杠）。
 
 ###符号
+
+#### 概述
+
+Sublime Text对符号导航提供了基本的支持（跳转到类和函数的定义），任何文件都可启用文件导航。
+
+#### 格式
+
+符号使用元数据文件定义。
+
+和常规元数据文件一样，符号定义文件有 `.tmPreferences` 后缀，且使用Property List格式。文件名会被Sublime Text忽略。
+
+#### 定义符号
+
+Sublime Text有两种符号列表：局部符号列表（当前文件）和全局符号列表（项目范围）。
+
+符号定义文件使用作用域选择器在源代码中捕获符号。
+
+同一个包中可以共存多个符号定义文件，例如，两个符号定义文件可以串联工作：一个将定义所有符号，和第二个可以选择性地隐藏其中的一些。
+
+符号定义文件示例：
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   <key>name</key>
+   <string>Symbol List</string>
+   <key>scope</key>
+   <string>source.python meta.function.python, source.python meta.class.python</string>
+   <key>settings</key>
+   <dict>
+      <key>showInSymbolList</key>
+      <integer>1</integer>
+   </dict>
+</dict>
+</plist>
+```
+
+上述文件，Sublime Text将会用`source.python meta.function.python`和`source.python meta.class.python`去查找源文件，找到的将被作为符号。 `showInSymbolList` 的设置告诉Sublime Text使用局部符号列表。
+
+#### 文本转换
+
+符号显示给用户时可以对它们进行转换，符号转换包含了使用 [Oniguruma](http://www.geocities.jp/kosako3/oniguruma/)语法定义的文本替换正则表达式。
+
+文本替换的例子：
+
+```
+s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
+```
+
+这个例子中， `class FooBar(object)` 在符号列表中将显示为 `FooBar(object)` 。
+
+使用符号转换来扩展一下上面的例子：
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   <key>name</key>
+   <string>Symbol List</string>
+   <key>scope</key>
+   <string>source.python meta.function.python, source.python meta.class.python</string>
+   <key>settings</key>
+   <dict>
+      <key>showInSymbolList</key>
+      <integer>1</integer>
+      <key>symbolTransformation</key>
+      <string>
+         s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
+         s/def\s+([A-Za-z_][A-Za-z0-9_]*\()(?:(.{0,40}?\))|((.{40}).+?\)))(\:)/$1(?2:$2)(?3:$4…\))/g;
+      </string>
+   </dict>
+</dict>
+</plist>
+```
+
+#### 符号定义文件的结构
+
+所有源文件的外部结构都是一样的，继承自Property List格式。
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   ...
+</dict>
+</plist>
+```
+
+下面这些事符号定义文件中合法的元素：
+
+`name`
+可选，符号定义的名称，Sublime Text会忽略。
+
+```
+<key>name</key>
+<string>Some arbitrary name goes here</string>
+
+```
+
+`scope`
+以逗号分隔的作用域名称列表。
+
+```
+<key>scope</key>
+<string>source.python meta.function.python, source.python meta.class.python</string>
+
+```
+
+`settings`
+必需，设置的容器。
+
+```
+<key>settings</key>
+<dict>
+   ...
+</dict>
+
+```
+
+`uuid`
+可选，文件的唯一标识符，Sublime Text会忽略。
+
+```
+<key>uuid</key>
+<string>BC062860-3346-4D3B-8421-C5543F83D11F</string>
+```
+
+#### `settings`子元素
+
+`showInSymbolList`
+
+可选，把符号和局部符号列表关联起来。合法值是`0`和`1`，`0`表示对应的符号不展示。
+
+```
+<key>showInSymbolList</key>
+<integer>1</integer>
+
+```
+
+`showInIndexedSymbolList`
+
+可选，把符号和全局符号列表关联起来。合法值是`0`和`1`，`0`表示对应的符号不展示。
+
+```
+<key>showInIndexedSymbolList</key>
+<integer>1</integer>
+
+```
+
+`symbolTransformation`
+
+可选，目标是局部符号列表。分号分隔的正则表达式列表。
+
+```
+<key>symbolTransformation</key>
+<string>
+   s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
+   s/def\s+([A-Za-z_][A-Za-z0-9_]*\()(?:(.{0,40}?\))|((.{40}).+?\)))(\:)/$1(?2:$2)(?3:$4…\))/g;
+</string>
+
+```
+
+`symbolIndexTransformation`
+
+可选，目标是全局符号列表。
+
+```
+<key>symbolIndexTransformation</key>
+<string>
+   s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
+   s/def\s+([A-Za-z_][A-Za-z0-9_]*\()(?:(.{0,40}?\))|((.{40}).+?\)))(\:)/$1(?2:$2)(?3:$4…\))/g;
+</string>
+```
+
+#### 导航符号
+
+一旦符号定义了，你就可以通过标准的快捷键来调用它们：
+
+| `F12`          | 跳转到定义    |
+| -------------- | -------- |
+| `Ctrl+R`       | 显示局部符号列表 |
+| `Ctrl+Shift+R` | 显示全局符号列表 |
 
 ###注释
 ###Metadata文件
