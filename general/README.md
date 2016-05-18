@@ -3681,7 +3681,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 
 `bracketIndentNextLinePattern`
 
-Regex. If it matches on the current line, only the next line will be indented one level further.
+正则表达式，如果匹配到当前行，则仅仅是下一行将会有下一级别的缩颈。
 
 ```
 <key>bracketIndentNextLinePattern</key>
@@ -3691,7 +3691,7 @@ Regex. If it matches on the current line, only the next line will be indented on
 
 `disableIndentNextLinePattern`
 
-Regex. If it matches on the current line, the next line will not be indented further.
+正则表达式，如果匹配到当前行，下一行将不再缩进。
 
 ```
 <key>disableIndentNextLinePattern</key>
@@ -3701,7 +3701,7 @@ Regex. If it matches on the current line, the next line will not be indented fur
 
 `unIndentedLinePattern`
 
-Regex. The auto-indenter will ignore lines matching this regex when computing the next line’s indentation level.
+正则表达式，自动缩进计算下一行的缩进层级时将忽略当前匹配行。
 
 ```
 <key>unIndentedLinePattern</key>
@@ -3710,9 +3710,40 @@ Regex. The auto-indenter will ignore lines matching this regex when computing th
 
 ##### 补全选项
 
-##### 符号定义
+`cancelCompletion`
+
+正则表达式，如果匹配到当前行，会禁止补全弹出层。
+
+```
+<key>cancelCompletion</key>
+<string>insert regex here</string>
+```
 
 ##### Shell变量
+
+Shell变量有多种用途且可以从代码段中访问，注意Shell变量是定义在array中的字典，因此和`settings`的子元素有不同的格式。
+
+`shellVariables`
+
+“shell变量”的容器。
+
+```xml
+<key>shellVariables</key>
+<array>
+   ...
+</array>
+```
+
+**`shellVariables`的子元素**
+
+```xml
+<dict>
+   <key>name</key>
+   <string>BOOK_OPENING</string>
+   <key>value</key>
+   <string>Once upon a time...</string>
+</dict>
+```
 
 #### 相关API函数
 
