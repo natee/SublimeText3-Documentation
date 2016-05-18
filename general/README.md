@@ -3534,6 +3534,190 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 | `Ctrl+Shift+/` | 切换块的注释 |
 
 ###Metadata文件
+
+#### 概述
+
+元数据是可以被分配到使用作用域选择器特定文本段的参数。
+
+这些参数可以有多种用途，如：
+
+- 指定当前注释标记，即使是在嵌入的源代码中，因此你可以用任何语法来切换注释。
+- 定义自动缩进的规则。
+- 快速浏览。
+
+#### 文件格式
+
+扩展名为 `.tmPreferences` ，使用 Property List 格式。
+
+**示例**
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   <key>name</key>
+   <string>JavaScript Metadata</string>
+   <key>scope</key>
+   <string>source.js</string>
+   <key>settings</key>
+   <dict>
+      <key>decreaseIndentPattern</key>
+      <string>^(.*\*/)?\s*\}.*$</string>
+      <key>increaseIndentPattern</key>
+      <string>^.*\{[^}"']*$</string>
+
+      <key>bracketIndentNextLinePattern</key>
+      <string>(?x)
+      ^ \s* \b(if|while|else)\b [^;]* $
+      | ^ \s* \b(for)\b .* $
+      </string>
+   </dict>
+   <dict>
+      <key>shellVariables</key>
+      <array>
+         <dict>
+            <key>name</key>
+            <string>TM_COMMENT_START</string>
+            <key>value</key>
+            <string>// </string>
+         </dict>
+         <dict>
+            <key>name</key>
+            <string>TM_COMMENT_START_2</string>
+            <key>value</key>
+            <string>/*</string>
+         </dict>
+         <dict>
+            <key>name</key>
+            <string>TM_COMMENT_END_2</string>
+            <key>value</key>
+            <string>*/</string>
+         </dict>
+      </array>
+   </dict>
+   <key>uuid</key>
+   <string>BC062860-3346-4D3B-8421-C5543F83D11F</string>
+</dict>
+</plist>
+```
+
+示例文件结合了多种类型的元数据。
+
+#### 元文件结构
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   ...
+</dict>
+</plist>
+```
+
+下面这些是合法的元素：
+
+`name`
+可选，符号定义的名称，Sublime Text会忽略。
+
+```
+<key>name</key>
+<string>Shell Variables</string>
+```
+
+`scope`
+必需，以逗号分隔的作用域名称列表。
+
+```
+<key>scope</key>
+<string>source.python</string>
+```
+
+`settings`
+必需，设置的容器。
+
+```
+<key>settings</key>
+<dict>
+   ...
+</dict>
+
+```
+
+`uuid`
+可选，文件的唯一标识符，Sublime Text会忽略。
+
+```
+<key>uuid</key>
+<string>BC062860-3346-4D3B-8421-C5543F83D11F</string>
+```
+
+#### `settings`子元素
+
+ `settings` 元素可以包含有不同用途的子元素。
+
+##### 缩进选项
+
+`increaseIndentPattern`
+
+正则表达式，如果匹配到当前行，则下一行将会有向下一级别的缩进。
+
+```
+<key>increaseIndentPattern</key>
+<string>insert regex here</string>
+
+```
+
+`decreaseIndentPattern`
+
+正则表达式，如果匹配到当前行，则下一行将会有向上一级别的缩进。
+
+```
+<key>decreaseIndentPattern</key>
+<string>insert regex here</string>
+
+```
+
+`bracketIndentNextLinePattern`
+
+Regex. If it matches on the current line, only the next line will be indented one level further.
+
+```
+<key>bracketIndentNextLinePattern</key>
+<string>insert regex here</string>
+
+```
+
+`disableIndentNextLinePattern`
+
+Regex. If it matches on the current line, the next line will not be indented further.
+
+```
+<key>disableIndentNextLinePattern</key>
+<string>insert regex here</string>
+
+```
+
+`unIndentedLinePattern`
+
+Regex. The auto-indenter will ignore lines matching this regex when computing the next line’s indentation level.
+
+```
+<key>unIndentedLinePattern</key>
+<string>insert regex here</string>
+```
+
+##### 补全选项
+
+##### 符号定义
+
+##### Shell变量
+
+#### 相关API函数
+
+用 `view.meta_info(key, point)` 从插件代码中提取元数据。
+
 ###命令面板
 ###插件
 ###Python API
