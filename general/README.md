@@ -3780,6 +3780,73 @@ Shell变量有多种用途且可以从代码段中访问，注意Shell变量是�
 可选项会根据输入的文字过滤，并不会一次显示所有的项。
 
 ###插件
+
+插件是从`sublime_plugin`中实现`*Command`类的Python脚本。
+
+#### 存放位置
+
+Sublime Text在下列位置寻找插件：
+
+- `Packages`
+- `Packages/`
+- `.sublime-package` 文件
+
+ `Packages` 中嵌套目录中的插件不会被加载。所有插件都应该放到`Packages`目录下其自己的文件夹中，不能直接放到`Packages`下。
+
+#### 指令命名约定
+
+带有`Command`的后缀，如：`NamesLikeThisCommand`。然而，指令名称会自动被转化成`name_like_this`。因此 `ExampleCommand` 会变成`example`， `AnotherExampleCommand` 会变成`another_example`。
+
+#### 指令的类型
+
+- `sublime_plugin.WindowCommand`
+- `sublime_plugin.TextCommand`
+- `sublime_plugin.EventListener`
+
+ `WindowCommand` 实例必须有一个 `.window` 属性指向创建他们的窗口实例，类似的， `TextCommand` 必须有一个 `.view` 属性。
+
+##### 命令的共同点
+
+所有的命令都需要实现一个`.run()`函数才能正常运行，此外，它们可以接收任意多的关键字参数。
+
+注意：命令的参数必须是有效的JSON值。
+
+#### 通过API调用指令
+
+根据不同指令的类型，使用`View`或`Window`的引用并调用`<object>.run_command('command_name')`。除了命令的名称外，`.run_command`接收一个字典参数。
+
+```shell
+window.run_command("echo", {"Tempus": "Irreparabile", "Fugit": "."})
+```
+
+#### 指令参数
+
+所有用户提供的参数都必须是合法的JSON类型。
+
+#### 文本指令和`edit`对象
+
+文本指令接收一个`edit`对象，所有 `edit` 中完成的操作都会被分组为一个撤销操作。编辑完成时 `on_modified()`和`on_selection_modified()` 等回调函数会被调用。
+
+和老版本不同，Sublime Text3不允许对`edit`对象进行编程控制，`edit`对象的生命周期由编辑器单独管理。API是负责管理其生命周期的。插件的作者必须确保新的文本命令中的所有的编辑都在`.run()`中，以便宏和代码段可以正常工作。
+
+用 `run_command()` 函数可以从你自己的指令中调用其他指令。
+
+#### 事件响应
+
+任何从`EventListener`派生的命令都能够对事件作出响应。
+
+#### 标准库
+
+Sublime Text自带一个缩减版的标准库。
+
+#### 自动重载插件
+
+插件有变动时Sublime Text将会重新加载Python模块，但是Python的子包不会被自动加载，这在你开发插件时会造成困惑。插件的文件有变化时最好还是重启Sublime Text为好。
+
+#### 多线程
+
+只有 `set_timeout()` 函数可以安全地从不同的线程调用。
+
 ###Python API
 ###指令
 ###Windows键盘快捷键
