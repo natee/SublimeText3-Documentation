@@ -103,7 +103,7 @@ Sublime Text在OS X上只有一个版本，所以你可以忽略这部分。
 ####Linux
 执行下面的命令查看的的操作系统类型。
 
-```
+```shell
 uname -m
 ```
 ###Windows
@@ -131,7 +131,7 @@ Sublime Text在Windows上有普通和便捷两个版本。除非你知道你是�
 
 使用下面的命令创建一个快捷方式。
 
-```
+```shell
 ln -s  "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
 ```
 ###Linux
@@ -139,45 +139,45 @@ ln -s  "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/loc
 ####Ubuntu
 #####i386
 
-```
+```shell
 cd ~
 wget http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3047_i386.deb
 ```
 #####x64
 
-```
+```shell
 cd ~
 wget http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3047_amd64.deb
 ```
 ####其它版本Linux
 #####i386
 
-```
+```shell
 cd ~
 wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3047_x32.tar.bz2
 tar vxjf sublime_text_3_build_3047_x32.tar.bz2
 ```
 #####x64
 
-```
+```shell
 cd ~
 wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3047_x64.tar.bz2
 tar vxjf sublime_text_3_build_3047_x64.tar.bz2
 ```
 现在我们应该把解压的文件移动到合适的位置。
 
-```
+```shell
 sudo mv Sublime\ Text\ 3 /opt/
 ```
 最后，用下面的命令创建一个快捷方式。
 
-```
+```shell
 sudo ln -s /opt/Sublime\ Text\ 3/sublime_text /usr/bin/sublime
 ```
 在Ubuntu下，如果你想把Sublime Text添加到统一的启动器中，那么你需要继续往下看。
 首先，创建一个新文件。
 
-```
+```shell
 sudo sublime /usr/share/applications/sublime.desktop
 ```
 然后，把下面的代码粘贴到里面。
@@ -204,7 +204,7 @@ TargetEnvironment=Unity
 ```
 如果你已经注册过Sublime Text，但是每次打开还是提示要你注册，尝试以下命令。
 
-```
+```shell
 sudo chown -R username:username /home/username/.config /sublime-text-3
 ```
 *username*替换为你的账户名，这将修复授权错误的问题。
@@ -512,7 +512,7 @@ Sublime Text提供两种主要搜索方式：
 
 ####示例
 
-```
+```json
 {
     "cmd": ["python", "-u", "$file"],
     "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
@@ -523,7 +523,9 @@ Sublime Text提供两种主要搜索方式：
 
 必须，这里包含了真正需要执行的命令：
 
-	python -u /path/to/current/file.ext
+```shell
+python -u /path/to/current/file.ext
+```
 ​	
 **file_regex**
 
@@ -609,7 +611,7 @@ models:100
 
 ####`.sublime-project`格式
 
-```
+```json
 {
     "folders":
     [
@@ -792,7 +794,7 @@ Sublime Text把配置文件存放在* .sublime-settings*中。
 #####传递参数
 使用`args`指定参数：
 
-```
+```json
 { "keys": ["shift+enter"], "command": "insert", "args": {"characters": "\n"} }
 ```
 这里，当按下`Shift+Enter`时，`insert`命令会加上`\n`参数。
@@ -800,7 +802,7 @@ Sublime Text把配置文件存放在* .sublime-settings*中。
 #####上下文
 上下文决定了一个给定的按键绑定是否生效。
 
-```
+```json
 { "keys": ["escape"], "command": "clear_fields", "context":
    [
       { "key": "has_next_field", "operator": "equal", "operand": true }
@@ -812,7 +814,7 @@ Sublime Text把配置文件存放在* .sublime-settings*中。
 #####Key Chords（同时按两个键）
 你可以用多个按键组合创建一个按键绑定。
 
-```
+```json
 { "keys": ["ctrl+k", "ctrl+v"], "command": "paste_from_history" }
 ```
 这里，触发`paste_from_history`命令，必须先按下`Ctrl + K`，然后松开`K`，按下`V`。
@@ -833,7 +835,7 @@ Sublime Text把配置文件存放在* .sublime-settings*中。
 
 下面的内容是 `Main.sublime-menu` 文件中的一个摘要：
 
-```
+```son
 [
     {
         "caption": "Edit",
@@ -987,7 +989,7 @@ Sublime Text中指令是无处不在的：按键绑定、菜单项、宏等都�
 
 ####指令解析
 指令都是以`_`分隔的名称，如：`hot_key`，它可以跟一个字典参数（key是string类型，value是JSON类型）。下面是几个从Python控制台运行的指令：
-```
+```shell
 view.run_command("goto_line", {"line": 10})
 view.run_command('insert_snippet', {"contents": "<$SELECTION>"})
 view.window().run_command("prompt_select_project")
@@ -1006,7 +1008,7 @@ view.window().run_command("prompt_select_project")
 
 ####如何编辑宏
 录制宏的另外一个选择就是手动编辑它，在`Packages/User`下创建一个以`.sublime-macro`为扩展名的文件，这个文件中写入操作指令。宏文件格式如下：
-```
+```json
 [
     {"command": "move_to", "args": {"to": "hardeol"}},
     {"command": "insert", "args": {"characters": "\n"}}
@@ -1019,7 +1021,7 @@ view.window().run_command("prompt_select_project")
 
 ####宏的按键绑定
 可以通过组合键的形式运行宏，把宏文件的路径替换下面的`run_macro_file`。
-```
+```json
 {"keys": ["super+alt+l"], "command": "run_macro_file", "args": {"file": "res://Packages/User/Example.sublime-macro"}}
 ```
 ###Snippets
@@ -1029,7 +1031,7 @@ view.window().run_command("prompt_select_project")
 以*.sublime-snippet*为后缀的XML文件，例如，你可以把一个`greeting.sublime-snippet`放到一个`Email`的包里。
 
 一个典型的snippet如下所示：
-```
+```xml
 <snippet>
     <content><![CDATA[Type your snippet here]]></content>
     <!-- Optional: Tab trigger to activate the snippet -->
@@ -1086,8 +1088,8 @@ Scope决定代码片段被激活的上下文，参考[作用域](####作用域)�
 
 ```
 USER NAME:          $TM_FULLNAME
-​FILE NAME:          $TM_FILENAME
-​TAB SIZE:          $TM_TAB_SIZE
+FILE NAME:          $TM_FILENAME
+TAB SIZE:          $TM_TAB_SIZE
 SOFT TABS:          $TM_SOFT_TABS
 =================================
 
@@ -1303,7 +1305,7 @@ l| andl|
 #### 示例文件`.sublime-commands`
 这是从`Packages/Default/Default.sublime-commands`中的一段摘录：
 
-```
+```json
 [
     { "caption": "Project: Save As", "command": "save_project_as" },
     { "caption": "Project: Close", "command": "close_project" },
@@ -1705,7 +1707,7 @@ Sublime Text只会在下列位置寻找插件：
 新的缓冲区（其实就是未保存的新文件）中将会看到“Hello, World!”。
 ####分析你的插件
 上面的插件看起来就是这样的：
-```
+```python
 import sublime, sublime_plugin
 
 class ExampleCommand(sublime_plugin.TextCommand):
@@ -1775,7 +1777,7 @@ Sublime Text命令是从定义在`sublime_plugin`中的 `*Command` 类派生出�
 
 让我们创建一个从谷歌的自动填充服务获取数据的插件，然后将其送至Sublime Text补全列表。
 
-```
+```python
 import sublime, sublime_plugin
 
 from xml.etree import ElementTree as ET
@@ -1821,9 +1823,9 @@ Packages/Default包含很多无文档的命令和API调用的例子。如果你�
 
 ##### 同名包的相互影响
 
-If two packages with the same name exist in both *`Installed Packages`* and *`Shipped Packages`*, the one in*`Installed Packages`* will be used and the one in *`Shipped Packages`* will be ignored.
+如果*`Installed Packages`*和*`Shipped Packages`*中存在两个同名包，将会用*`Installed Packages`*中的这个，*自带包*将会被忽略。
 
-Any file in `*Packages*/*PackageName*` takes precedence over an identically named file in`*Installed Packages*/*PackageName*.sublime-package` or `*Shipped Packages*/*PackageName*.sublime-package`.
+*`Packages/PackageName`*中所有的文件都优先于`Installed Packages/PackageName.sublime-package`和`Shipped Packages/PackageName.sublime-package`中的同名文件。
 
 参看[定制化或覆盖包](####定制化或覆盖包)。
 
@@ -2192,7 +2194,7 @@ match: "#"\w+""
 
 ##### 配色方案文件最外层元素
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -2222,7 +2224,7 @@ Sublime Text支持以下几种配色方案的设置：
 
   此处的设置会影响全局，在 `<array>`中的`<dict>`中设置。
 
-  ```
+  ```xml
   <array>
      <dict>
         <key>settings</key>
@@ -2347,7 +2349,7 @@ Sublime Text支持以下几种配色方案的设置：
 
   特殊作用域的设置。
 
-  ```
+  ```xml
   <array>
      ...
      <dict>
@@ -2405,7 +2407,7 @@ Sublime Text支持以下几种配色方案的设置：
 
 **例子**
 
-```
+```json
 {
     "cmd": ["python", "-u", "$file"],
     "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
@@ -2464,7 +2466,7 @@ Sublime Text中的构建系统框架足够灵活所以它可以容纳大量的�
 **特定平台选项**
 `windows`、 `osx`和`linux` 使你可以在构建系统中添加指定平台的数据。例如：
 
-```
+```json
 {
     "cmd": ["ant"],
     "file_regex": "^ *\\[javac\\] (.+):([0-9]+):() (.*)$",
@@ -2483,7 +2485,7 @@ Sublime Text中的构建系统框架足够灵活所以它可以容纳大量的�
 
 例子：
 
-```
+```json
 {
     "selector": "source.python",
     "cmd": ["date"],
@@ -2623,7 +2625,7 @@ Sublime Text中的构建系统框架足够灵活所以它可以容纳大量的�
 
 例子：
 
-```
+```json
 { 
 "keys": ["shift+enter"], 
 "command": "insert_snippet", 
@@ -2713,7 +2715,7 @@ Sublime Text提供了一个 `command_mode` 设置防止按键事件被发送�
 
 不适用于命令模式的按键绑定应该包含类似下面的内容：
 
-```
+```json
 {"key": "setting.command_mode", "operand": false}
 ```
 
@@ -2837,7 +2839,7 @@ Sublime Text默认的按键映射位于 `Packages/Default`下。其他包也许
 
 下面的内容是 `Main.sublime-menu` 文件中的一个摘要：
 
-```
+```json
 [
     {
         "caption": "Edit",
@@ -3102,7 +3104,7 @@ Sublime Text默认的按键映射位于 `Packages/Default`下。其他包也许
 
 #### 例子
 
-```
+```json
 {
    "scope": "text.html - source - meta.tag, punctuation.definition.tag.begin",
 
@@ -3178,7 +3180,7 @@ Sublime Text有两种符号列表：局部符号列表（当前文件）和全�
 
 符号定义文件示例：
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -3212,7 +3214,7 @@ s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
 
 使用符号转换来扩展一下上面的例子：
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -3239,7 +3241,7 @@ s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
 
 所有源文件的外部结构都是一样的，继承自Property List格式。
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -3254,36 +3256,33 @@ s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
 `name`
 可选，符号定义的名称，Sublime Text会忽略。
 
-```
+```xml
 <key>name</key>
 <string>Some arbitrary name goes here</string>
-
 ```
 
 `scope`
 以逗号分隔的作用域名称列表。
 
-```
+```xml
 <key>scope</key>
 <string>source.python meta.function.python, source.python meta.class.python</string>
-
 ```
 
 `settings`
 必需，设置的容器。
 
-```
+```xml
 <key>settings</key>
 <dict>
    ...
 </dict>
-
 ```
 
 `uuid`
 可选，文件的唯一标识符，Sublime Text会忽略。
 
-```
+```xml
 <key>uuid</key>
 <string>BC062860-3346-4D3B-8421-C5543F83D11F</string>
 ```
@@ -3294,40 +3293,37 @@ s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
 
 可选，把符号和局部符号列表关联起来。合法值是`0`和`1`，`0`表示对应的符号不展示。
 
-```
+```xml
 <key>showInSymbolList</key>
 <integer>1</integer>
-
 ```
 
 `showInIndexedSymbolList`
 
 可选，把符号和全局符号列表关联起来。合法值是`0`和`1`，`0`表示对应的符号不展示。
 
-```
+```xml
 <key>showInIndexedSymbolList</key>
 <integer>1</integer>
-
 ```
 
 `symbolTransformation`
 
 可选，目标是局部符号列表。分号分隔的正则表达式列表。
 
-```
+```xml
 <key>symbolTransformation</key>
 <string>
    s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
    s/def\s+([A-Za-z_][A-Za-z0-9_]*\()(?:(.{0,40}?\))|((.{40}).+?\)))(\:)/$1(?2:$2)(?3:$4…\))/g;
 </string>
-
 ```
 
 `symbolIndexTransformation`
 
 可选，目标是全局符号列表。
 
-```
+```xml
 <key>symbolIndexTransformation</key>
 <string>
    s/class\s+([A-Za-z_][A-Za-z0-9_]*.+?\)?)(\:|$)/$1/g;
@@ -3356,7 +3352,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 
 **示例**
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -3386,7 +3382,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 
 所有源文件的外部结构都是一样的，继承自Property List格式。
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -3401,7 +3397,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 `name`
 可选，符号定义的名称，Sublime Text会忽略。
 
-```
+```xml
 <key>name</key>
 <string>Shell Variables</string>
 ```
@@ -3409,7 +3405,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 `scope`
 必需，以逗号分隔的作用域名称列表。
 
-```
+```xml
 <key>scope</key>
 <string>source.python</string>
 ```
@@ -3417,18 +3413,17 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 `settings`
 必需，设置的容器。
 
-```
+```xml
 <key>settings</key>
 <dict>
    ...
 </dict>
-
 ```
 
 `uuid`
 可选，文件的唯一标识符，Sublime Text会忽略。
 
-```
+```xml
 <key>uuid</key>
 <string>BC062860-3346-4D3B-8421-C5543F83D11F</string>
 ```
@@ -3439,7 +3434,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 
 必需，注释标记的容器。
 
-```
+```xml
 <key>shellVariables</key>
 <array>
    ...
@@ -3453,14 +3448,13 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 `TM_COMMENT_START`
 定义默认的注释标记。如果想定义一个额外的注释标记，取名为`TM_COMMENT_START_2`、`TM_COMMENT_START_3`等等。
 
-```
+```xml
 <dict>
    <key>name</key>
    <string>TM_COMMENT_START</string>
    <key>value</key>
    <string># </string>
 </dict>
-
 ```
 
 `TM_COMMENT_END`
@@ -3468,20 +3462,19 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 如果开始和结束标记都有的话，则这一组将视为块级注释标记。
 如果想定义一个额外的注释结束标记，取名为`TM_COMMENT_END_2`、`TM_COMMENT_END_3`等等。
 
-```
+```xml
 <dict>
    <key>name</key>
    <string>TM_COMMENT_END_2</string>
    <key>value</key>
    <string>*/</string>
 </dict>
-
 ```
 
 `TM_COMMENT_DISABLE_INDENT`
 可选，合法值为`yes`和`no`。禁用`TM_COMMENT_START`标记的缩进。如果要指定其他组的标记，使用 `TM_COMMENT_DISABLE_INDENT_2`等。
 
-```
+```xml
 <dict>
    <key>name</key>
    <string>TM_COMMENT_DISABLE_INDENT</string>
@@ -3494,7 +3487,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 
 这里有一个更加完整的示例，使用了刚才说到的内容：
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -3551,7 +3544,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 
 **示例**
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -3606,7 +3599,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 
 #### 元文件结构
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -3621,7 +3614,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 `name`
 可选，符号定义的名称，Sublime Text会忽略。
 
-```
+```xml
 <key>name</key>
 <string>Shell Variables</string>
 ```
@@ -3629,7 +3622,7 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 `scope`
 必需，以逗号分隔的作用域名称列表。
 
-```
+```xml
 <key>scope</key>
 <string>source.python</string>
 ```
@@ -3637,18 +3630,17 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 `settings`
 必需，设置的容器。
 
-```
+```xml
 <key>settings</key>
 <dict>
    ...
 </dict>
-
 ```
 
 `uuid`
 可选，文件的唯一标识符，Sublime Text会忽略。
 
-```
+```xml
 <key>uuid</key>
 <string>BC062860-3346-4D3B-8421-C5543F83D11F</string>
 ```
@@ -3660,50 +3652,41 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 ##### 缩进选项
 
 `increaseIndentPattern`
-
 正则表达式，如果匹配到当前行，则下一行将会有向下一级别的缩进。
 
-```
+```xml
 <key>increaseIndentPattern</key>
 <string>insert regex here</string>
-
 ```
 
 `decreaseIndentPattern`
-
 正则表达式，如果匹配到当前行，则下一行将会有向上一级别的缩进。
 
-```
+```xml
 <key>decreaseIndentPattern</key>
 <string>insert regex here</string>
-
 ```
 
 `bracketIndentNextLinePattern`
-
 正则表达式，如果匹配到当前行，则仅仅是下一行将会有下一级别的缩颈。
 
-```
+```xml
 <key>bracketIndentNextLinePattern</key>
 <string>insert regex here</string>
-
 ```
 
 `disableIndentNextLinePattern`
-
 正则表达式，如果匹配到当前行，下一行将不再缩进。
 
-```
+```xml
 <key>disableIndentNextLinePattern</key>
 <string>insert regex here</string>
-
 ```
 
 `unIndentedLinePattern`
-
 正则表达式，自动缩进计算下一行的缩进层级时将忽略当前匹配行。
 
-```
+```xml
 <key>unIndentedLinePattern</key>
 <string>insert regex here</string>
 ```
@@ -3711,10 +3694,9 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 ##### 补全选项
 
 `cancelCompletion`
-
 正则表达式，如果匹配到当前行，会禁止补全弹出层。
 
-```
+```xml
 <key>cancelCompletion</key>
 <string>insert regex here</string>
 ```
@@ -3724,7 +3706,6 @@ Sublime Text提供了一个默认的命令来注释和取消注释，支持任�
 Shell变量有多种用途且可以从代码段中访问，注意Shell变量是定义在array中的字典，因此和`settings`的子元素有不同的格式。
 
 `shellVariables`
-
 “shell变量”的容器。
 
 ```xml
@@ -3750,6 +3731,54 @@ Shell变量有多种用途且可以从代码段中访问，注意Shell变量是�
 用 `view.meta_info(key, point)` 从插件代码中提取元数据。
 
 ###命令面板
+
+#### 文件格式
+
+| **Format**    | JSON （带注释）          |
+| ------------- | ------------------- |
+| **Extension** | `.sublime-commands` |
+| **Name**      | 任意                  |
+| **Location**  | *`Packages`*下任何位置   |
+| **Content**   | 命令面板可选项列表           |
+
+#### 示例
+
+这里有一个`Packages/Default/Default.sublime-commands`的部分内容：
+
+```json
+[
+    { "caption": "Project: Save As", "command": "save_project_as" },
+    { "caption": "Project: Close", "command": "close_project" },
+    { "caption": "Project: Add Folder", "command": "prompt_add_folder" },
+
+    { "caption": "Preferences: Default File Settings", "command": "open_file", "args": {"file": "${packages}/Default/Base File.sublime-settings"} },
+    { "caption": "Preferences: User File Settings", "command": "open_file", "args": {"file": "${packages}/User/Base File.sublime-settings"} },
+    { "caption": "Preferences: Default Global Settings", "command": "open_file", "args": {"file": "${packages}/Default/Global.sublime-settings"} },
+    { "caption": "Preferences: User Global Settings", "command": "open_file", "args": {"file": "${packages}/User/Global.sublime-settings"} },
+    { "caption": "Preferences: Browse Packages", "command": "open_dir", "args": {"dir": "$packages"} }
+]
+```
+
+#### 命令面板项
+
+下面这些事可以包含在 `.sublime-commands` 中的项：
+
+`caption`
+显示在命令面板中的文字。
+
+`command`
+将要执行的命令。
+
+`args`
+传递给`command`的参数。需要注意的是你需要用类似代码段形式的变量：`${packages}` 或 `$packages`来定位包文件夹，这和其他地方有点区别。
+
+#### 使用方法
+
+1. 按下`Ctrl+Shift+P`
+2. 选择命令
+
+可选项会根据输入的文字过滤，并不会一次显示所有的项。
+
 ###插件
 ###Python API
 ###指令
