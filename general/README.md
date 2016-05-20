@@ -3848,6 +3848,181 @@ Sublime Text自带一个缩减版的标准库。
 只有 `set_timeout()` 函数可以安全地从不同的线程调用。
 
 ###Python API
+
+[官方文档](http://www.sublimetext.com/docs/3/api_reference.html)
+
+#### 官方文档中缺失的
+
+官方文档中有些缺失，本章节就是尝试解决这个问题的。
+
+##### 索引
+
+- module [`sublime`](http://docs.sublimetext.info/en/latest/reference/api.html#module-sublime)
+  - class [`Window`](http://docs.sublimetext.info/en/latest/reference/api.html#sublime.Window)[`set_layout()`](http://docs.sublimetext.info/en/latest/reference/api.html#sublime.Window.set_layout)
+    - class [`View`](http://docs.sublimetext.info/en/latest/reference/api.html#sublime.View)[`match_selector()`](http://docs.sublimetext.info/en/latest/reference/api.html#sublime.View.match_selector)
+
+
+- module [`sublime_plugin`](http://docs.sublimetext.info/en/latest/reference/api.html#module-sublime_plugin)
+  - class [`EventListener`](http://docs.sublimetext.info/en/latest/reference/api.html#sublime_plugin.EventListener)
+    - [`on_query_completions()`](http://docs.sublimetext.info/en/latest/reference/api.html#sublime_plugin.EventListener.on_query_completions)
+
+##### `sublime` 模块
+
+- *class* **sublime.Window**
+
+  表示Sublime Text中的窗口，并提供了一些方法与窗口进行交互。
+
+  - set_layout (*layout*)
+
+    更改视图组基于区块的面板布局。
+
+    | Parameters: | **layout** (*dict*) – 指定新的布局 |
+    | ----------- | ---------------------------- |
+    | Returns:    | None                         |
+
+    期望的字典如下：
+
+    ```json
+    {"cols": [float], "rows": [float], "cells": [[int]]}
+    ```
+
+     `[type]` 代表*type*的列表：
+
+    **cols**
+
+    列分隔符的列表，从0（左）到1（右）。
+
+    **rows**
+
+    行分隔符的列表，从0（上）到1（下）。
+
+    **cells**
+
+    格子列表，每项值表示格子的边界。如下：
+
+    ```
+    [x1, y1, x2, y2]
+    ```
+
+    每个值分别表示行列的索引，因此， `[0, 0, 1, 2]` 表示把一个单元格从左上角平移到第一列第二行的位置。
+
+    注意：**行**和**列**没有进行过边界测试，也不会进行自动调整。因此，你可以指定比0小或比1大的值，Sublime Text会有相应的处理。这意味着你可以裁剪视图或创建边框。目前还不清楚这些空白空间的背景色（默认是黑色）是否可以被修改，使用的话后果自负😈。
+
+    行列的顺序也没有被检查，所以如果你使用了一个类似 `[1, 0.5, 0]` 这样的值，你将会看到两个黑色的面板，Sublime Text在这种状态将不可用。
+
+    示例：
+
+    ```
+    # A 2-column layout with a separator in the middle
+    window.set_layout({
+        "cols": [0, 0.5, 1],
+        "rows": [0, 1],
+        "cells": [[0, 0, 1, 1], [1, 0, 2, 1]]
+    })
+    ```
+
+    ```
+    # A 2x2 grid layout with all separators in the middle
+    window.set_layout({
+        "cols": [0, 0.5, 1],
+        "rows": [0, 0.5, 1],
+        "cells": [[0, 0, 1, 1], [1, 0, 2, 1],
+                  [0, 1, 1, 2], [1, 1, 2, 2]]
+    })
+    ```
+
+    ```
+    # A 2-column layout with the separator in the middle and the right
+    # column being split in half
+    window.set_layout({
+        "cols": [0, 0.5, 1],
+        "rows": [0, 0.5, 1],
+        "cells": [[0, 0, 1, 2], [1, 0, 2, 1],
+                                [1, 1, 2, 2]]
+    })
+    ```
+
+
+- *class* **sublime.View**
+
+  和`Window`类似，表示Sublime Text中的视图，并提供了一些方法与窗口进行交互。
+
+  - match_selector(*point*, *selector*)
+
+    匹配指定`selector`下的`point`作用域。
+
+    | Parameters:   | **point** (*int*) – 一个作用域选择器 |
+    | ------------- | ---------------------------- |
+    | Returns bool: | 是否匹配到                        |
+
+    等价于：
+
+    ```
+    view.score_selector(point, selector) != 0
+    # or
+    sublime.score_selector(view.scope_name(point), selector) != 0
+    ```
+
+##### `sublime_plugin` 模块
+
+- class **sublime_plugin.EventListener**
+
+  - on_query_completions(*view*, *prefix*, *locations*)
+
+    请求补全列表时调用。
+
+    - view
+
+      补全到的`view`实例。
+
+    - prefix
+
+      到目前为止输入的文字。
+
+    - locations
+
+       `view` 中补全将要插入的作用域的选择器列表。
+
+      如果你想处理依赖于单词分隔符的补全，你需要单独测试每一个location。
+
+    - Return value
+
+      - `[[trigger, contents], ...]`
+
+        和“基于选择器补全”类似，但是没有keys.trigger的映射，可以使用`\\t`描述语法的**列表**。
+
+        **注意**：Sublime Text 3中，补全还可以包含纯文本，而不是触发内容列表。
+
+      - `([[trigger, contents], ...], flags)`
+
+        基本上和上面一种相同，第二个元素*flag*可能是这些标记的按位或的组合：
+
+        - `sublime.INHIBIT_WORD_COMPLETIONS`
+
+          所有插件都被处理后，阻止Sublime Text把它的单词添加到补全列表。
+
+        - `sublime.INHIBIT_EXPLICIT_COMPLETIONS`
+
+          这个是做啥的？
+
+        所有补全中的标记都是共享的，一旦被某种插件设置过就无法恢复了。
+
+      - 其它（例如`None`）
+
+        没作用。
+
+#### 探索API
+
+快速查看API的方法：
+
+1. 把 `Packages/Default` (**Preferences | Browse Packages…**) 添加到你的项目中
+2. `Ctrl + Shift + F`
+3. 在输入框中输入 `*.py` 
+4. 开启 `Use Buffer`选项
+5. 搜索API名称
+6. `F4`
+7. 学习相关的源代码
+
 ###指令
 ###Windows键盘快捷键
 ###OSX键盘快捷键
