@@ -4252,6 +4252,32 @@ Sublime Text自带一个缩减版的标准库。
 
 ##词汇表
 
+**buffer**
 
+与一个或多个视图相关联的已加载文件的数据及其额外的元数据，*buffer*和*view*的区别在于技术性，大多数时候这两个何以互换使用。
+
+**view**
+
+一个*buffer*的图形显示，多个视图可以同时显示一个buffer。
+
+**plugin**
+
+用Python实现的一个可以包含单一指令或多个指令的功能，可以包含在一个*.py*或多个*.py*文件中。
+
+**package**
+
+这个术语在Sublime Text中有着不同的含义，它既可表示一个Python包，还可以表示`Packages`中的文件夹，或是一个*.sublime-package*文件。大多数时候表示`Packages`中的文件夹。
+
+**panel**
+
+一个输入/输出部件，如搜索面板和输出面板。
+
+**overlay**
+
+一种特殊的输入部件，如“跳转到”就是一个overlay。
+
+**file type**
+
+在Sublime Text中，*file type*指`.tmLanguage`中确定的语法定义的文件类型。然而，这也是有点歧义的，在某些情况下，也可以在技术文本中使用
 
 [返回目录](#目录)
