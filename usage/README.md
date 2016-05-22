@@ -103,6 +103,26 @@ Windows和Linux上按下Alt+F3（OSX：Ctrl+Command+G）直接选中所有匹配
 
 ## Tab键补全
 
+### 概述
+
+按下Tab键来执行补全操作。默认是启用的。
+
+### 禁用Tab补全
+
+把下面一行加入到`Preferences/File Settings - User`中：
+
+```
+"tab_completion": false
+```
+
+### 插入常量Tab符
+
+按下`shift+tab`插入一个常量tab符。
+
+### 改变补全
+
+有时候补全列表的文本并不是需要的，为了增加一个可选项，按下`Ctrl + Space`，这将使补全回退，并展示一个标准的补全列表。
+
 ## 无干扰模式
 
 ## VI模式
