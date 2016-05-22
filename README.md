@@ -7,7 +7,7 @@
 ###使用方法
 - [列选择](/usage/README.md#列选择)
 - [使用键盘进行多选](/usage/README.md#使用键盘进行多选)
-- [自动填充](/usage/README.md#自动填充)
+- [自动补全](/usage/README.md#自动补全)
 - [Tab键补全](/usage/README.md#tab键补全)
 - [无干扰模式](/usage/README.md#无干扰模式)
 - [VI模式](/usage/README.md#VI模式)
