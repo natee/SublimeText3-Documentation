@@ -125,6 +125,29 @@ Windows和Linux上按下Alt+F3（OSX：Ctrl+Command+G）直接选中所有匹配
 
 ## 无干扰模式
 
+### 概述
+
+无干扰模式将只在显示器中以全屏模式显示你的文件，可以在菜单栏中的`View - 切换无干扰模式`进入无干扰模式，快捷键也可以。
+
+### 定制化
+
+无干扰模式将使某些设置生效，默认设置（位于`Packages/Default/Distraction Free.sublime-settings`）是：
+
+```json
+{
+	"line_numbers": false,
+	"gutter": false,
+	"draw_centered": true,
+	"wrap_width": 80,
+	"word_wrap": true,
+	"scroll_past_end": true
+}
+```
+
+你可以在`Packages/User/Distraction Free.sublime-settings`文件中编辑这些设置，从菜单栏中的`Preferences/File Settings - More`打开这个配置文件。
+
+值得注意的是上面的`word_wrap`这个选项，值为80表示当有80个字符时会换行，你可能会设置成一个更大的值，设置成0将在窗口宽度时换行。
+
 ## VI模式
 
 ## 项目
