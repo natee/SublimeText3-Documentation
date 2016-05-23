@@ -148,7 +148,76 @@ Windows和Linux上按下Alt+F3（OSX：Ctrl+Command+G）直接选中所有匹配
 
 值得注意的是上面的`word_wrap`这个选项，值为80表示当有80个字符时会换行，你可能会设置成一个更大的值，设置成0将在窗口宽度时换行。
 
-## VI模式
+## Vintage模式
+
+### 概述
+
+Vintage是Sublime Text中一个vi模式的包，这允许你在Sublime Text中使用vi命令。
+
+Vintage模式是开源的，在[GitHub](https://github.com/sublimehq/Vintage) 上贡献你的代码吧。
+
+### 启用VI模式
+
+默认是禁用的，在菜单栏`Preferences/Settings - Default`打开配饰文件，从`ignored_packages`字段中移除"Vintage"即可启用vi模式。vi模式默认是以插入模式开始的，这可以在用户设置中进行修改：
+
+```json
+"vintage_start_in_command_mode": true
+```
+
+### 支持的操作
+
+Vintage包含最基本的操作：d（删除）、y（复制）、c（修改）、gu（小写）、gU（大写）、g~（交换）、g?、<（取消缩进）、>（缩进）。
+
+也包含很多其它的操作。也支持文本对象，包括单词、括号、引号、标签等。
+
+### 不支持的操作
+
+插入模式是Sublime Text编辑状态，支持Sublime Text按键绑定：不支持vi的插入模式额按键绑定。
+
+不实现Ex commands，除了通过命令面板执行的`:w`和`:e`之外。
+
+### Under the Hood
+
+Vintage模式是完全通过按键绑定和插件API实现的，例如，如果你想绑定`jj`为退出插入模式的命令，你可以添加如下按键绑定：
+
+```json
+{ "keys": ["j", "j"], "command": "exit_insert_mode",
+	"context":
+	[
+		{ "key": "setting.command_mode", "operand": false },
+		{ "key": "setting.is_widget", "operand": false }
+	]
+}
+```
+
+### OS X Lion
+
+在Lion中，长按按键并不会重复输入，而是会打开一个提示菜单来在有差异的字符间进行选择，这在命令模式下工作可能不太好，所以你也许想禁用它，在terminal中输入下面的命令：
+
+```
+defaults write com.sublimetext.2 ApplePressAndHoldEnabled -bool false
+```
+
+### Ctrl按键
+
+Vintage支持这些ctrl按键绑定：
+
+- Ctrl+[：退出
+- Ctrl+R：重做
+- Ctrl+Y：向下一行
+- Ctrl+E：向上一行
+- Ctrl+F：向下翻页
+- Ctrl+B：向上翻页
+
+然而，由于回合Sublime Text中其他按键绑定冲突，Windows和Linux中这些命令默认都被禁用了，启用方式为修改：
+
+```
+"vintage_ctrl_keys": true
+```
+
+### Ex模式
+
+在 [VintageEx](https://github.com/SublimeText/VintageEx)查看Vintage的Ex模式。
 
 ## 项目
 

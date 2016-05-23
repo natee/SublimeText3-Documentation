@@ -10,7 +10,7 @@
 - [自动补全](/usage/README.md#自动补全)
 - [Tab键补全](/usage/README.md#tab键补全)
 - [无干扰模式](/usage/README.md#无干扰模式)
-- [VI模式](/usage/README.md#VI模式)
+- [Vintage模式](/usage/README.md#Vintage模式)
 - [项目](/usage/README.md#项目)
 
 ###定制化
