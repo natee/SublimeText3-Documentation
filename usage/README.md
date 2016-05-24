@@ -221,5 +221,58 @@ Vintage支持这些ctrl按键绑定：
 
 ## 项目
 
+### 概述
 
+Sublime Text中的项目有两个文件组成：一个包含项目定义的sublime-project文件和一个包含用户特定数据（如用户打开的文件和编辑的文件）的sublime-workspace文件。
+
+一般来说，sublime-project文件会被纳入版本控制中，sublime-workspace则不会。
+
+### 项目格式
+
+sublime-project文件是JSON，提供了3个顶层的key，`folders`：包含的文件夹，`settings`：覆盖默认的文件设置，`build-system`：项目制定的构建系统。例子：
+
+```json
+{
+    "folders":
+    [
+        {
+            "path": "src",
+            "folder_exclude_patterns": ["backup"],
+            "follow_symlinks": true
+        },
+        {
+            "path": "docs",
+            "name": "Documentation",
+            "file_exclude_patterns": ["*.css"]
+        }
+    ],
+    "settings":
+    {
+        "tab_size": 8
+    },
+    "build_systems":
+    [
+        {
+            "name": "List",
+            "shell_cmd": "ls -l"
+        }
+    ]
+}
+```
+
+**folders**
+
+每个文件夹必须有一个`path`，额外可以有`file_exclude_patterns`，` file_include_patterns,`，`folder_exclude_patterns`， `folder_include_patterns`和`follow_symlinks`。
+
+`path`是相对于项目路径的相对路径，或者是一个绝对路径。
+
+`name`表示在侧边栏显示的名称。
+
+**settings**
+
+覆盖默认设置，但无法覆盖语法设置。
+
+**build_systems**
+
+数组，除了常规的设置外，数组的每一项必须指定一个`name`，这里列出的数组可以通过菜单栏的**Tools/Build Systems**访问。
 
