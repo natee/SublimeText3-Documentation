@@ -175,4 +175,34 @@ use_indent_to_bracket(to_indent,
 
 ## 拼写检查
 
+### 概述
+
+Sublime Text使用[Hunspell](http://hunspell.sourceforge.net/)来进行拼写检查，可以从[OpenOffice.org Extension List](http://extensions.services.openoffice.org/en/dictionaries)获取额外的字典。
+
+Sublime Text可用字典：[https://github.com/SublimeText/Dictionaries](https://github.com/SublimeText/Dictionaries)
+
+### 字典
+
+Sublime Text目前只支持UTF-8编码格式的字典，大多数字典并没有使用UTF-8字典，而是使用了和其语言相关的编码格式，为了正常使用Sublime Text字典，首先得把编码格式转成UTF-8。
+
+一旦你有了一个UTF-8编码格式的字典，把它放到一个package中就算是安装了，例如，放到*Packages/User*，可以通过菜单栏的**Preferences/Browse Packages**访问。文件放到位后，就可以从菜单栏的**View/Dictionary**选择这个字典。
+
+### 设置
+
+有两种影响拼写检查的设置，`spell_check`：控制是否启用拼写检查。`dictionary`：字典的路径。例：
+
+```
+"spell_check": true,
+"dictionary": "Packages/Language - English/en_US.dic"
+```
+
+已添加的已忽略的单词分别存储在用户设置中的`added_words`和`ignored_words`中。
+
+### 指令
+
+- next_misspelling：选择下一个拼错
+- prev_misspelling：选择上一个拼错
+- add_word：把通过`word`参数指定的单词添加到add列表
+- ignore_word：把通过`word`参数指定的单词添加到ignore列表
+
 ## 包
