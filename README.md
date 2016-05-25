@@ -19,6 +19,7 @@
 - [缩进](/customization/README.md#缩进)
 - [拼写检查](/customization/README.md#拼写检查)
 - [包](/customization/README.md#包)
+- [语法](/customization/README.md#语法)
 
 ###其它
 - [恢复到初始状态](/miscellaneous/README.md#恢复到初始状态)

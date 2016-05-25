@@ -206,3 +206,42 @@ Sublime Text目前只支持UTF-8编码格式的字典，大多数字典并没有
 - ignore_word：把通过`word`参数指定的单词添加到ignore列表
 
 ## 包
+
+### 概述
+
+包是Sublime Text中使用的资源文件的集合：插件、语法高亮定义、菜单、代码段及其他更多。Sublime Text自带了一些包，还有很多其他用户创建的包。
+
+包存储在*.sublime-package*文件（一个不同的扩展名的*zip*文件）中，也可以存储为一个目录下的未压缩的文件，或是二者的混合形式：package下的任何未压缩的文件都会覆盖存储在*.sublime-package*文件中的文件。
+
+### 位置
+
+压缩的包可以存储在：
+
+- `<executable_path>/Packages`
+- `<data_path>/Installed Packages`
+
+未压缩的包可以存储在：
+
+- `<data_path>/Packages`
+
+例如，`Python`包存储在`<executable_path>/Packages/Python.sublime-package`中，任何在`<data_path>/Packages/Python`中的文件都会覆盖存储在`.sublime-package`文件中的文件。
+
+### 特殊包
+
+有两种特殊的包：`Default`和`User.Default`永远会在第一位加载，`User`永远在最后被加载。包的顺序在进行包合并时会体现出来，如：`Main.sublime-menu`，任何包都可以包含一个`Main.sublime-menu`文件，然而这并不会覆盖主菜单，只会依据包的加载顺序进行合并。
+
+除了`Default`和`User.Default`之外的包是按字母顺序进行排序的。
+
+### 创建新的包
+
+在`<data_path>/Installed Packages`下新建一个目录即可创建一个包，通过菜单栏的**Preferences/Browse Packages**可以访问这个目录。
+
+### 覆盖Zipped Package中的文件
+
+覆盖一个存在的包中的文件，在`Packages/<Package Name>`目录下创建一个同名文件。
+
+为了覆盖Sublime Text自带的包` Python.sublime-package`中的`function.sublime-snippet`文件，在`<data_path>/Packages`目录下新建一个字典命名为`Python`，然后把你的`function.sublime-snippet`文件放到那里。
+
+
+
+## 语法
