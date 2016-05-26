@@ -243,5 +243,4 @@ Sublime Text目前只支持UTF-8编码格式的字典，大多数字典并没有
 为了覆盖Sublime Text自带的包` Python.sublime-package`中的`function.sublime-snippet`文件，在`<data_path>/Packages`目录下新建一个字典命名为`Python`，然后把你的`function.sublime-snippet`文件放到那里。
 
 
-
 ## 语法
