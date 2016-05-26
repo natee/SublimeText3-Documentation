@@ -216,7 +216,6 @@ Sublime Text目前只支持UTF-8编码格式的字典，大多数字典并没有
 ### 位置
 
 压缩的包可以存储在：
-
 - `<executable_path>/Packages`
 - `<data_path>/Installed Packages`
 
