@@ -220,7 +220,6 @@ Sublime Text目前只支持UTF-8编码格式的字典，大多数字典并没有
 - `<data_path>/Installed Packages`
 
 未压缩的包可以存储在：
-
 - `<data_path>/Packages`
 
 例如，`Python`包存储在`<executable_path>/Packages/Python.sublime-package`中，任何在`<data_path>/Packages/Python`中的文件都会覆盖存储在`.sublime-package`文件中的文件。
