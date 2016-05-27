@@ -241,4 +241,386 @@ Sublime Text目前只支持UTF-8编码格式的字典，大多数字典并没有
 为了覆盖Sublime Text自带的包` Python.sublime-package`中的`function.sublime-snippet`文件，在`<data_path>/Packages`目录下新建一个字典命名为`Python`，然后把你的`function.sublime-snippet`文件放到那里。
 
 
-## 语法
+# 语法
+
+Sublime Text可以使用`.sublime-syntax`和`.tmLanguage`文件进行语法高亮，本文介绍`.sublime-syntax`文件。
+
+### 概述
+
+Sublime语法文件是 [YAML](http://yaml.org/)，此文件有一个小的头部，紧跟一个上下文列表。每个上下文都有一个匹配模式的列表，这个列表描述了在这个上下文中如何高亮文本、如何改变当前文本。
+
+这里有一个高亮C语言语法的示例：
+
+```
+%YAML 1.2
+---
+name: C
+file_extensions: [c, h]
+scope: source.c
+
+contexts:
+  main:
+    - match: \b(if|else|for|while)\b
+      scope: keyword.control.c
+
+```
+
+核心是一个语法定义，把作用域安排给文本区域，这个作用域由配色方案使用来对文本进行高亮。
+
+这个语法文件包含一个context，main，匹配到[if, else, for, while]等单词时，就会把它们放进`keyword.control.c`的作用域。每个语法都必须定义一个main上下文，这会最先被使用。
+
+是正则表达式，使用了[Ruby](http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt) 语法。上面的例子中，`\b`用来确保单词的边界被匹配上，其他位置的这些词不会被作为关键词。
+
+注意：由于YAML语法，` .sublime-syntax`文件中不允许有tab字符。
+
+## Header
+
+header区域允许的key有：
+
+- **name**. 菜单栏中语法的名称。可选，如果没有时将会从文件名中提取。
+- **file_extensions**.一个字符串列表，定义使用这种语法高亮的文件的扩展名。
+- **first_line_match**. 当打开一个未识别的文件时，文件的第一行内容将会通过这个正则表达式去识别，从而判断是否应该应用这个语法高亮。
+- **scope**. 文件中全部文本的默认作用域。
+- **hidden**. 菜单栏中不会显示隐藏的语法定义，但仍然可以被插件使用，或是包含在其它语法定义中。
+
+## Contexts
+
+对于大多数语言来说，你可能需要不止一种context。如，C语言中，我们不需要一个字符串中间被匹配到的单词有关键词的语法高亮。这里有个例子：
+
+```
+%YAML 1.2
+---
+name: C
+file_extensions: [c, h]
+scope: source.c
+
+contexts:
+  main:
+    - match: \b(if|else|for|while)\b
+      scope: keyword.control.c
+    - match: '"'
+      push: string
+
+  string:
+    - meta_scope: string.quoted.double.c
+    - match: \\.
+      scope: constant.character.escape.c
+    - match: '"'
+      pop: true
+
+```
+
+`main`上下文中第二个匹配项是一个双引号（注意"必须是'"'这样的，单独一个双引号会报YAL语法错误），添加一个字符串上下文到context的堆中。这就意味着这个文件的余下部分将使用`contexts`中的`string`来处理，而不是`main`，直到`string`从堆中被移除。
+
+`string`上下文介绍了一个新的模式：`meta_scope`，档`string`上下文在堆中时，这会把`string.quoted.double.c`作用域分配给文本。
+
+在Sublime Text中编辑时，你可以通过按下`ctrl+shift+p`（OS X）或`ctrl+alt+shift+p`（Windows和Linux）来查看光标选中的文本应用的作用域。
+
+`string`有两个匹配项：第一个是反斜杠字符跟一个任意字符，第二个是一个双引号字符。注意最后一个匹配项指定了一个行为：当遇到转义引号时，`string`将被从context堆栈中移除，然后重新去使用`main`中的作用域。
+
+当一个context有多个匹配项，最左边的一个将被发现。当同一位置匹配到多个模式时，将会应用第一个定义的模式。
+
+### Meta Patterns
+
+- **meta_scope**. This assigns the given scope to all text within this context, including the patterns that push the context onto the stack and pop it off.
+- **meta_content_scope**. As above, but does not apply to the text that triggers the context (e.g., in the above string example, the content scope would not get applied to the quote characters).
+- **meta_include_prototype**. Used to stop the current context from automatically including the prototype context.
+
+Meta patterns must be listed first in the context, before any match or include patterns.
+
+### Match Patterns
+
+A match pattern can include the following keys:
+
+- **match**. The [regex](http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt) used to match against the text. YAML allows many strings to be written without quotes, which can help make the regex clearer, but it's important to understand when you need to quote the regex. If your regex includes the characters #, :, -, {, [ or > then you likely need to quote it. Regexes are only ever run against a single line of text at a time.
+- **scope**. The scope assigned to the matched text.
+- **captures**. A mapping of numbers to scope, assigning scopes to captured portions of the match regex. See below for an example.
+- **push**. The contexts to push onto the stack. This may be either a single context name, a list of context names, or an inline, anonymous context.
+- **pop**. Pops the current context off the stack. The only accepted value for this key is true.
+- **set**. Accepts the same arguments as push, but will first pop this context off, and then push the given context(s) onto the stack.
+- **syntax**. See [Including Other Files](https://www.sublimetext.com/docs/3/syntax.html#include-syntax), below
+
+Note that the actions: push, pop, set, and syntax are exclusive, and only one of them may be used within a single match pattern.
+
+In this example, the regex includes two captures, and the captures key is used to assign each one a different scope:
+
+```
+- match: "^\\s*(#)\\s*\\b(include)\\b"
+  captures:
+    1: meta.preprocessor.c++
+    2: keyword.control.include.c++
+
+```
+
+### Include Patterns
+
+Frequently it's convenient to include the contents of one context within another. For example, you may define several different contexts for parsing the C language, and almost all of them can include comments. Rather than copying the relevant match patterns into each of these contexts, you can include them:
+
+```
+expr:
+  - include: comments
+  - match: \b[0-9]+\b
+    scope: constant.numeric.c
+  ...
+
+```
+
+Here, all the match patterns and include patterns defined in the comments context will be pulled in. They'll be inserted at the position of the include pattern, so you can still control the pattern order. Any meta patterns defined in the comments context will be ignored.
+
+With elements such as comments, it's so common to include them that it's simpler to make them included automatically in every context, and just list the exceptions instead. You can do this by creating a context named prototype, it will be included automatically at the top of every other context, unless the context uses the meta_include_prototype meta pattern. For example:
+
+```
+prototype:
+  - include: comments
+
+string:
+  - meta_include_prototype: false
+  ...
+
+```
+
+In C, a /* inside a string does not start a comment, so the string context indicates that the prototype should not be included.
+
+## Including Other Files
+
+Sublime Syntax files support the notion of one syntax definition embedding another. For example, HTML can contain embedded JavaScript. Here's an example of a basic syntax defintion for HTML that does so:
+
+```
+scope: text.html
+
+contexts:
+  main:
+    - match: <script>
+      push: Packages/JavaScript/JavaScript.sublime-syntax
+      with_prototype:
+        - match: (?=</script>)
+          pop: true
+    - match: "<"
+      scope: punctuation.definition.tag.begin
+    - match: ">"
+      scope: punctuation.definition.tag.end
+
+```
+
+Note the first rule above. It indicates that when we encounter a <script> tag, the main context within JavaScript.sublime-syntax should be pushed onto the context stack. It also defines another key, with_prototype. This contains a list of patterns that will be inserted into every context defined within JavaScript.sublime-syntax. Note that with_prototype is conceptually similar to the prototype context, however it will be always be inserted into every referenced context irrespective of their meta_include_prototype setting.
+
+In this case, the pattern that's inserted will pop off the current context while the next text is a </script> tag. Note that it doesn't actually match the </script> tag, it's just using a lookahead assertion, which plays two key roles here: It both allows the HTML rules to match against the end tag, highlighting it as-per normal, and it will ensure that all the JavaScript contexts will get poped off. The context stack may be in the middle of a JavaScript string, for example, but when the </script> is encoutered, both the JavaScript string and main contexts will get poped off.
+
+Note that while Sublime Text supports both .sublime-syntax and .tmLanguage files, it's not possible to include a .tmLanguage file within a .sublime-syntax one.
+
+Another common scenario is a templating language including HTML. Here's an example of that, this time with a subset of [Jinja](http://jinja.pocoo.org/):
+
+```
+scope: text.jinja
+contexts:
+  main:
+    - match: ""
+      push: "Packages/HTML/HTML.sublime-syntax"
+      with_prototype:
+        - match: "{{"
+          push: expr
+
+  expr:
+    - match: "}}"
+      pop: true
+    - match: \b(if|else)\b
+      scope: keyword.control
+
+```
+
+This is quite different from the HTML-embedding-JavaScript example, because templating languages tend to operate from the inside out: by default, it needs to act as HTML, only escaping to the underlying templating language on certain expressions.
+
+In the example above, we can see it operates in HTML mode by default: the main context includes a single pattern that always matches, consuming no text, just including the HTML syntax.
+
+Where the HTML syntax is included, the Jinja syntax directives ("{{ ... }}" ) are included via the with_prototype key, and thus get injected into every context in the HTML syntax (and JavaScript, by transitivity).
+
+## Variables
+
+It's not uncommon for several regexes to have parts in common. To avoid repetitious typing, you can use variables:
+
+```
+variables:
+  ident: '[A-Za-z_][A-Za-z_0-9]*'
+contexts:
+  main:
+    - match: '\b{{ident}}\b'
+      scope: keyword.control
+
+```
+
+Variables must be defined at the top level of the .sublime-syntax file, and are referenced within regxes via {{varname}}. Variables may themselves include other variables. Note that any text that doesn't match {{[A-Za-z0-9_]+}} won't be considered as a variable, so regexes can still include literal{{ characers, for example.
+
+## Selected Examples
+
+### Bracket Balancing
+
+This example highlights closing brackets without a corresponding open bracket:
+
+```
+name: C
+scope: source.c
+
+contexts:
+  main:
+    - match: \(
+      push: brackets
+    - match: \)
+      scope: invalid.illegal.stray-bracket-end
+
+  brackets:
+    - match: \)
+      pop: true
+    - include: main
+
+```
+
+### Sequential Contexts
+
+This example will highlight a C style for statement containing too many semicolons:
+
+```
+for_stmt:
+  - match: \(
+    set: for_stmt_expr1
+for_stmt_expr1:
+  - match: ";"
+    set: for_stmt_expr2
+  - match: \)
+    pop: true
+  - include: expr
+for_stmt_expr2:
+  - match: ";"
+    set: for_stmt_expr3
+  - match: \)
+    pop: true
+  - include: expr
+for_stmt_expr3:
+  - match: \)
+    pop: true
+  - match: ";"
+    scope: invalid.illegal.stray-semi-colon
+  - include: expr
+
+```
+
+### Advanced Stack Usage
+
+In C, symbols are often defined with the typedef keyword. So that *Goto Definition* can pick these up, the symbols should have the entity.name.typescope attached to them.
+
+Doing this can be a little tricky, as while typedefs are sometimes simple, they can get quite complex:
+
+```
+typedef int coordinate_t;
+
+typedef struct
+{
+    int x;
+    int y;
+} point_t;
+
+```
+
+To recognise these, after matching the typedef keyword, two contexts will be pushed onto the stack: the first will recognise a typename, and then pop off, while the second will recognise the introduced name for the type:
+
+```
+main:
+  - match: \btypedef\b
+    scope: keyword.control.c
+    set: [typedef_after_typename, typename]
+
+typename:
+  - match: \bstruct\b
+    set:
+      - match: "{"
+        set:
+          - match: "}"
+            pop: true
+  - match: \b[A-Za-z_][A-Za-z_0-9]*\b
+    pop: true
+
+typedef_after_typename:
+  - match: \b[A-Za-z_][A-Za-z_0-9]*\b
+    scope: entity.name.type
+    pop: true
+
+```
+
+In the above example, typename is a reusable context, that will read in a typename and pop itself off the stack when it's done. It can be used in any context where a type needs to be consumed, such as within a typedef, or as a function argument.
+
+The main context uses a match pattern that pushes two contexts on the stack, with the rightmost context in the list becoming the topmost context on the stack. Once the typename context has poped itself off, the typedef_after_typename context will be at the top of the stack.
+
+Also note above the use of anonymous contexts for brevity within the typename context.
+
+### PHP Heredocs
+
+This example shows how to match against [Heredocs](http://php.net/language.types.string#language.types.string.syntax.heredoc) in PHP. The match pattern in the main context captures the heredoc identifier, and the corresponding pop pattern in the heredoc context refers to this captured text with the \1 symbol:
+
+```
+name: PHP
+scope: source.php
+
+contexts:
+  main:
+    - match: <<<([A-Za-z][A-Za-z0-9_]*)
+      push: heredoc
+
+  heredoc:
+    - meta_scope: string.unquoted.heredoc
+    - match: ^\1;
+        pop: true
+
+```
+
+## Testing
+
+When building a syntax definition, rather than manually checking scopes with the show_scope_name command, you can define a syntax test file that will do the checking for you:
+
+```
+// SYNTAX TEST "Packages/C/C.sublime-syntax"
+#pragma once
+// <- source.c meta.preprocessor.c++
+ // <- keyword.control.import
+
+// foo
+// ^ source.c comment.line
+// <- punctuation.definition.comment
+
+/* foo */
+// ^ source.c comment.block
+// <- punctuation.definition.comment.begin
+//     ^ punctuation.definition.comment.end
+
+#include "stdio.h"
+// <- meta.preprocessor.include.c++
+//       ^ meta string punctuation.definition.string.begin
+//               ^ meta string punctuation.definition.string.end
+int square(int x)
+// <- storage.type
+//  ^ meta.function entity.name.function
+//         ^ storage.type
+{
+    return x * x;
+//  ^^^^^^ keyword.control
+}
+
+"Hello, World! // not a comment";
+// ^ string.quoted.double
+//                  ^ string.quoted.double - comment
+
+```
+
+To make one, follow these rules
+
+1. Ensure the file name starts with "syntax_test".
+2. Ensure the file is saved somewhere within the Packages directory: next to the corresponding .sublime-syntax file is a good choice.
+3. Ensure the first line of the file starts with: <comment_token> SYNTAX TEST "<syntax_file>". Note that the syntax file can either be a .sublime-syntax or .tmLanguage file.
+
+Once the above conditions are met, running the build command with a syntax test or syntax definition file selected will run all the Syntax Tests, and show the results in an output panel. *Next Result* (F4) can be used to navigate to the first failing test.
+
+Each test in the syntax test file must first start the comment token (established on the first line, it doesn't actually have to be a comment according to the syntax), and then either a ^ or <- token.
+
+The two types of tests are:
+
+- Caret: ^ this will test the following selector against the scope on the most recent non-test line. It will test it at the same column the ^ is in. Consecutive ^s will test each column against the selector.
+- Arrow: <- this will test the following selector against the scope on the most recent non-test line. It will test it at the same column as the comment character is in.
+
