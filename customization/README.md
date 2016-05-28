@@ -320,29 +320,29 @@ contexts:
 
 当一个context有多个匹配项，最左边的一个将被发现。当同一位置匹配到多个模式时，将会应用第一个定义的模式。
 
-### Meta Patterns
+### Meta模式
 
-- **meta_scope**. This assigns the given scope to all text within this context, including the patterns that push the context onto the stack and pop it off.
-- **meta_content_scope**. As above, but does not apply to the text that triggers the context (e.g., in the above string example, the content scope would not get applied to the quote characters).
-- **meta_include_prototype**. Used to stop the current context from automatically including the prototype context.
+- **meta_scope**. 这把给定的作用域分配给这个上下文中的所有文本，包括把context添加到堆栈或从中移除的patterns。
+- **meta_content_scope**. 和上面一样，但是不应用于触发此context的文本（如，上面的`string`例子中，当前作用域不会应用于引号字符）。
+- **meta_include_prototype**. 用来阻止当前context自动包含原型context。
 
-Meta patterns must be listed first in the context, before any match or include patterns.
+Meta模式必须放在contexts中的第一位。
 
-### Match Patterns
+### Match模式
 
-A match pattern can include the following keys:
+match模式允许有如下key：
 
-- **match**. The [regex](http://www.geocities.jp/kosako3/oniguruma/doc/RE.txt) used to match against the text. YAML allows many strings to be written without quotes, which can help make the regex clearer, but it's important to understand when you need to quote the regex. If your regex includes the characters #, :, -, {, [ or > then you likely need to quote it. Regexes are only ever run against a single line of text at a time.
-- **scope**. The scope assigned to the matched text.
-- **captures**. A mapping of numbers to scope, assigning scopes to captured portions of the match regex. See below for an example.
-- **push**. The contexts to push onto the stack. This may be either a single context name, a list of context names, or an inline, anonymous context.
-- **pop**. Pops the current context off the stack. The only accepted value for this key is true.
-- **set**. Accepts the same arguments as push, but will first pop this context off, and then push the given context(s) onto the stack.
-- **syntax**. See [Including Other Files](https://www.sublimetext.com/docs/3/syntax.html#include-syntax), below
+- **match**. 正则表达式。YAML允许很多字符串不带双引号，这可以使正则表达式更清晰，但你仍然需要知道何时把正则表达式用引号包起来。如果你的正则表达式包含了`#`、`:`、`-`、`{`、`[`或`>`等字符，这时你就需要用到引号了。正则表达式同一时间只能对单行文本生效。
+- **scope**. 安排给匹配到的文本的作用域。
+- **captures**. 一个数字到作用域的映射，给正则表达式匹配到的部分分配作用域。
+- **push**. 追加到contexts堆栈中的context，这可以是一个context名称、context名称列表或是一个行内、匿名的context。
+- **pop**. 把当前上下文从contexts堆栈中移除，这个key唯一可被接收的值是`true`。
+- **set**. 和`push`接收同样的参数，但是首先会把这个context移除，然后才把给定的context添加到堆栈中。
+- **syntax**. 看下面的[包含其它文件](##包含其它文件)。
 
-Note that the actions: push, pop, set, and syntax are exclusive, and only one of them may be used within a single match pattern.
+注意：push、pop、set和syntax都是独立的，一个单独的匹配模式中只能使用其中的一个。
 
-In this example, the regex includes two captures, and the captures key is used to assign each one a different scope:
+这个例子中，正则表达式包含了两个捕获，捕获的key用来给每一个分配不同的作用域。
 
 ```
 - match: "^\\s*(#)\\s*\\b(include)\\b"
@@ -352,9 +352,9 @@ In this example, the regex includes two captures, and the captures key is used t
 
 ```
 
-### Include Patterns
+### Include模式
 
-Frequently it's convenient to include the contents of one context within another. For example, you may define several different contexts for parsing the C language, and almost all of them can include comments. Rather than copying the relevant match patterns into each of these contexts, you can include them:
+便于在一个context中包含另外一个。例如，你可以定义多种不同的context来解析C语言，它们几乎都可以包含`comments`。你可以包含他们，而不是在每个context中复制一份：
 
 ```
 expr:
@@ -362,12 +362,11 @@ expr:
   - match: \b[0-9]+\b
     scope: constant.numeric.c
   ...
-
 ```
 
-Here, all the match patterns and include patterns defined in the comments context will be pulled in. They'll be inserted at the position of the include pattern, so you can still control the pattern order. Any meta patterns defined in the comments context will be ignored.
+这里，所有的match匹配项和include模式都将被拉取，它们将在include模式的位置被插入，因此你仍然可以控制模式的顺序。所有定义在comments上下文中的meta模式都将被忽视。
 
-With elements such as comments, it's so common to include them that it's simpler to make them included automatically in every context, and just list the exceptions instead. You can do this by creating a context named prototype, it will be included automatically at the top of every other context, unless the context uses the meta_include_prototype meta pattern. For example:
+当有一个元素，如`comments`时，这个被包含简直太常见了，对每一个context自动包含这个是很简单的，只需要列出异常。你可以创建一个context明明的原型，这将会自动被包含到每一个其它context的顶部，除非context使用了`meta_include_prototype`meta模式。例如：
 
 ```
 prototype:
@@ -379,11 +378,11 @@ string:
 
 ```
 
-In C, a /* inside a string does not start a comment, so the string context indicates that the prototype should not be included.
+C语言中，字符串中的`/*`不会作为注释的开始，因此`string`context表明原型不应该被包含。
 
-## Including Other Files
+## 包含其它文件
 
-Sublime Syntax files support the notion of one syntax definition embedding another. For example, HTML can contain embedded JavaScript. Here's an example of a basic syntax defintion for HTML that does so:
+Sublime语法文件支持在一个语法定义中嵌入另一个，如，HTML可以嵌入JavaScript。这里有一个HTML的基本语法定义的例子：
 
 ```
 scope: text.html
@@ -402,13 +401,13 @@ contexts:
 
 ```
 
-Note the first rule above. It indicates that when we encounter a <script> tag, the main context within JavaScript.sublime-syntax should be pushed onto the context stack. It also defines another key, with_prototype. This contains a list of patterns that will be inserted into every context defined within JavaScript.sublime-syntax. Note that with_prototype is conceptually similar to the prototype context, however it will be always be inserted into every referenced context irrespective of their meta_include_prototype setting.
+注意上面的第一条规则，它表明了当遇到`<script>`标签时，`JavaScript.sublime-syntax`将被push到context的堆栈中。它还定义了另外一个key`with_prototype`。包含了一个将被插入到每一个`JavaScript.sublime-syntax`中定义的context中的匹配项列表。注意`with_prototype`在概念上和`prototype`上下文类似，然而它将始终被插入到每一个被引用的上下文，无需考虑`meta_include_prototype`设置。
 
-In this case, the pattern that's inserted will pop off the current context while the next text is a </script> tag. Note that it doesn't actually match the </script> tag, it's just using a lookahead assertion, which plays two key roles here: It both allows the HTML rules to match against the end tag, highlighting it as-per normal, and it will ensure that all the JavaScript contexts will get poped off. The context stack may be in the middle of a JavaScript string, for example, but when the </script> is encoutered, both the JavaScript string and main contexts will get poped off.
+这个例子中，当下一个标签是`</script>`时，插入的patter会被从当前context中移除。注意这并不是真正匹配`</script>`标签，只是使用了一个在这里扮演了两个角色的预判：既允许HTML规则匹配结束标签，按照正常方式高亮，保证JavaScript上下文可以被移出。上下文堆栈也许在JavaScript字符串中间，例如，一旦遇到`</script>`标签，JavaScript字符和`main`context都将被移出。
 
-Note that while Sublime Text supports both .sublime-syntax and .tmLanguage files, it's not possible to include a .tmLanguage file within a .sublime-syntax one.
+注意：不能把`.tmLanguage`文件包含到` .sublime-syntax`文件中。
 
-Another common scenario is a templating language including HTML. Here's an example of that, this time with a subset of [Jinja](http://jinja.pocoo.org/):
+一种常见的情景是包含HTML的模板语言，这里有一个例子：
 
 ```
 scope: text.jinja
@@ -428,15 +427,13 @@ contexts:
 
 ```
 
-This is quite different from the HTML-embedding-JavaScript example, because templating languages tend to operate from the inside out: by default, it needs to act as HTML, only escaping to the underlying templating language on certain expressions.
+这个和HTML嵌套JavaScript的例子大不一样，因为模板语言往往是从内到外进行操作：默认情况，它需要像HTML一样，只有转码成特定表达式的底层模板语言。
 
-In the example above, we can see it operates in HTML mode by default: the main context includes a single pattern that always matches, consuming no text, just including the HTML syntax.
+上面的例子，我们可以看到它默认以HTML模式运行：`main`上下文包含一个单独的永远被匹配到的模式，只包含了HTML语法。
 
-Where the HTML syntax is included, the Jinja syntax directives ("{{ ... }}" ) are included via the with_prototype key, and thus get injected into every context in the HTML syntax (and JavaScript, by transitivity).
+## 变量
 
-## Variables
-
-It's not uncommon for several regexes to have parts in common. To avoid repetitious typing, you can use variables:
+几个正则表达式有共同部分并不罕见，你可以使用变量来避免重复输入：
 
 ```
 variables:
@@ -448,13 +445,13 @@ contexts:
 
 ```
 
-Variables must be defined at the top level of the .sublime-syntax file, and are referenced within regxes via {{varname}}. Variables may themselves include other variables. Note that any text that doesn't match {{[A-Za-z0-9_]+}} won't be considered as a variable, so regexes can still include literal{{ characers, for example.
+变量必须定义在`.sublime-syntax`文件的顶部，在正则表达式中通过`{{varname}}`的形式来引用，变量本身可以引用其它变量。注意任何不匹配`{{[A-Za-z0-9_]+}}`的文本将不会被认为是一个变量，因此正则表达式仍然可以包含常量`{{`字符。
 
-## Selected Examples
+## 示例
 
-### Bracket Balancing
+### 括号平衡
 
-This example highlights closing brackets without a corresponding open bracket:
+这个例子高亮没有对应的开括号的闭合括号：
 
 ```
 name: C
@@ -474,9 +471,9 @@ contexts:
 
 ```
 
-### Sequential Contexts
+### 连续的context
 
-This example will highlight a C style for statement containing too many semicolons:
+这个例子将高亮包含很多分号的C语言风格的`for`语句：
 
 ```
 for_stmt:
@@ -503,11 +500,11 @@ for_stmt_expr3:
 
 ```
 
-### Advanced Stack Usage
+### 高级堆栈的使用
 
-In C, symbols are often defined with the typedef keyword. So that *Goto Definition* can pick these up, the symbols should have the entity.name.typescope attached to them.
+C语言中，符号通常是和一个`typedef`关键词一起定义的。符号有一个附加到它的`entity.name.typescope`。
 
-Doing this can be a little tricky, as while typedefs are sometimes simple, they can get quite complex:
+这样做事带有一点取巧，因为虽然类型定义很简单，但你也可以把它玩的很复杂。
 
 ```
 typedef int coordinate_t;
@@ -520,7 +517,7 @@ typedef struct
 
 ```
 
-To recognise these, after matching the typedef keyword, two contexts will be pushed onto the stack: the first will recognise a typename, and then pop off, while the second will recognise the introduced name for the type:
+认识到这些，当匹配到`typoedef`关键词后，两个context会被添加到堆栈中：第一个将识别`typename`，然后移出；第二个将识别这个类型介绍的名称：
 
 ```
 main:
@@ -545,15 +542,11 @@ typedef_after_typename:
 
 ```
 
-In the above example, typename is a reusable context, that will read in a typename and pop itself off the stack when it's done. It can be used in any context where a type needs to be consumed, such as within a typedef, or as a function argument.
-
-The main context uses a match pattern that pushes two contexts on the stack, with the rightmost context in the list becoming the topmost context on the stack. Once the typename context has poped itself off, the typedef_after_typename context will be at the top of the stack.
-
-Also note above the use of anonymous contexts for brevity within the typename context.
+上面的例子中，`typename`是一个可复用的context，它将在`typename`中读取然后在完成时从堆栈中移出。它可以在任意上下文中使用，如：typedef中，或作为一个函数的参数。
 
 ### PHP Heredocs
 
-This example shows how to match against [Heredocs](http://php.net/language.types.string#language.types.string.syntax.heredoc) in PHP. The match pattern in the main context captures the heredoc identifier, and the corresponding pop pattern in the heredoc context refers to this captured text with the \1 symbol:
+这个例子展示了如何匹配PHP中的[Heredocs](http://php.net/language.types.string#language.types.string.syntax.heredoc)。`main`context中的`match`捕获heredoc的识别符，`heredoc`context中相应的`pop`指的是捕获到的文本中有`\1`的。
 
 ```
 name: PHP
@@ -568,12 +561,11 @@ contexts:
     - meta_scope: string.unquoted.heredoc
     - match: ^\1;
         pop: true
-
 ```
 
 ## Testing
 
-When building a syntax definition, rather than manually checking scopes with the show_scope_name command, you can define a syntax test file that will do the checking for you:
+当构建了一个语法定义，你可以定义一个语法测试文件来帮你检测作用域，而不是手动通过`show_scope_name`指令进行检测。
 
 ```
 // SYNTAX TEST "Packages/C/C.sublime-syntax"
@@ -606,21 +598,20 @@ int square(int x)
 "Hello, World! // not a comment";
 // ^ string.quoted.double
 //                  ^ string.quoted.double - comment
-
 ```
 
-To make one, follow these rules
+遵循以下规则：
 
-1. Ensure the file name starts with "syntax_test".
-2. Ensure the file is saved somewhere within the Packages directory: next to the corresponding .sublime-syntax file is a good choice.
-3. Ensure the first line of the file starts with: <comment_token> SYNTAX TEST "<syntax_file>". Note that the syntax file can either be a .sublime-syntax or .tmLanguage file.
+1. 确保文件名以"syntax_test"开头。
+2. 确保文件存储在`Packages`目录下的某个地方：推荐和相应的`.sublime-syntax`文件放在一起。
+3. 确保文件第一行以` <comment_token> SYNTAX TEST "<syntax_file>"`开头。注意语法文件可以是` .sublime-syntax`或`.tmLanguage`文件。
 
-Once the above conditions are met, running the build command with a syntax test or syntax definition file selected will run all the Syntax Tests, and show the results in an output panel. *Next Result* (F4) can be used to navigate to the first failing test.
+一但上述要求都满足了，运行build指令就可以在输出面板看到结果。*下一个结果*（F4）可以用来导航到第一个失败的测试。
 
-Each test in the syntax test file must first start the comment token (established on the first line, it doesn't actually have to be a comment according to the syntax), and then either a ^ or <- token.
+语法测试文件中的每一个测试必须首先以注释标记开头，然后才是`^`或`<-`标记。
 
-The two types of tests are:
+这两种类型的测试分别是：
 
-- Caret: ^ this will test the following selector against the scope on the most recent non-test line. It will test it at the same column the ^ is in. Consecutive ^s will test each column against the selector.
-- Arrow: <- this will test the following selector against the scope on the most recent non-test line. It will test it at the same column as the comment character is in.
+- 尖号：`^`将测试针对最近一次的非测试行的作用域选择器，它将测试和`^`所在列。连续的`^`将测试选择器对应的每一列。
+- 箭头：`<-` 将测试针对最近一次的非测试行的作用域选择器，它将测试注释字符所在的列。
 
