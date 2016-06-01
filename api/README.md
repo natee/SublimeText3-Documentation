@@ -74,88 +74,445 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 
 ## Class sublime.View
 
-Represents a view into a text buffer. Note that multiple views may refer to the same buffer, but they have their own unique selection and geometry.
+表示一个文本缓冲的视图。注意多个视图可以引用相同的缓冲区，但是它们有独立的选择和几何结构。
 
-| Methods                                  | Return Value       | Description                              |
-| ---------------------------------------- | ------------------ | ---------------------------------------- |
-| id()                                     | int                | Returns a number that uniquely identifies this view. |
-| buffer_id()                              | int                | Returns a number that uniquely identifies the buffer underlying this view. |
-| file_name()                              | String             | The full name file the file associated with the buffer, or None if it doesn't exist on disk. |
-| name()                                   | String             | The name assigned to the buffer, if any  |
-| set_name(name)                           | None               | Assigns a name to the buffer             |
-| is_loading()                             | bool               | Returns true if the buffer is still loading from disk, and not ready for use. |
-| is_dirty()                               | bool               | Returns true if there are any unsaved modifications to the buffer. |
-| is_read_only()                           | bool               | Returns true if the buffer may not be modified. |
-| set_read_only(value)                     | None               | Sets the read only property on the buffer. |
-| is_scratch()                             | bool               | Returns true if the buffer is a scratch buffer. Scratch buffers never report as being dirty. |
-| set_scratch(value)                       | None               | Sets the scratch property on the buffer. |
-| settings()                               | Settings           | Returns a reference to the views settings object. Any changes to this settings object will be private to this view. |
-| window()                                 | Window             | Returns a reference to the window containing the view. |
-| run_command(string, <args>)              | None               | Runs the named TextCommand with the (optional) given arguments. |
-| size()                                   | int                | Returns the number of character in the file. |
-| substr(region)                           | String             | Returns the contents of the region as a string. |
-| substr(point)                            | String             | Returns the character to the right of the point. |
-| insert(edit, point, string)              | int                | Inserts the given string in the buffer at the specified point. Returns the number of characters inserted: this may be different if tabs are being translated into spaces in the current buffer. |
-| erase(edit, region)                      | None               | Erases the contents of the region from the buffer. |
-| replace(edit, region, string)            | None               | Replaces the contents of the region with the given string. |
-| sel()                                    | Selection          | Returns a reference to the selection.    |
-| line(point)                              | Region             | Returns the line that contains the point. |
-| line(region)                             | Region             | Returns a modified copy of region such that it starts at the beginning of a line, and ends at the end of a line. Note that it may span several lines. |
-| full_line(point)                         | Region             | As line(), but the region includes the trailing newline character, if any. |
-| full_line(region)                        | Region             | As line(), but the region includes the trailing newline character, if any. |
-| lines(region)                            | [Region]           | Returns a list of lines (in sorted order) intersecting the region. |
-| split_by_newlines(region)                | [Region]           | Splits the region up such that each region returned exists on exactly one line. |
-| word(point)                              | Region             | Returns the word that contains the point. |
-| word(region)                             | Region             | Returns a modified copy of region such that it starts at the beginning of a word, and ends at the end of a word. Note that it may span several words. |
-| classify(point)                          | int                | Classifies pt, returning a bitwise OR of zero or more of these flags:CLASS_WORD_STARTCLASS_WORD_ENDCLASS_PUNCTUATION_STARTCLASS_PUNCTUATION_ENDCLASS_SUB_WORD_STARTCLASS_SUB_WORD_ENDCLASS_LINE_STARTCLASS_LINE_ENDCLASS_EMPTY_LINE |
-| find_by_class(point, forward, classes, <separators>) | Region             | Finds the next location after point that matches the given classes. If forward is False, searches backwards instead of forwards. classes is a bitwise OR of the sublime.CLASS_XXX flags. separators may be passed in, to define what characters should be considered to separate words. |
-| expand_by_class(point, classes, <separators>) | Region             | Expands point to the left and right, until each side lands on a location that matches classes. classes is a bitwise OR of the sublime.CLASS_XXX flags. separators may be passed in, to define what characters should be considered to separate words. |
-| expand_by_class(region, classes, <separators>) | Region             | Expands region to the left and right, until each side lands on a location that matches classes. classes is a bitwise OR of the sublime.CLASS_XXX flags. separators may be passed in, to define what characters should be considered to separate words. |
-| find(pattern, fromPosition, <flags>)     | Region             | Returns the first Region matching the regex pattern, starting from the given point, or None if it can't be found. The optional flags parameter may be sublime.LITERAL, sublime.IGNORECASE, or the two ORed together. |
-| find_all(pattern, <flags>, <format>, <extractions>) | [Region]           | Returns all (non-overlapping) regions matching the regex pattern. The optional flags parameter may be sublime.LITERAL, sublime.IGNORECASE, or the two ORed together. If a format string is given, then all matches will be formatted with the formatted string and placed into the extractions list. |
-| rowcol(point)                            | (int, int)         | Calculates the 0 based line and column numbers of the point. |
-| text_point(row, col)                     | int                | Calculates the character offset of the given, 0 based, row and column. Note that 'col' is interpreted as the number of characters to advance past the beginning of the row. |
-| set_syntax_file(syntax_file)             | None               | Changes the syntax used by the view. syntax_file should be a name along the lines ofPackages/Python/Python.tmLanguage. To retrieve the current syntax, useview.settings().get('syntax'). |
-| extract_scope(point)                     | Region             | Returns the extent of the syntax name assigned to the character at the given point. |
-| scope_name(point)                        | String             | Returns the syntax name assigned to the character at the given point. |
-| score_selector(point, selector)          | Int                | Matches the selector against the scope at the given location, returning a score. A score of 0 means no match, above 0 means a match. Different selectors may be compared against the same scope: a higher score means the selector is a better match for the scope. |
-| find_by_selector(selector)               | [Regions]          | Finds all regions in the file matching the given selector, returning them as a list. |
-| show(point, <show_surrounds>)            | None               | Scroll the view to show the given point. |
-| show(region, <show_surrounds>)           | None               | Scroll the view to show the given region. |
-| show(region_set, <show_surrounds>)       | None               | Scroll the view to show the given region set. |
-| show_at_center(point)                    | None               | Scroll the view to center on the point.  |
-| show_at_center(region)                   | None               | Scroll the view to center on the region. |
-| visible_region()                         | Region             | Returns the currently visible area of the view. |
-| viewport_position()                      | Vector             | Returns the offset of the viewport in layout coordinates. |
-| set_viewport_position(vector, <animate<) | None               | Scrolls the viewport to the given layout position. |
-| viewport_extent()                        | vector             | Returns the width and height of the viewport. |
-| layout_extent()                          | vector             | Returns the width and height of the layout. |
-| text_to_layout(point)                    | vector             | Converts a text position to a layout position |
-| layout_to_text(vector)                   | point              | Converts a layout position to a text position |
-| window_to_layout(vector)                 | vector             | Converts a window position to a layout position |
-| window_to_text(vector)                   | point              | Converts a window position to a text position |
-| line_height()                            | real               | Returns the light height used in the layout |
-| em_width()                               | real               | Returns the typical character width used in the layout |
-| add_regions(key, [regions], <scope>, <icon>, <flags>) | None               | Add a set of regions to the view. If a set of regions already exists with the given key, they will be overwritten. The scope is used to source a color to draw the regions in, it should be the name of a scope, such as "comment" or "string". If the scope is empty, the regions won't be drawn.The optional icon name, if given, will draw the named icons in the gutter next to each region. The icon will be tinted using the color associated with the scope. Valid icon names are dot, circle, bookmarkand cross. The icon name may also be a full package relative path, such as Packages/Theme - Default/dot.png.The optional flags parameter is a bitwise combination of:sublime.DRAW_EMPTY. Draw empty regions with a vertical bar. By default, they aren't drawn at all.sublime.HIDE_ON_MINIMAP. Don't show the regions on the minimap.sublime.DRAW_EMPTY_AS_OVERWRITE. Draw empty regions with a horizontal bar instead of a vertical one.sublime.DRAW_NO_FILL. Disable filling the regions, leaving only the outline.sublime.DRAW_NO_OUTLINE. Disable drawing the outline of the regions.sublime.DRAW_SOLID_UNDERLINE. Draw a solid underline below the regions.sublime.DRAW_STIPPLED_UNDERLINE. Draw a stippled underline below the regions.sublime.DRAW_SQUIGGLY_UNDERLINE. Draw a squiggly underline below the regions.sublime.PERSISTENT. Save the regions in the session.sublime.HIDDEN. Don't draw the regions.The underline styles are exclusive, either zero or one of them should be given. If using an underline, DRAW_NO_FILL and DRAW_NO_OUTLINE should generally be passed in. |
-| get_regions(key)                         | [regions]          | Return the regions associated with the given key, if any |
-| erase_regions(key)                       | None               | Removed the named regions                |
-| set_status(key, value)                   | None               | Adds the status key to the view. The value will be displayed in the status bar, in a comma separated list of all status values, ordered by key. Setting the value to the empty string will clear the status. |
-| get_status(key)                          | String             | Returns the previously assigned value associated with the key, if any. |
-| erase_status(key)                        | None               | Clears the named status.                 |
-| command_history(index, <modifying_only>) | (String,Dict,int)  | Returns the command name, command arguments, and repeat count for the given history entry, as stored in the undo / redo stack.Index 0 corresponds to the most recent command, -1 the command before that, and so on. Positive values for index indicate to look in the redo stack for commands. If the undo / redo history doesn't extend far enough, then (None, None, 0) will be returned.Setting modifying_only to True (the default is False) will only return entries that modified the buffer. |
-| change_count()                           | int                | Returns the current change count. Each time the buffer is modified, the change count is incremented. The change count can be used to determine if the buffer has changed since the last it was inspected. |
-| fold([regions])                          | bool               | Folds the given regions, returning False if they were already folded |
-| fold(region)                             | bool               | Folds the given region, returning False if it was already folded |
-| unfold(region)                           | [regions]          | Unfolds all text in the region, returning the unfolded regions |
-| unfold([regions])                        | [regions]          | Unfolds all text in the regions, returning the unfolded regions |
-| encoding()                               | String             | Returns the encoding currently associated with the file |
-| set_encoding(encoding)                   | None               | Applies a new encoding to the file. This encoding will be used the next time the file is saved. |
-| line_endings()                           | String             | Returns the line endings used by the current file. |
-| set_line_endings(line_endings)           | None               | Sets the line endings that will be applied when next saving. |
-| overwrite_status()                       | Bool               | Returns the overwrite status, which the user normally toggles via the insert key. |
-| set_overwrite_status(enabled)            | None               | Sets the overwrite status.               |
-| symbols(line_endings)                    | [(Region, String)] | Extract all the symbols defined in the buffer. |
-| show_popup_menu(items, on_done, <flags>) | None               | Shows a pop up menu at the caret, to select an item in a list. on_done will be called once, with the index of the selected item. If the pop up menu was cancelled, on_done will be called with an argument of -1.Items is an array of strings.Flags currently only has no option. |
+<table>
+	<thead>
+	<tr>
+	  <th>方法</th>
+	  <th>返回值</th>
+	  <th>描述</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+	  <td>id()</td>
+	  <td>int</td>
+	  <td>返回可唯一识别视图的数值。</td>
+	</tr>
+	<tr>
+	  <td>buffer_id()</td>
+	  <td>int</td>
+	  <td>返回唯一识别视图中的缓冲区的数值。</td>
+	</tr>
+	<tr>
+	  <td>file_name()</td>
+	  <td>String</td>
+	  <td>完整的文件名，不存在则是None。</td>
+	</tr>
+	<tr>
+	  <td>name()</td>
+	  <td>String</td>
+	  <td>分配给缓冲区的名称。</td>
+	</tr>
+	<tr>
+	  <td>set_name(name)</td>
+	  <td>None</td>
+	  <td>给缓冲区设置一个名字。</td>
+	</tr>
+	<tr>
+	  <td>is_loading()</td>
+	  <td>bool</td>
+	  <td>如果缓冲区正则从磁盘中加载则返回true。</td>
+	</tr>
+	<tr>
+	  <td>is_dirty()</td>
+	  <td>bool</td>
+	  <td>如果缓冲区中有任何未保存的修改则返回true。</td>
+	</tr>
+	<tr>
+	  <td>is_read_only()</td>
+	  <td>bool</td>
+	  <td>缓冲区是否只读。</td>
+	</tr>
+	<tr>
+	  <td>set_read_only(value)</td>
+	  <td>None</td>
+	  <td>给缓冲区添加只读属性。</td>
+	</tr>
+	<tr>
+	  <td>is_scratch()</td>
+	  <td>bool</td>
+	  <td>如果一个缓冲区是从无到有的缓冲区（大概就是新建的文件）则返回true，这将不会被报告为dirty。</td>
+	</tr>
+	<tr>
+	  <td>set_scratch(value)</td>
+	  <td>None</td>
+	  <td>给缓冲区设置`scratch`属性。</td>
+	</tr>
+	<tr>
+	  <td>settings()</td>
+	  <td>Settings</td>
+	  <td>返回视图的`settings`对象的引用。`settings`对象的任何变化都属于这个视图私有。</td>
+	</tr>
+	<tr>
+	  <td>window()</td>
+	  <td>Window</td>
+	  <td>返回包含视图的窗口的引用。</td>
+	</tr>
+	<tr>
+	  <td>run_command(string, <args>)</td>
+	  <td>None</td>
+	  <td>以给定的参数（可选）执行`TextCommand`。</td>
+	</tr>
+	<tr>
+	  <td>size()</td>
+	  <td>int</td>
+	  <td>返回文件中的字符总数。</td>
+	</tr>
+	<tr>
+	  <td>substr(region)</td>
+	  <td>String</td>
+	  <td>以字符串形式返回`region`的内容。</td>
+	</tr>
+	<tr>
+	  <td>substr(point)</td>
+	  <td>String</td>
+	  <td>返回`point`右边的字符。</td>
+	</tr>
+	<tr>
+	  <td>insert(edit, point, string)</td>
+	  <td>int</td>
+	  <td>在缓冲区中指定的`point`处插入给定的`string`。返回插入字符串的字符数：如果tab被替换为空格，则这个结果会不同。</td>
+	</tr>
+	<tr>
+	  <td>erase(edit, region)</td>
+	  <td>None</td>
+	  <td>冲缓冲区中清除`region`的内容。</td>
+	</tr>
+	<tr>
+	  <td>replace(edit, region, string)</td>
+	  <td>None</td>
+	  <td>用给定的`string`替换`region`的内容。</td>
+	</tr>
+	<tr>
+	  <td>sel()</td>
+	  <td>Selection</td>
+	  <td>返回选择的引用。</td>
+	</tr>
+	<tr>
+	  <td>line(point)</td>
+	  <td>Region</td>
+	  <td>返回包含`point`的行。</td>
+	</tr>
+	<tr>
+	  <td>line(region)</td>
+	  <td>Region</td>
+	  <td>返回`region`的一个编辑副本，这样它以一行的开始开始，以一行的结尾为结束。注意它可能跨越好几行。</td>
+	</tr>
+	<tr>
+	  <td>full_line(point)</td>
+	  <td>Region</td>
+	  <td>和`line()`类似，但是这个区块包含了换行符。</td>
+	</tr>
+	<tr>
+	  <td>full_line(region)</td>
+	  <td>Region</td>
+	  <td>和`line()`类似，但是这个区块包含了换行符。</td>
+	</tr>
+	<tr>
+	  <td>lines(region)</td>
+	  <td>[Region]</td>
+	  <td>返回与该`region`相交的行的列表（排序过的）。</td>
+	</tr>
+	<tr>
+	  <td>split_by_newlines(region)</td>
+	  <td>[Region]</td>
+	  <td>把`region`按行分开，这样每个返回的`region`都是一行。</td>
+	</tr>
+	<tr>
+	  <td>word(point)</td>
+	  <td>Region</td>
+	  <td>返回包含`point`的单词。</td>
+	</tr>
+	<tr>
+	  <td>word(region)</td>
+	  <td>Region</td>
+	  <td>返回`region`的一个编辑副本，这样它以一行的开始开始，以一行的结尾为结束。注意它可能跨越好几行。</td>
+	</tr>
+	<tr>
+	  <td>classify(point)</td>
+	  <td>int</td>
+	  <td>
+	  	Classifies pt, returning a bitwise OR of zero or more of these flags: 
+		<ul>
+			<li>CLASS_WORD_START</li>
+			<li>CLASS_WORD_END</li>
+			<li>CLASS_PUNCTUATION_START</li>
+			<li>CLASS_PUNCTUATION_END</li>
+			<li>CLASS_SUB_WORD_START</li>
+			<li>CLASS_SUB_WORD_END</li>
+			<li>CLASS_LINE_START</li>
+			<li>CLASS_LINE_END</li>
+			<li>CLASS_EMPTY_LINE</li>
+		</ul>
+	  </td>
+	</tr>
+	<tr>
+	  <td>find_by_class(point, forward, classes, <separators>)</td>
+	  <td>Region</td>
+	  <td>找到`point`之后与`classes`匹配的下一个位置。如果`forward`是False，则用向后搜索代替向前搜索。`classes`是一个位运算符或`sublime.CLASS_XXX`标签，`separators`用来定义什么字符应该被视为单独的词。</td>
+	</tr>
+	<tr>
+	  <td>expand_by_class(point, classes, <separators>)</td>
+	  <td>Region</td>
+	  <td>向左或向右扩展`point`直到每一个都匹配到`classes`的位置。`classes`是一个位运算符或`sublime.CLASS_XXX`标签，`separators`用来定义什么字符应该被视为单独的词。</td>
+	</tr>
+	<tr>
+	  <td>expand_by_class(region, classes, <separators>)</td>
+	  <td>Region</td>
+	  <td>向左或向右扩展`region`直到每一个都匹配到`classes`的位置。</td>
+	</tr>
+	<tr>
+	  <td>find(pattern, fromPosition, <flags>)</td>
+	  <td>Region</td>
+	  <td>返回匹配到正则表达式`pattern`的第一个Region，从给定的point开始，未找到则返回None。可选的`flags`参数可以是`sublime.LITERAL`、`sublime.IGNORECASE`或两者一起。</td>
+	</tr>
+	<tr>
+	  <td>find_all(pattern, <flags>, <format>, <extractions>)</td>
+	  <td>[Region]</td>
+	  <td>返回所有匹配到正则表达式的区域（无重叠）。可选的`flags`参数可以是`sublime.LITERAL`、`sublime.IGNORECASE`或两者一起。如果给定了`format`字符串，则所有匹配值都将被以格式化的字符串进行格式化。</td>
+	</tr>
+	<tr>
+	  <td>rowcol(point)</td>
+	  <td>(int, int)</td>
+	  <td>计算`point`的行号和列号。从0开始算。</td>
+	</tr>
+	<tr>
+	  <td>text_point(row, col)</td>
+	  <td>int</td>
+	  <td>计算给定的字符偏移量，从0开始算。</td>
+	</tr>
+	<tr>
+	  <td>set_syntax_file(syntax_file)</td>
+	  <td>None</td>
+	  <td>修改视图使用的语法。用`view.settings().get('syntax')`来恢复语法。</td>
+	</tr>
+	<tr>
+	  <td>extract_scope(point)</td>
+	  <td>Region</td>
+	  <td>返回在给定的`point`分配给该字符的语法名称的范围。</td>
+	</tr>
+	<tr>
+		<td>scope_name(point)</td>
+		<td>String</td>
+		<td>返回在给定的`point`分配给该字符的语法名称。</td>
+	</tr>
+	<tr>
+		<td>score_selector(point, selector)</td>
+		<td>Int</td>
+		<td>从指定位置的作用域中匹配选择器，返回一个分值。`0`表示没有匹配项，大于`0`表示有匹配。分值越大匹配度越高。</td>
+	</tr>
+	<tr>
+		<td>find_by_selector(selector)</td>
+		<td>[Region]</td>
+		<td>返回匹配到指定的选择器的区域列表。</td>
+	</tr>
+	<tr>
+		<td>show(point, <show_surrounds>)</td>
+		<td>None</td>
+		<td>滚动视图到给定的`point`。</td>
+	</tr>
+	<tr>
+		<td>show(region, <show_surrounds>)</td>
+		<td>None</td>
+		<td>滚动视图到给定的`region`。</td>
+	</tr>
+	<tr>
+		<td>show(region_set, <show_surrounds>)</td>
+		<td>None</td>
+		<td>滚动视图到给定的`region_set`。</td>
+	</tr>
+	<tr>
+		<td>show_at_center(point)</td>
+		<td>None</td>
+		<td>滚动视图到给定的`point`居中的位置。</td>
+	</tr>
+	<tr>
+		<td>show_at_center(region)</td>
+		<td>None</td>
+		<td>滚动视图到给定的`region`居中的位置。</td>
+	</tr>
+	<tr>
+		<td>visible_region()</td>
+		<td>Region</td>
+		<td>返回当前视图中的可视区域。</td>
+	</tr>
+	<tr>
+		<td>viewport_position()</td>
+		<td>Vector</td>
+		<td>返回视区的偏移量。</td>
+	</tr>
+	<tr>
+		<td>set_viewport_position(vector, <animate<)</td>
+		<td>None</td>
+		<td>滚动视图到指定的布局位置。</td>
+	</tr>
+	<tr>
+		<td>viewport_extent()</td>
+		<td>vector</td>
+		<td>返回视图的宽度和高度。</td>
+	</tr>
+	<tr>
+		<td>layout_extent()</td>
+		<td>vector</td>
+		<td>返回布局的宽度和高度。</td>
+	</tr>
+	<tr>
+		<td>text_to_layout(point)</td>
+		<td>vector</td>
+		<td>把文本位置转化成布局位置。</td>
+	</tr>
+	<tr>
+		<td>layout_to_text(vector)</td>
+		<td>point</td>
+		<td>把布局位置转化成文本位置。</td>
+	</tr>
+	<tr>
+		<td>window_to_layout(vector)</td>
+		<td>vector</td>
+		<td>把窗口位置转化成布局位置。</td>
+	</tr>
+	<tr>
+		<td>window_to_text(vector)</td>
+		<td>point</td>
+		<td>把窗口位置转化成文本位置。</td>
+	</tr>
+	<tr>
+		<td>line_height()</td>
+		<td>real</td>
+		<td>返回布局中使用的行高。</td>
+	</tr>
+	<tr>
+		<td>em_width()</td>
+		<td>real</td>
+		<td>返回布局中使用的典型字符的宽度。</td>
+	</tr>
+	<tr>
+		<td>add_regions(key, [regions], <scope>, <icon>, <flags>)</td>
+		<td>None</td>
+		<td>
+		Add a set of regions to the view. If a set of regions already exists with the given key, they will be overwritten. The scope is used to source a color to draw the regions in, it should be the name of a scope, such as "comment" or "string". If the scope is empty, the regions won't be drawn.
+		The optional icon name, if given, will draw the named icons in the gutter next to each region. The icon will be tinted using the color associated with the scope. Valid icon names are dot, circle, bookmark and cross. The icon name may also be a full package relative path, such as Packages/Theme - Default/dot.png.
+	
+		The optional flags parameter is a bitwise combination of:
+		<ul>
+			<li>
+		`sublime.DRAW_EMPTY`. Draw empty regions with a vertical bar. By default, they aren't drawn at all.
+			</li>
+			<li>`sublime.HIDE_ON_MINIMAP`. Don't show the regions on the minimap.</li>
+			<li>`sublime.DRAW_EMPTY_AS_OVERWRITE`. Draw empty regions with a horizontal bar instead of a vertical one.</li>
+			<li>`sublime.DRAW_NO_FILL`. Disable filling the regions, leaving only the outline.</li>
+			<li>`sublime.DRAW_NO_OUTLINE`. Disable drawing the outline of the regions.</li>
+			<li>`sublime.DRAW_SOLID_UNDERLINE`. Draw a solid underline below the regions.</li>
+			<li>`sublime.DRAW_STIPPLED_UNDERLINE`. Draw a stippled underline below the regions.</li>
+			<li>`sublime.DRAW_SQUIGGLY_UNDERLINE`. Draw a squiggly underline below the regions.</li>
+			<li>`sublime.PERSISTENT`，保存会话中的区域</li>
+			<li>`sublime.HIDDEN`，不画区域</li>
+		</ul>
+		
+		The underline styles are exclusive, either zero or one of them should be given. If using an underline, DRAW_NO_FILL and DRAW_NO_OUTLINE should generally be passed in.
+		</td>
+	</tr>
+	<tr>
+		<td>get_regions(key)</td>
+		<td>[regions]</td>
+		<td>返回和给定`key`相关联的区域。</td>
+	</tr>
+	<tr>
+		<td>erase_regions(key)</td>
+		<td>None</td>
+		<td>删除命名区域。</td>
+	</tr>
+	<tr>
+		<td>set_status(key, value)</td>
+		<td>None</td>
+		<td>给视图设置状态`key`。`value`将显示在状态栏，以逗号分隔，按`key`排序。`value`为空字符串时将清除状态。</td>
+	</tr>
+	<tr>
+		<td>get_status(key)</td>
+		<td>String</td>
+		<td>返回先前和`key`相关联的指定的值。</td>
+	</tr>
+	<tr>
+		<td>erase_status(key)</td>
+		<td>None</td>
+		<td>清除已命名的状态。 </td>
+	</tr>
+	<tr>
+		<td>command_history(index, <modifying_only>)</td>
+		<td>(String,Dict,int)</td>
+		<td>对于给定的历史记录条目，返回其存储在撤销/重做堆栈中的指令名称、指令参数和重复次数。索引`0`对应最近一个指令，`-1`对应最近第二个指令，以此类推。索引值为正数表示在重做堆栈中寻找指令。如果撤销/重做历史记录不够多（超出索引），则将返回（None,None,0）。`modifying_only`为`true`表示只返回编辑缓冲区的条目，默认值是`false`。</td>
+	</tr>
+	<tr>
+		<td>change_count()</td>
+		<td>int</td>
+		<td>返回当前修改的数量。缓冲区每一次被修改，修改数就会增加。这个数值可以用来判断缓冲区自上次被检测时是否有作修改。</td>
+	</tr>
+	<tr>
+		<td>fold([regions]) </td>
+		<td>bool</td>
+		<td>折叠指定的区域，如果已经被折叠则返回False。</td>
+	</tr>
+	<tr>
+		<td>fold(region) </td>
+		<td>bool</td>
+		<td>折叠指定的区域，如果已经被折叠则返回False。</td>
+	</tr>
+	<tr>
+		<td>unfold(region)</td>
+		<td>[regions]</td>
+		<td>展开所有区域的文本，返回展开后的区域。</td>
+	</tr>
+	<tr>
+		<td>unfold([regions])</td>
+		<td>[regions]</td>
+		<td>展开所有区域的文本，返回展开后的区域。</td>
+	</tr>
+	<tr>
+		<td>encoding()</td>
+		<td>String</td>
+		<td>返回当前文件的编码格式。</td>
+	</tr>
+	<tr>
+		<td>set_encoding(encoding)</td>
+		<td>None</td>
+		<td>设置文件的编码格式。新的编码格式会在文件下次保存时生效。</td>
+	</tr>
+	<tr>
+		<td>line_endings()</td>
+		<td>String</td>
+		<td>返回当前文件使用的行结束符。</td>
+	</tr>
+	<tr>
+		<td>set_line_endings(line_endings)</td>
+		<td>None</td>
+		<td>下次保存时设置将使用的行结束符。</td>
+	</tr>
+	<tr>
+		<td>overwrite_status()</td>
+		<td>Bool</td>
+		<td>返回覆盖的状态。</td>
+	</tr>
+	<tr>
+		<td>set_overwrite_status(enabled)</td>
+		<td>None</td>
+		<td>设置覆盖的状态。</td>
+	</tr>
+	<tr>
+		<td>symbols(line_endings)</td>
+		<td>[(Region, String)]</td>
+		<td>提取在缓冲区中定义的所有符号。</td>
+	</tr>
+	<tr>
+		<td>show_popup_menu(items, on_done, <flags>)</td>
+		<td>None</td>
+		<td>在光标处显示一个弹出菜单，用来从一个列表中选择一个选项。`on_done`会以指定项目的索引被调用一次。如果弹出层取消了，`on_done`将会以参数`-1`被调用。`items`是一个字符串组成的数组。`flags`目前别无选择（完全不知道这里是啥意思Flags currently only has no option）。</td>
+	</tr>
+	
+	</tbody>
+</table>
+
 
 ## Class sublime.Selection
 
