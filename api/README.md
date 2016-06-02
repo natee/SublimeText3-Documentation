@@ -392,26 +392,26 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 		<td>add_regions(key, [regions], <scope>, <icon>, <flags>)</td>
 		<td>None</td>
 		<td>
-		Add a set of regions to the view. If a set of regions already exists with the given key, they will be overwritten. The scope is used to source a color to draw the regions in, it should be the name of a scope, such as "comment" or "string". If the scope is empty, the regions won't be drawn.
-		The optional icon name, if given, will draw the named icons in the gutter next to each region. The icon will be tinted using the color associated with the scope. Valid icon names are dot, circle, bookmark and cross. The icon name may also be a full package relative path, such as Packages/Theme - Default/dot.png.
+		给视图添加一组区域。如果指定的key已经存在了一组区域，则它们将被覆盖。scope用来指定画区域的颜色，它的值是一个作用域的名称，如“comment”或“string”。如果scope为空，则不会画区域。
+		可选的icon名称，如果指定了，将会在挨着区域的gutter处绘制一个指定的icon。这个icon将使用和scope相关联的颜色进行着色。合法的icon名称是dot、circle、bookmark、cross。icon名称也可以是一个完整的package相对路径，如Packages/Theme - Default/dot.png。
 	
-		The optional flags parameter is a bitwise combination of:
+		可选的falg参数：
 		<ul>
 			<li>
-		`sublime.DRAW_EMPTY`. Draw empty regions with a vertical bar. By default, they aren't drawn at all.
+		`sublime.DRAW_EMPTY`，画一个带有垂直条的区域，默认是不画的。
 			</li>
-			<li>`sublime.HIDE_ON_MINIMAP`. Don't show the regions on the minimap.</li>
-			<li>`sublime.DRAW_EMPTY_AS_OVERWRITE`. Draw empty regions with a horizontal bar instead of a vertical one.</li>
-			<li>`sublime.DRAW_NO_FILL`. Disable filling the regions, leaving only the outline.</li>
-			<li>`sublime.DRAW_NO_OUTLINE`. Disable drawing the outline of the regions.</li>
-			<li>`sublime.DRAW_SOLID_UNDERLINE`. Draw a solid underline below the regions.</li>
-			<li>`sublime.DRAW_STIPPLED_UNDERLINE`. Draw a stippled underline below the regions.</li>
-			<li>`sublime.DRAW_SQUIGGLY_UNDERLINE`. Draw a squiggly underline below the regions.</li>
+			<li>`sublime.HIDE_ON_MINIMAP`，在小地图上不显示当前区域</li>
+			<li>`sublime.DRAW_EMPTY_AS_OVERWRITE`，画一个带有水平条的空的区域</li>
+			<li>`sublime.DRAW_NO_FILL`，禁用区域的填充色，只留外边框</li>
+			<li>`sublime.DRAW_NO_OUTLINE`，禁用对区域画外框线</li>
+			<li>`sublime.DRAW_SOLID_UNDERLINE`，在区域下方画一条下滑线</li>
+			<li>`sublime.DRAW_STIPPLED_UNDERLINE`，在区域下方画一条点状下滑线</li>
+			<li>`sublime.DRAW_SQUIGGLY_UNDERLINE`，在区域下方画一条波浪线</li>
 			<li>`sublime.PERSISTENT`，保存会话中的区域</li>
 			<li>`sublime.HIDDEN`，不画区域</li>
 		</ul>
 		
-		The underline styles are exclusive, either zero or one of them should be given. If using an underline, DRAW_NO_FILL and DRAW_NO_OUTLINE should generally be passed in.
+		下划线样式是排它的，0和这个只能有一个。如果使用了下划线，则DRAW_NO_FILL和DRAW_NO_OUTLINE通常应该被传入。
 		</td>
 	</tr>
 	<tr>
@@ -516,15 +516,15 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 
 ## Class sublime.Selection
 
-Maintains a set of Regions, ensuring that none overlap. The regions are kept in sorted order.
+维护一组区域，确保其没有重叠。区域是有序保存的。
 
-| Methods             | Return Value | Description                              |
-| ------------------- | ------------ | ---------------------------------------- |
-| clear()             | None         | Removes all regions.                     |
-| add(region)         | None         | Adds the given region. It will be merged with any intersecting regions already contained within the set. |
-| add_all(region_set) | None         | Adds all regions in the given set.       |
-| subtract(region)    | None         | Subtracts the region from all regions in the set. |
-| contains(region)    | bool         | Returns true iff the given region is a subset. |
+| 方法                  | 返回值  | 描述                             |
+| ------------------- | ---- | ------------------------------ |
+| clear()             | None | 删除所有区域                         |
+| add(region)         | None | 添加指定的区域，它将与已经包含在集合内的任何相交的区域合并。 |
+| add_all(region_set) | None | 添加所有区域。                        |
+| subtract(region)    | None | 从所有区域中删掉指定的区域。                 |
+| contains(region)    | bool | 如果包含了给定区域则返回true。              |
 
 ## Class sublime.Region
 
