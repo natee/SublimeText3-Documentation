@@ -528,29 +528,29 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 
 ## Class sublime.Region
 
-Represents an area of the buffer. Empty regions, where a == b are valid.
+代表缓冲区的一个区域，两个空区域a==b是合法的。
 
-| Constructors | Description                              |
-| ------------ | ---------------------------------------- |
-| Region(a, b) | Creates a Region with initial values a and b. |
+| Constructors | 描述                     |
+| ------------ | ---------------------- |
+| Region(a, b) | 用初始值`a`和`b`创建一个Region。 |
 
-| Properties | Type | Description                              |
-| ---------- | ---- | ---------------------------------------- |
-| a          | int  | The first end of the region.             |
-| b          | int  | The second end of the region. May be less that a, in which case the region is a reversed one. |
-| xpos       | int  | The target horizontal position of the region, or -1 if undefined. Effects behavior when pressing the up or down keys. |
+| 属性   | 类型   | 描述                        |
+| ---- | ---- | ------------------------- |
+| a    | int  | 该区域的第一端。                  |
+| b    | int  | 该区域的第二端。比`a`小时表示这个区域是颠倒的。 |
+| xpos | int  | 区域的水平位置，如果未定义则是`-1`。      |
 
-| Methods              | Return Value | Description                              |
-| -------------------- | ------------ | ---------------------------------------- |
-| begin()              | int          | Returns the minimum of a and b.          |
-| end()                | int          | Returns the maximum of a and b.          |
-| size()               | int          | Returns the number of characters spanned by the region. Always >= 0. |
-| empty()              | bool         | Returns true iff begin() == end().       |
-| cover(region)        | Region       | Returns a Region spanning both this and the given regions. |
-| intersection(region) | Region       | Returns the set intersection of the two regions. |
-| intersects(region)   | bool         | Returns True iff this == region or both include one or more positions in common. |
-| contains(region)     | bool         | Returns True iff the given region is a subset. |
-| contains(point)      | bool         | Returns True iff begin() <= point <= end(). |
+| 方法                   | 返回值    | 描述                                  |
+| -------------------- | ------ | ----------------------------------- |
+| begin()              | int    | 返回`a`和`b`当中的较小值。                    |
+| end()                | int    | 返回`a`和`b`当中的较大值。                    |
+| size()               | int    | 返回区域包含的字符数。                         |
+| empty()              | bool   | 区域是否为空。`a=b`时为true。                 |
+| cover(region)        | Region | 返回两个区域的并集。                          |
+| intersection(region) | Region | 返回两个区域的交集。                          |
+| intersects(region)   | bool   | 如果两个区域存在相交的区域则返回true。               |
+| contains(region)     | bool   | 如果当前区域包含`region`则返回true。            |
+| contains(point)      | bool   | 如果begin() <= point <= end()则返回true。 |
 
 ## Class sublime.Edit
 
