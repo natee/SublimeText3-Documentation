@@ -554,9 +554,9 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 
 ## Class sublime.Edit
 
-Edit objects have no functions, they exist to group buffer modifications.
+`Edit`对象没有函数，它的存在是为了对缓冲区的修改进行分组。
 
-Edit objects are passed to TextCommands, and are not user createable. Using an invalid Edit object, or an Edit object from a different view, will cause the functions that require them to fail.
+`Edit`对象是要传递给`TextCommands`的，不是用户创建的。使用一个不合法的`Edit`对象或是从一个不同的视图中使用一个`Edit`对象将会造成需要依赖它们的函数失败。
 
 | Methods      | Return Value | Description |
 | ------------ | ------------ | ----------- |
@@ -564,7 +564,7 @@ Edit objects are passed to TextCommands, and are not user createable. Using an i
 
 ## Class sublime.Window
 
-| Methods                                  | Return Value   | Description                              |
+| 方法                                       | 返回值            | 描述                                       |
 | ---------------------------------------- | -------------- | ---------------------------------------- |
 | id()                                     | int            | Returns a number that uniquely identifies this window. |
 | new_file()                               | View           | Creates a new file. The returned view will be empty, and its is_loaded method will return True. |
