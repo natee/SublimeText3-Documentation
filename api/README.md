@@ -566,50 +566,50 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 
 | 方法                                       | 返回值            | 描述                                       |
 | ---------------------------------------- | -------------- | ---------------------------------------- |
-| id()                                     | int            | Returns a number that uniquely identifies this window. |
-| new_file()                               | View           | Creates a new file. The returned view will be empty, and its is_loaded method will return True. |
-| open_file(file_name, <flags>)            | View           | Opens the named file, and returns the corresponding view. If the file is already opened, it will be brought to the front. Note that as file loading is asynchronous, operations on the returned view won't be possible until its is_loading() method returns False.The optional flags parameter is a bitwise combination of:sublime.ENCODED_POSITION. Indicates the file_name should be searched for a :row or :row:colsuffixsublime.TRANSIENT. Open the file as a preview only: it won't have a tab assigned it until modified |
-| find_open_file(file_name)                | View           | Finds the named file in the list of open files, and returns the corresponding View, or None if no such file is open. |
-| active_view()                            | View           | Returns the currently edited view.       |
-| active_view_in_group(group)              | View           | Returns the currently edited view in the given group. |
-| views()                                  | [View]         | Returns all open views in the window.    |
-| views_in_group(group)                    | [View]         | Returns all open views in the given group. |
-| num_groups()                             | int            | Returns the number of view groups in the window. |
-| active_group()                           | int            | Returns the index of the currently selected group. |
-| focus_group(group)                       | None           | Makes the given group active.            |
-| focus_view(view)                         | None           | Switches to the given view.              |
-| get_view_index(view)                     | (group, index) | Returns the group, and index within the group of the view. Returns -1 if not found. |
-| set_view_index(view, group, index)       | None           | Moves the view to the given group and index. |
-| is_sidebar_visible()                     | bool           | Returns true if the sidebar will be shown when contents are available. |
-| set_sidebar_visible(flag)                | None           | Sets the sidebar to be shown or hidden when contents are available. |
-| folders()                                | [String]       | Returns a list of the currently open folders. |
-| project_file_name()                      | String         | Returns name of the currently opened project file, if any. |
-| project_data()                           | Dictionary     | Returns the project data associated with the current window. The data is in the same format as the contents of a .sublime-project file. |
-| set_project_data(data)                   | None           | Updates the project data associated with the current window. If the window is associated with a .sublime-project file, the project file will be updated on disk, otherwise the window will store the data internally. |
-| run_command(string, <args>)              | None           | Runs the named Command with the (optional) given arguments. Window.run_command is able to run both any sort of command, dispatching the command via input focus. |
-| show_quick_panel(items, on_done, <flags>, <selected_index>, <on_highlighted>) | None           | Shows a quick panel, to select an item in a list. on_done will be called once, with the index of the selected item. If the quick panel was cancelled, on_done will be called with an argument of -1.Items may be an array of strings, or an array of string arrays. In the latter case, each entry in the quick panel will show multiple rows.Flags is a bitwise OR of sublime.MONOSPACE_FONT and sublime.KEEP_OPEN_ON_FOCUS_LOSTon_highlighted, if given, will be called every time the highlighted item in the quick panel is changed. |
-| show_input_panel(caption, initial_text, on_done, on_change, on_cancel) | View           | Shows the input panel, to collect a line of input from the user. on_done and on_change, if not None, should both be functions that expect a single string argument. on_cancel should be a function that expects no arguments. The view used for the input widget is returned. |
-| create_output_panel(name, <unlisted>)    | View           | Returns the view associated with the named output panel, creating it if required. The output panel can be shown by running the show_panel window command, with the panel argument set to the name with an "output." prefix.The optional unlisted parameter is a boolean to control if the output panel should be listed in the panel switcher. |
-| find_output_panel(name)                  | View or None   | Returns the view associated with the named output panel, or None if the output panel does not exist. |
-| destroy_output_panel(name)               | None           | Destroys the named output panel, hiding it if currently open. |
-| active_panel()                           | string or None | Returns the name of the currently open panel, or None if no panel is open. Will return built-in panel names (e.g. "console", "find", etc) in addition to output panels. |
-| panels()                                 | [string]       | Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels. |
-| create_output_panel(name)                | View           | Returns the view associated with the named output panel, created it if required. The output panel can be shown by running the show_panel window command, with the panel argument set to the name with an "output." prefix. |
-| lookup_symbol_in_index(symbol)           | [Location]     | Returns all locations where the symbol is defined across files in the current project. |
-| lookup_symbol_in_open_files(symbol)      | [Location]     | Returns all locations where the symbol is defined across open files. |
-| extract_variables()                      | Dictionary     | Returns a dictionary of strings populated with contextual keys: packages, platform, file, file_path, file_name, file_base_name, file_extension, folder, project, project_path, project_name, project_base_name, project_extension. This dictionary is suitable for passing tosublime.expand_variables(). |
+| id()                                     | int            | 返回窗口的唯一识别码                               |
+| new_file()                               | View           | 创建一个新文件。返回的视图将为空，`is_loaded`方法将返回true。   |
+| open_file(file_name, <flags>)            | View           | 打开指定文件名的文件，返回相应的视图。如果文件已经被打开，则此文件将会被显示到最前面。注意由于文件加载时异步的，只有`is_loading()`方法返回false时才能进行操作。可选参数`flag`是一个和一下选项相结合的按位符：1.`sublime.ENCODED_POSITION`，表示文件将在`:row`或`:row:col`后缀下进行搜索。2.把文件作为一个预览打开：这将不会有一个tab，直到被编辑过。 |
+| find_open_file(file_name)                | View           | 从打开的文件列表中找到指定名称的文件，返回相应的视图，如果没有文件打开则返回None。 |
+| active_view()                            | View           | 返回当前正在被编辑的视图。                            |
+| active_view_in_group(group)              | View           | 返回指定group中正在被编辑的视图。                      |
+| views()                                  | [View]         | 返回窗口中的所有打开的视图。                           |
+| views_in_group(group)                    | [View]         | 返回指定group中所有打开的视图。                       |
+| num_groups()                             | int            | 返回窗口中的视图组的数量。                            |
+| active_group()                           | int            | 返回当前选中的分组的索引。                            |
+| focus_group(group)                       | None           | 使当前分组处于激活状态。                             |
+| focus_view(view)                         | None           | 切换到指定视图。                                 |
+| get_view_index(view)                     | (group, index) | 返回视图所处的分组和索引。如果没找到则返回-1。                 |
+| set_view_index(view, group, index)       | None           | 把视图移动到指定的group和索引。                       |
+| is_sidebar_visible()                     | bool           | 侧边栏是否可见。                                 |
+| set_sidebar_visible(flag)                | None           | 设置侧边栏的可见状态。                              |
+| folders()                                | [String]       | 返回当前打开文件夹组成的列表。                          |
+| project_file_name()                      | String         | 返回当前打开的项目文件的名称。                          |
+| project_data()                           | Dictionary     | 返回和当前窗口关联的项目的数据。                         |
+| set_project_data(data)                   | None           | 更新和当前窗口相关联的项目的数据。如果窗口和`.sublime-project`文件相关联，则项目文件将在磁盘进行更新，否则窗口将在内存中存储数据。 |
+| run_command(string, <args>)              | None           | 运行指令。                                    |
+| show_quick_panel(items, on_done, <flags>, <selected_index>, <on_highlighted>) | None           | 显示一个快速面板，可以从中选择一个项。`on_done`将会用选择项的索引调用一次。如果取消了快速面板，`on_done`将会以`-1`进行调用。`items`可以是一个字符串组成的数组或是一个包含字符串数组的数组。 |
+| show_input_panel(caption, initial_text, on_done, on_change, on_cancel) | View           | 显示输入面板。`on_done`和`on_change`如果不为none时，都应该是一个接收唯一字符串参数的函数。`on_cancel`是无参数的函数。返回输入组件使用的视图。 |
+| create_output_panel(name, <unlisted>)    | View           | 返回和输出面板关联的视图，如果需要则创建。运行窗口指令`show_panel`来显示输出面板。 |
+| find_output_panel(name)                  | View or None   | 返回指定输出面板的视图，如果不存在则返回none。                |
+| destroy_output_panel(name)               | None           | 销毁指定输入面板，如果当前是打开的则隐藏它。                   |
+| active_panel()                           | string or None | 返回当前打开的面板的名称，如果没有则返回none。                |
+| panels()                                 | [string]       | 返回没有被标记为不列出的所有面板的名称。包括除了输出面板的特定内置面板。     |
+| create_output_panel(name)                | View           | 返回和输出面板关联的视图，如果需要则创建。运行窗口指令`show_panel`来显示输出面板。 |
+| lookup_symbol_in_index(symbol)           | [Location]     | 返回当前项目中所有文件中定义的符号的位置。                    |
+| lookup_symbol_in_open_files(symbol)      | [Location]     | 返回所有打开文件中定义的符号的位置。                       |
+| extract_variables()                      | Dictionary     | 返回一个字典：`packages`，`platform`，`file`，`file_path`，`file_name`， `file_base_name`，`file_extension`，`folder`，`project`， `project_path`， `project_name`，`project_base_name`，`project_extension`。这个字典适合传递给`sublime.expand_variables()`。 |
 
 ## Class sublime.Settings
 
-| Methods                       | Return Value | Description                              |
-| ----------------------------- | ------------ | ---------------------------------------- |
-| get(name)                     | value        | Returns the named setting.               |
-| get(name, default)            | value        | Returns the named setting, or default if it's not defined. |
-| set(name, value)              | None         | Sets the named setting. Only primitive types, lists, and dictionaries are accepted. |
-| erase(name)                   | None         | Removes the named setting. Does not remove it from any parent Settings. |
-| has(name)                     | bool         | Returns true iff the named option exists in this set of Settings or one of its parents. |
-| add_on_change(key, on_change) | None         | Register a callback to be run whenever a setting in this object is changed. |
-| clear_on_change(key)          | None         | Remove all callbacks registered with the given key. |
+| 方法                            | 值     | 描述                                       |
+| ----------------------------- | ----- | ---------------------------------------- |
+| get(name)                     | value | 返回指定名称的设置。                               |
+| get(name, default)            | value | 返回指定名称的设置，如果未定义则返回默认值。                   |
+| set(name, value)              | None  | Sets the named setting. Only primitive types, lists, and dictionaries are accepted. |
+| erase(name)                   | None  | Removes the named setting. Does not remove it from any parent Settings. |
+| has(name)                     | bool  | Returns true iff the named option exists in this set of Settings or one of its parents. |
+| add_on_change(key, on_change) | None  | Register a callback to be run whenever a setting in this object is changed. |
+| clear_on_change(key)          | None  | Remove all callbacks registered with the given key. |
 
 ## Module sublime_plugin
 
