@@ -601,15 +601,15 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 
 ## Class sublime.Settings
 
-| 方法                            | 值     | 描述                                       |
-| ----------------------------- | ----- | ---------------------------------------- |
-| get(name)                     | value | 返回指定名称的设置。                               |
-| get(name, default)            | value | 返回指定名称的设置，如果未定义则返回默认值。                   |
-| set(name, value)              | None  | Sets the named setting. Only primitive types, lists, and dictionaries are accepted. |
-| erase(name)                   | None  | Removes the named setting. Does not remove it from any parent Settings. |
-| has(name)                     | bool  | Returns true iff the named option exists in this set of Settings or one of its parents. |
-| add_on_change(key, on_change) | None  | Register a callback to be run whenever a setting in this object is changed. |
-| clear_on_change(key)          | None  | Remove all callbacks registered with the given key. |
+| 方法                            | 值     | 描述                       |
+| ----------------------------- | ----- | ------------------------ |
+| get(name)                     | value | 返回指定名称的设置。               |
+| get(name, default)            | value | 返回指定名称的设置，如果未定义则返回默认值。   |
+| set(name, value)              | None  | 设置指定名称的设置。只支持原始类型，列表和字典。 |
+| erase(name)                   | None  | 删除指定设置，不从父级Settings中删除。  |
+| has(name)                     | bool  | 是否存在某项设置。                |
+| add_on_change(key, on_change) | None  | 当一个设置有改动时注册一个回调函数。       |
+| clear_on_change(key)          | None  | 删除所有以指定key注册的回调函数。       |
 
 ## Module sublime_plugin
 
