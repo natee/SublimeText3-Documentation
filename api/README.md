@@ -619,35 +619,174 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 
 ## Class sublime_plugin.EventListener
 
-Note that many of these events are triggered by the buffer underlying the view, and thus the method is only called once, with the first view as the parameter.
+很多事件都是由视图的底层触发的，因此这些方法只会以第一个视图作为参数被调用一次。
 
-| Methods                                  | Return Value                 | Description                              |
-| ---------------------------------------- | ---------------------------- | ---------------------------------------- |
-| on_new(view)                             | None                         | Called when a new buffer is created.     |
-| on_new_async(view)                       | None                         | Called when a new buffer is created. Runs in a separate thread, and does not block the application. |
-| on_clone(view)                           | None                         | Called when a view is cloned from an existing one. |
-| on_clone_async(view)                     | None                         | Called when a view is cloned from an existing one. Runs in a separate thread, and does not block the application. |
-| on_load(view)                            | None                         | Called when the file is finished loading. |
-| on_load_async(view)                      | None                         | Called when the file is finished loading. Runs in a separate thread, and does not block the application. |
-| on_pre_close(view)                       | None                         | Called when a view is about to be closed. The view will still be in the window at this point. |
-| on_close(view)                           | None                         | Called when a view is closed (note, there may still be other views into the same buffer). |
-| on_pre_save(view)                        | None                         | Called just before a view is saved.      |
-| on_pre_save_async(view)                  | None                         | Called just before a view is saved. Runs in a separate thread, and does not block the application. |
-| on_post_save(view)                       | None                         | Called after a view has been saved.      |
-| on_post_save_async(view)                 | None                         | Called after a view has been saved. Runs in a separate thread, and does not block the application. |
-| on_modified(view)                        | None                         | Called after changes have been made to a view. |
-| on_modified_async(view)                  | None                         | Called after changes have been made to a view. Runs in a separate thread, and does not block the application. |
-| on_selection_modified(view)              | None                         | Called after the selection has been modified in a view. |
-| on_selection_modified_async(view)        | None                         | Called after the selection has been modified in a view. Runs in a separate thread, and does not block the application. |
-| on_activated(view)                       | None                         | Called when a view gains input focus.    |
-| on_activated_async(view)                 | None                         | Called when a view gains input focus. Runs in a separate thread, and does not block the application. |
-| on_deactivated(view)                     | None                         | Called when a view loses input focus.    |
-| on_deactivated_async(view)               | None                         | Called when a view loses input focus. Runs in a separate thread, and does not block the application. |
-| on_text_command(view, command_name, args) | (new_command_name, new_args) | Called when a text command is issued. The listener may return a (command, arguments) tuple to rewrite the command, or None to run the command unmodified. |
-| on_window_command(window, command_name, args) | (new_command_name, new_args) | Called when a window command is issued. The listener may return a (command, arguments) tuple to rewrite the command, or None to run the command unmodified. |
-| post_text_command(view, command_name, args) | None                         | Called after a text command has been executed. |
-| post_window_command(window, command_name, args) | None                         | Called after a window command has been executed. |
-| on_query_context(view, key, operator, operand, match_all) | bool or None                 | Called when determining to trigger a key binding with the given context key. If the plugin knows how to respond to the context, it should return either True of False. If the context is unknown, it should return None.operator is one of:sublime.OP_EQUAL. Is the value of the context equal to the operand?sublime.OP_NOT_EQUAL. Is the value of the context not equal to the operand?sublime.OP_REGEX_MATCH. Does the value of the context match the regex given in operand?sublime.OP_NOT_REGEX_MATCH. Does the value of the context not match the regex given in operand?sublime.OP_REGEX_CONTAINS. Does the value of the context contain a substring matching the regex given in operand?sublime.OP_NOT_REGEX_CONTAINS. Does the value of the context not contain a substring matching the regex given in operand?match_all should be used if the context relates to the selections: does every selection have to match (match_all = True), or is at least one matching enough (match_all = Fals)? |
+<table>
+	<thead>
+	<tr>
+	  <th>方法</th>
+	  <th>返回值</th>
+	  <th>描述</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+	  <td>on_new(view)</td>
+	  <td>None</td>
+	  <td>创建新的缓冲区时调用。</td>
+	</tr>
+	<tr>
+		<td>on_new_async(view)</td>
+		<td>None</td>
+		<td>创建新的缓冲区时异步调用。</td>
+	</tr>
+	<tr>
+		<td>on_clone(view)</td>
+		<td>None</td>
+		<td>克隆一个视图时调用。</td>
+	</tr>
+	<tr>
+		<td>on_clone_async(view)</td>
+		<td>None</td>
+		<td>克隆一个视图时异步调用。</td>
+	</tr>
+	<tr>
+		<td>on_load(view)</td>
+		<td>None</td>
+		<td>文件加载完毕时调用。</td>
+	</tr>
+	<tr>
+		<td>on_load_async(view)</td>
+		<td>None</td>
+		<td>加载完毕时异步调用。</td>
+	</tr>
+	<tr>
+		<td>on_pre_close(view)</td>
+		<td>None</td>
+		<td>视图关闭之前被调用。</td>
+	</tr>
+	<tr>
+		<td>on_close(view)</td>
+		<td>None</td>
+		<td>视图关闭后调用（注意，可能会有其他的视图到缓冲区中）。</td>
+	</tr>
+	<tr>
+		<td>on_pre_save(view)</td>
+		<td>None</td>
+		<td>视图保存前调用。</td>
+	</tr>
+	<tr>
+		<td>on_pre_save_async(view)</td>
+		<td>None</td>
+		<td>视图保存前异步调用。</td>
+	</tr>
+	<tr>
+		<td>on_post_save(view)</td>
+		<td>None</td>
+		<td>视图保存后调用。</td>
+	</tr>
+	<tr>
+		<td>on_post_save_async(view)</td>
+		<td>None</td>
+		<td>视图被保存后异步调用。</td>
+	</tr>
+	<tr>
+		<td>on_modified(view)</td>
+		<td>None</td>
+		<td>视图有修改时调用。</td>
+	</tr>
+	<tr>
+		<td>on_modified_async(view)</td>
+		<td>None</td>
+		<td>视图有修改时异步调用。</td>
+	</tr>
+	<tr>
+		<td>on_selection_modified(view)</td>
+		<td>None</td>
+		<td>视图中的选中区被修改后调用。</td>
+	</tr>
+	<tr>
+		<td>on_selection_modified_async(view)</td>
+		<td>None</td>
+		<td>视图中的选中区被修改后异步调用。</td>
+	</tr>
+	<tr>
+		<td>on_activated(view)</td>
+		<td>None</td>
+		<td>视图获得输入焦点时调用。</td>
+	</tr>
+	<tr>
+		<td>on_activated_async(view)</td>
+		<td>None</td>
+		<td>视图获得输入焦点时异步调用。</td>
+	</tr>
+	<tr>
+		<td>on_deactivated(view)</td>
+		<td>None</td>
+		<td>视图失去输入焦点时调用。</td>
+	</tr>
+	<tr>
+		<td>on_deactivated_async(view)</td>
+		<td>None</td>
+		<td>视图失去输入焦点时异步调用。</td>
+	</tr>
+	<tr>
+		<td>on_text_command(view, command_name, args)</td>
+		<td>(new_command_name, new_args)</td>
+		<td>发出文本指令时调用。监视器可以返回一个（command, arguments）元组来重写改指令，如果未作修改则返回none。</td>
+	</tr>
+	<tr>
+		<td>on_window_command(window, command_name, args)</td>
+		<td>(new_command_name, new_args)</td>
+		<td>发出窗口指令时调用。监视器可以返回一个（command, arguments）元组来重写改指令，如果未作修改则返回none。</td>
+	</tr>
+	<tr>
+		<td>post_text_command(view, command_name, args)</td>
+		<td>None</td>
+		<td>文本指令被执行时调用。</td>
+	</tr>
+	<tr>
+		<td>post_window_command(window, command_name, args)</td>
+		<td>None</td>
+		<td>窗口指令被执行时调用。</td>
+	</tr>
+	<tr>
+		<td>on_query_context(view, key, operator, operand, match_all)</td>
+		<td>bool或None</td>
+		<td>
+			当决定用指定key去触发一个按键绑定时被调用。如果插件知道如何对上下文进行回应，则应该返回true或false。如果上下文是未知的，则返回none。
+			<p>
+				<tt><i>operater</i></tt>可以是以下中的一个：
+			</p>
+			<ul>
+				<li>
+					<tt>sublime.OP_EQUAL</tt>，上下文的值是否和操作符相等？
+				</li>
+				<li>
+					<tt>sublime.OP_NOT_EQUAL</tt>，上下文的值是否和操作符不相等？
+				</li>
+				<li>
+					<tt>sublime.OP_REGEX_MATCH</tt>，上下文的值是否和操作符指定的正则表达式相匹配？
+				</li>
+				<li>
+					<tt>sublime.OP_NOT_REGEX_MATCH</tt>，上下文的值是否和操作符指定的正则表达式不匹配？
+				</li>
+				<li>
+					<tt>sublime.OP_REGEX_CONTAINS</tt>，上下文的值是否包含一个和操作符指定的正则表达式相匹配的字符串？
+				</li>
+				<li>
+					<tt>sublime.OP_NOT_REGEX_CONTAINS</tt>，上下文的值是否不包含一个和操作符指定的正则表达式相匹配的字符串？
+				</li>
+			</ul>
+	
+			<p>
+				<tt><i>match_all</i></tt> 如果上下文涉及到这些选择则应该被使用：是否每一个选择都应该匹配（match_all = True），是否匹配一项就够了（match_all = False）？
+			</p>
+		</td>
+	</tr>
+	</tbody>
+</table>
+
 
 ## Class sublime_plugin.ApplicationCommand
 
