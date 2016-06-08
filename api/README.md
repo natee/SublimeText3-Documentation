@@ -790,38 +790,93 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 
 ## Class sublime_plugin.ApplicationCommand
 
-| Methods             | Return Value | Description                              |
-| ------------------- | ------------ | ---------------------------------------- |
-| run(<args>)         | None         | Called when the command is run.          |
-| is_enabled(<args>)  | bool         | Returns true if the command is able to be run at this time. The default implementation simply always returns True. |
-| is_visible(<args>)  | bool         | Returns true if the command should be shown in the menu at this time. The default implementation always returns True. |
-| is_checked(<args>)  | bool         | Returns true if a checkbox should be shown next to the menu item. The .sublime-menu file must have the checkbox attribute set to true for this to be used. |
-| description(<args>) | String       | Returns a description of the command with the given arguments. Used in the menu, if no caption is provided. Return None to get the default description. |
+| 方法                  | 返回值    | 描述                                       |
+| ------------------- | ------ | ---------------------------------------- |
+| run(<args>)         | None   | 指令执行时调用。                                 |
+| is_enabled(<args>)  | bool   | 如果指令此时是可以运行时返回true。默认返回true。             |
+| is_visible(<args>)  | bool   | 如果指令当前显示在菜单栏中则返回true。默认返回true。           |
+| is_checked(<args>)  | bool   | 如果复选框显示在菜单项旁边则返回true，如果要使用这个则`.sublime-menu`文件必须把checkbox属性设置为true。 |
+| description(<args>) | String | 返回指令的描述。                                 |
 
 ## Class sublime_plugin.WindowCommand
 
-WindowCommands are instantiated once per window. The Window object may be retrieved via 
+每个窗口只会实例化一次WindowCommands。Window对象可以通过`self.window`来恢复。
 
-self.window
-
-| Methods             | Return Value | Description                              |
-| ------------------- | ------------ | ---------------------------------------- |
-| run(<args>)         | None         | Called when the command is run.          |
-| is_enabled(<args>)  | bool         | Returns true if the command is able to be run at this time. The default implementation simply always returns True. |
-| is_visible(<args>)  | bool         | Returns true if the command should be shown in the menu at this time. The default implementation always returns True. |
-| description(<args>) | String       | Returns a description of the command with the given arguments. Used in the menu, if no caption is provided. Return None to get the default description. |
+| 方法                  | 返回值    | 描述                             |
+| ------------------- | ------ | ------------------------------ |
+| run(<args>)         | None   | 指令执行时调用                        |
+| is_enabled(<args>)  | bool   | 如果指令此时是可以运行时返回true。默认返回true。   |
+| is_visible(<args>)  | bool   | 如果指令当前显示在菜单栏中则返回true。默认返回true。 |
+| description(<args>) | String | 返回指令的描述。                       |
 
 ## Class sublime_plugin.TextCommand
 
-TextCommands are instantiated once per view. The View object may be retrieved via 
+每个窗口只会实例化一次TextCommands。Window对象可以通过`self.view`来恢复。
 
-self.view
+| 方法                  | 返回值    | 描述                                       |
+| ------------------- | ------ | ---------------------------------------- |
+| run(edit, <args>)   | None   | 指令执行时调用                                  |
+| is_enabled(<args>)  | bool   | 如果指令此时是可以运行时返回true。默认返回true。             |
+| is_visible(<args>)  | bool   | 如果指令当前显示在菜单栏中则返回true。默认返回true。           |
+| description(<args>) | String | 返回指令的描述。                                 |
+| want_event()        | bool   | 当指令值通过鼠标行为触发时返回true以接收一个事件参数。事件的信息允许指令判断视图的哪一部分被点击了，默认返回false。 |
 
-| Methods             | Return Value | Description                              |
-| ------------------- | ------------ | ---------------------------------------- |
-| run(edit, <args>)   | None         | Called when the command is run.          |
-| is_enabled(<args>)  | bool         | Returns true if the command is able to be run at this time. The default implementation simply always returns True. |
-| is_visible(<args>)  | bool         | Returns true if the command should be shown in the menu at this time. The default implementation always returns True. |
-| description(<args>) | String       | Returns a description of the command with the given arguments. Used in the menus, and for Undo / Redo descriptions. Return None to get the default description. |
-| want_event()        | bool         | Return True to receive an event argument when the command is triggered by a mouse action. The event information allows commands to determine which portion of the view was clicked on. The default implementation returns False. |
 
+
+# 移植指南
+
+### Overview
+
+Sublime Text 3 contains some important differences from Sublime Text 2 when it comes to plugins, and most plugins will require at least a small amount porting to work. The changes are:
+
+- Python 3.3
+- Out of Process Plugins
+- Asynchronous Events
+- Restricted begin_edit() and end_edit()
+- Zipped Packages
+- Importing Modules
+
+### Python 3.3
+
+Sublime Text 3 uses Python 3.3, while Sublime Text 2 used Python 2.6. Furthermore, on OS X, the system build of Python is no longer used, instead Sublime Text is bundled with its own version. Windows and Linux are also bundled with their own version, as they were previously.
+
+### Out of Process Plugins
+
+Plugins are now run in a separate process, `plugin_host`. From a plugin authors perspective, there should be no observable difference, except that a crash in the plugin host will no longer bring down the main application.
+
+### Asynchronous Events
+
+In Sublime Text 2, only the set_timeout method was thread-safe. In Sublime Text 3, every API method is thread-safe. Furthermore, there are now asynchronous event handlers, to make writing non-blocking code easier:
+
+- on_modified_async
+- on_selection_modified_async
+- on_pre_save_async
+- on_post_save_async
+- on_activated_async
+- on_deactivated_async
+- on_new_async
+- on_load_async
+- on_clone_async
+- set_timeout_async
+
+When writing threaded code, keep in mind that the buffer will be changing underneath you as your function runs.
+
+### Restricted begin_edit() and end_edit()
+
+begin_end() and end_edit() are no longer directly accessible, except in some special circumstances. The only way to get a valid instance of an Edit object is to place your code in a TextCommand subclass. In general, most code can be refactored by placing the code between begin_edit() and end_edit() in a TextCommand, and then calling run_command on that TextCommand.
+
+This approach removes the issue of dangling Edit objects, and ensures the repeat command and macros work as they should.
+
+### Zipped Packages
+
+Packages in Sublime Text 3 are able to be run from `.sublime-package` (i.e., renamed .zip files) files directly, in contrast to Sublime Text 2, which unzipped them prior to running.
+
+While in most changes this should lead to no differences, it is important to keep this in mind if you are accessing files in your package.
+
+### Importing Modules
+
+Importing other Plugins is simpler and more robust in Sublime Text 3, and can be done with a regular import statement, e.g., `import Default.comment` will import `Packages/Default/Comment.py`
+
+### Restricted API Usage at Startup
+
+Due to the `plugin_host` loading asynchronously, it is not possible to use the Sublime Text API at import time. This means that all top-level statements in your module must not call any functions from the `sublime` module. During startup, the API is in a dormant state, and will silently ignore any requests made.
