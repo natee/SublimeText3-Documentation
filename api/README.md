@@ -825,28 +825,28 @@ Sublime Text预置了几个插件，你可以在`Default`包中找到它们：
 
 # 移植指南
 
-### Overview
+### 概述
 
-Sublime Text 3 contains some important differences from Sublime Text 2 when it comes to plugins, and most plugins will require at least a small amount porting to work. The changes are:
+对于插件这一块，Sublime Text 3包含一些和Sublime Text 2非常重要区别，大多数插件都至少需要一点移植才能正常工作。这些变化是：
 
 - Python 3.3
-- Out of Process Plugins
-- Asynchronous Events
-- Restricted begin_edit() and end_edit()
+- 进程外的插件
+- 异步事件
+- 受限的`begin_edit()`和`end_edit()`
 - Zipped Packages
-- Importing Modules
+- 导入模块
 
 ### Python 3.3
 
-Sublime Text 3 uses Python 3.3, while Sublime Text 2 used Python 2.6. Furthermore, on OS X, the system build of Python is no longer used, instead Sublime Text is bundled with its own version. Windows and Linux are also bundled with their own version, as they were previously.
+Sublime Text 3使用了Python 3.3，而Sublime Text 2使用了Python 2.6。而且，在OS X上，Python的构建系统不再使用了，而是捆绑了Sublime自己的版本。Windows和Linux上和以前一样捆绑了自己的版本。
 
-### Out of Process Plugins
+### 进程外的插件
 
-Plugins are now run in a separate process, `plugin_host`. From a plugin authors perspective, there should be no observable difference, except that a crash in the plugin host will no longer bring down the main application.
+插件现在是一个独立的进程，`plugin_host`。从插件作者的观点来看，不应该有可观察到的差异，不同的是在插件宿主崩溃将不再降低主应用程序。
 
-### Asynchronous Events
+### 异步事件
 
-In Sublime Text 2, only the set_timeout method was thread-safe. In Sublime Text 3, every API method is thread-safe. Furthermore, there are now asynchronous event handlers, to make writing non-blocking code easier:
+Sublime Text 2中只有`set_timeout`线程是线程安全的。Sublime Text 3中，每一个API方法都是线程安全的。此外，现在有异步事件处理程序使得编写无阻塞代码更加容易。
 
 - on_modified_async
 - on_selection_modified_async
@@ -859,24 +859,20 @@ In Sublime Text 2, only the set_timeout method was thread-safe. In Sublime Text 
 - on_clone_async
 - set_timeout_async
 
-When writing threaded code, keep in mind that the buffer will be changing underneath you as your function runs.
+当编写线程代码时，请记住函数运行时缓冲区会在底层进行改变。
 
-### Restricted begin_edit() and end_edit()
+### 受限的`begin_edit()`和`end_edit()`
 
-begin_end() and end_edit() are no longer directly accessible, except in some special circumstances. The only way to get a valid instance of an Edit object is to place your code in a TextCommand subclass. In general, most code can be refactored by placing the code between begin_edit() and end_edit() in a TextCommand, and then calling run_command on that TextCommand.
-
-This approach removes the issue of dangling Edit objects, and ensures the repeat command and macros work as they should.
+除了一些特殊情况，`begin_edit()`和`end_edit()`不再可以直接被访问。得到一个有效`Edit`对象实例的唯一方法是把你的代码放到一个TextCommand的子类中。通常来说，大多数代码可以通过把代码放到TextCommand中的`begin_edit()`和`end_edit()`中进行重构，然后调用这个TextCommand中的`run_command`函数。
 
 ### Zipped Packages
 
-Packages in Sublime Text 3 are able to be run from `.sublime-package` (i.e., renamed .zip files) files directly, in contrast to Sublime Text 2, which unzipped them prior to running.
+Sublime Text 3中的包可以直接通过`.sublime-package`（如，重命名后的.zip文件）文件运行，Sublime Text 2则是解压缩之前运行。
 
-While in most changes this should lead to no differences, it is important to keep this in mind if you are accessing files in your package.
+### 导入模块
 
-### Importing Modules
-
-Importing other Plugins is simpler and more robust in Sublime Text 3, and can be done with a regular import statement, e.g., `import Default.comment` will import `Packages/Default/Comment.py`
+Sublime Text 3中导入其它插件更简单且更健全，并且可以用一个常规的import语句完成。如，`import Default.comment`将导入`Packages/Default/Comment.py`。
 
 ### Restricted API Usage at Startup
 
-Due to the `plugin_host` loading asynchronously, it is not possible to use the Sublime Text API at import time. This means that all top-level statements in your module must not call any functions from the `sublime` module. During startup, the API is in a dormant state, and will silently ignore any requests made.
+由于`plugin_host`是异步加载，在导入的时候是不能使用Sublime Text API的。这意味着你的模块中的所有顶层语句将不能调用`sublime`模块中的任何函数。在启动期间，API是休眠状态，将会略任何请求。
